@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
@@ -6,14 +6,30 @@ import { MonthSelect } from '@/common/components/month-select'
 import { YearSelect } from '@/common/components/year-select'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useLayout } from '@/common/layout'
+
+import { NachislenieTabs } from '../nachislenie-tabs'
 
 export const NachislenieReports = () => {
   const budjetId = useRequisitesStore((store) => store.budjet_id)
+  const setLayout = useLayout()
 
   const [year, setYear] = useState(new Date().getFullYear())
   const [month, setMonth] = useState(new Date().getMonth() + 1)
 
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
+
+  useEffect(() => {
+    setLayout({
+      title: t('reports'),
+      breadcrumbs: [
+        {
+          title: t('pages.zarplata')
+        }
+      ],
+      content: NachislenieTabs
+    })
+  }, [t, setLayout])
 
   return (
     <div className="p-20">
@@ -68,6 +84,18 @@ export const NachislenieReports = () => {
             }}
             fileName={`plastik_${year}_${month}.xlsx`}
             buttonText={t('plastik')}
+            variant="default"
+          />
+          <DownloadFile
+            isZarplata
+            url="Excel/jur5-otchet"
+            params={{
+              spBudnameId: budjetId,
+              year,
+              month
+            }}
+            fileName={`${t('monthly_report')}_${year}_${month}.xlsx`}
+            buttonText={t('monthly_report')}
             variant="default"
           />
         </div>

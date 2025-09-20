@@ -113,7 +113,7 @@ export const TabelsView = () => {
 
   useEffect(() => {
     setLayout({
-      title: t('nachislenie'),
+      title: t('tabel'),
       breadcrumbs: [
         {
           title: t('pages.zarplata')

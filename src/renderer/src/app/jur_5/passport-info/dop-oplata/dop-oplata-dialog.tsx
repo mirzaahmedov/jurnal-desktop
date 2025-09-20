@@ -44,7 +44,7 @@ export const DopOplataDialog = ({ mainZarplata, selected, ...props }: DopOplataD
               onFinish={() => {
                 props?.onOpenChange?.(false)
                 queryClient.invalidateQueries({
-                  queryKey: [DopOplataService.QueryKeys.GetByMainZarplataId]
+                  queryKey: [DopOplataService.QueryKeys.GetByMainId]
                 })
               }}
             />

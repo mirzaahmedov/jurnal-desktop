@@ -11,3 +11,22 @@ export interface DopOplata {
   summa: number
   additionalDeductions: Deduction[]
 }
+
+export interface DopOplataById {
+  id: number
+  mainZarplataId: number
+  paymentId: number
+  paymentName: string
+  from: string
+  to: string
+  summa: number
+  day: number
+  additionalDeductions: AdditionalDeduction[]
+}
+interface AdditionalDeduction {
+  id: number
+  deductionId: number
+  deductionName: string
+  summa: number
+  percentage: number
+}

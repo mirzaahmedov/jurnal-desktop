@@ -265,6 +265,24 @@ export const NachislenieEditDialog = ({
               fileName={`zarplata_svod_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
               buttonText={t('aggregated_report')}
             />
+            <DownloadFile
+              isZarplata
+              url="Excel/inps-otchet-byMainId"
+              params={{
+                mainId: nachislenieId
+              }}
+              fileName={`zarplata_inps_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
+              buttonText={t('inps')}
+            />
+            <DownloadFile
+              isZarplata
+              url="Excel/plastik-otchet-byMainId"
+              params={{
+                mainId: nachislenieId
+              }}
+              fileName={`zarplata_plastik_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
+              buttonText={t('plastik')}
+            />
           </div>
         ) : null}
       </div>

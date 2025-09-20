@@ -14,12 +14,15 @@ import { PaymentColumnDefs } from '@/app/jur_5/payment-types/payments/columns'
 import { PaymentsService } from '@/app/jur_5/payment-types/payments/service'
 import { GenericTable, LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
+import { FormElementUncontrolled } from '@/common/components/form/form-element-uncontrolled'
 import { Debouncer } from '@/common/components/hoc/debouncer'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
+import { Textarea } from '@/common/components/ui/textarea'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -55,8 +58,16 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
         name
       }
     ],
-    queryFn: PaymentsService.getAll
+    queryFn: PaymentsService.getAll,
+    enabled: !selected
   })
+
+  const dopOplataGetByIdQuery = useQuery({
+    queryKey: [DopOplataService.QueryKeys.GetById, selected?.id ?? 0],
+    queryFn: DopOplataService.getById,
+    enabled: !!selected
+  })
+  const dopOplataData = dopOplataGetByIdQuery.data
 
   const dopOplataCreateMutation = useMutation({
     mutationFn: DopOplataService.create,
@@ -104,20 +115,21 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
   })
 
   const isVacationPayment = paymentData?.code === 32
+  const isCreate = !selected
 
   useEffect(() => {
-    if (selected) {
+    if (dopOplataData) {
       form.reset({
-        ...selected,
-        from: formatDate(parseLocaleDate(selected.from)),
-        to: formatDate(parseLocaleDate(selected.to))
+        ...dopOplataData,
+        from: formatDate(parseLocaleDate(dopOplataData.from)),
+        to: formatDate(parseLocaleDate(dopOplataData.to))
       })
     } else {
       form.reset({
         ...defaultValues
       })
     }
-  }, [form, selected])
+  }, [form, dopOplataData])
 
   useEffect(() => {
     if (isVacationPayment) {
@@ -146,6 +158,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                     >
                       <JollyDatePicker
                         {...field}
+                        readOnly={!isCreate}
                         className="w-full"
                       />
                     </FormElement>
@@ -162,6 +175,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                     >
                       <JollyDatePicker
                         {...field}
+                        readOnly={!isCreate}
                         className="w-full"
                       />
                     </FormElement>
@@ -179,6 +193,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                       hideDescription
                     >
                       <NumericInput
+                        readOnly={!isCreate}
                         disabled={field.disabled}
                         name={field.name}
                         ref={field.ref}
@@ -194,64 +209,6 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                   )}
                 />
 
-                {/* <FormField
-                  control={form.control}
-                  name="daySumma"
-                  render={({ field }) => (
-                    <FormElement
-                      label={t('day_summa')}
-                      className="w-full max-w-64"
-                      hideDescription
-                    >
-                      <NumericInput
-                        disabled={field.disabled}
-                        name={field.name}
-                        ref={field.ref}
-                        onBlur={field.onBlur}
-                        value={field.value}
-                        onValueChange={(values) => {
-                          field.onChange(values.floatValue ?? 0)
-                          const days = form.getValues('day')
-                          const percentage = form.getValues('percentage')
-                          const summa = calculateSumma(days, values.floatValue ?? 0, percentage)
-                          form.setValue('summa', summa, { shouldValidate: true })
-                        }}
-                        decimalScale={undefined}
-                      />
-                    </FormElement>
-                  )}
-                /> */}
-
-                {/* {!isVacationPayment ? (
-                  <FormField
-                    control={form.control}
-                    name="percentage"
-                    render={({ field }) => (
-                      <FormElement
-                        label={t('foiz') + '(%)'}
-                        hideDescription
-                      >
-                        <NumericInput
-                          disabled={field.disabled}
-                          name={field.name}
-                          ref={field.ref}
-                          onBlur={field.onBlur}
-                          value={field.value}
-                          onValueChange={(values) => {
-                            field.onChange(values.floatValue ?? 0)
-                            const days = form.getValues('day')
-                            const daySumma = form.getValues('daySumma')
-                            const summa = calculateSumma(days, daySumma, values.floatValue ?? 0)
-                            form.setValue('summa', summa, { shouldValidate: true })
-                          }}
-                          decimalScale={undefined}
-                          className="w-24"
-                        />
-                      </FormElement>
-                    )}
-                  />
-                ) : null} */}
-
                 <FormField
                   control={form.control}
                   name="summa"
@@ -262,6 +219,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                       hideDescription
                     >
                       <NumericInput
+                        readOnly={!isCreate}
                         name={field.name}
                         ref={field.ref}
                         onBlur={field.onBlur}
@@ -271,74 +229,116 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                     </FormElement>
                   )}
                 />
+
+                {!isCreate ? (
+                  <FormElementUncontrolled
+                    label={t('payment')}
+                    divProps={{ className: 'flex-1' }}
+                  >
+                    <Textarea
+                      readOnly
+                      value={dopOplataData?.paymentName ?? ''}
+                    />
+                  </FormElementUncontrolled>
+                ) : null}
               </div>
             </div>
 
-            <div className="flex items-center justify-start gap-2.5 py-5">
-              <Debouncer
-                value={name}
-                onChange={setName}
-              >
-                {({ value, onChange }) => (
-                  <Input
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    placeholder={t('name')}
-                    className="w-64"
-                  />
-                )}
-              </Debouncer>
-              <Debouncer
-                value={code}
-                onChange={setCode}
-              >
-                {({ value, onChange }) => (
-                  <Input
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    placeholder={t('code')}
-                    className="w-64"
-                  />
-                )}
-              </Debouncer>
-            </div>
-            <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
-              {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
-              <GenericTable
-                columnDefs={PaymentColumnDefs({ isEditable: false })}
-                data={paymentsQuery?.data?.data ?? []}
-                selectedIds={form.watch('paymentId') ? [form.watch('paymentId')] : []}
-                onClickRow={(item) => {
-                  setPaymentData(item)
-                  form.setValue('paymentId', item.id)
-                }}
-                className="table-generic-xs"
-              />
-            </div>
+            {isCreate ? (
+              <div className="flex items-center justify-start gap-2.5 py-5">
+                <Debouncer
+                  value={name}
+                  onChange={setName}
+                >
+                  {({ value, onChange }) => (
+                    <Input
+                      value={value}
+                      onChange={(e) => onChange(e.target.value)}
+                      placeholder={t('name')}
+                      className="w-64"
+                    />
+                  )}
+                </Debouncer>
+                <Debouncer
+                  value={code}
+                  onChange={setCode}
+                >
+                  {({ value, onChange }) => (
+                    <Input
+                      value={value}
+                      onChange={(e) => onChange(e.target.value)}
+                      placeholder={t('code')}
+                      className="w-64"
+                    />
+                  )}
+                </Debouncer>
+              </div>
+            ) : null}
+
+            {isCreate ? (
+              <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
+                {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
+                <GenericTable
+                  columnDefs={PaymentColumnDefs({ isEditable: false })}
+                  data={paymentsQuery?.data?.data ?? []}
+                  selectedIds={form.watch('paymentId') ? [form.watch('paymentId')] : []}
+                  onClickRow={(item) => {
+                    setPaymentData(item)
+                    form.setValue('paymentId', item.id)
+                  }}
+                  className="table-generic-xs"
+                />
+              </div>
+            ) : (
+              <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
+                {dopOplataGetByIdQuery.isFetching ? <LoadingOverlay /> : null}
+                <GenericTable
+                  columnDefs={[
+                    {
+                      key: 'deductionName',
+                      header: t('name')
+                    },
+                    {
+                      key: 'percentage',
+                      header: t('percentage')
+                    },
+                    {
+                      key: 'summa',
+                      header: t('summa'),
+                      renderCell: (row) => <SummaCell summa={row.summa} />
+                    }
+                  ]}
+                  data={dopOplataData?.additionalDeductions ?? []}
+                  className="table-generic-xs border border-t border-l"
+                />
+              </div>
+            )}
           </div>
 
-          <div className="p-5 pb-0 flex items-center justify-between gap-5">
-            <Pagination
-              page={page}
-              limit={limit}
-              count={paymentsQuery?.data?.meta?.count ?? 0}
-              pageCount={paymentsQuery?.data?.meta?.pageCount ?? 0}
-              onChange={(values) => {
-                if (values.page) {
-                  setPage(values.page)
-                }
-                if (values.limit) {
-                  setLimit(values.limit)
-                }
-              }}
-            />
-            <Button
-              type="submit"
-              isDisabled={!form.watch('paymentId')}
-            >
-              {t('continue')}
-            </Button>
-          </div>
+          {isCreate ? (
+            <div className="p-5 pb-0 flex items-center justify-between gap-5">
+              <Pagination
+                page={page}
+                limit={limit}
+                count={paymentsQuery?.data?.meta?.count ?? 0}
+                pageCount={paymentsQuery?.data?.meta?.pageCount ?? 0}
+                onChange={(values) => {
+                  if (values.page) {
+                    setPage(values.page)
+                  }
+                  if (values.limit) {
+                    setLimit(values.limit)
+                  }
+                }}
+              />
+              <Button
+                type="submit"
+                isDisabled={!form.watch('paymentId')}
+              >
+                {t('continue')}
+              </Button>
+            </div>
+          ) : null}
         </form>
       </Form>
     </>

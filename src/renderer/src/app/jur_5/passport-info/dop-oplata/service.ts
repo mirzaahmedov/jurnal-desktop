@@ -1,5 +1,5 @@
 import type { DopOplataFormValues } from './config'
-import type { DopOplata } from '@/common/models/dop-oplata'
+import type { DopOplata, DopOplataById } from '@/common/models/dop-oplata'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
@@ -8,16 +8,25 @@ export class DopOplataService {
   static endpoint = 'AdditionalPaymenyt'
 
   static QueryKeys = {
-    GetByMainZarplataId: 'AdditionalPaymenyt/get-by-mainId'
+    GetByMainId: 'AdditionalPaymenyt/get-by-mainId',
+    GetById: 'AdditionalPaymenyt/get-by-id'
   }
 
   static async getAll(
-    ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetByMainZarplataId, number]>
+    ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetByMainId, number]>
   ) {
     const mainZarplataId = ctx.queryKey[1]
     const res = await zarplataApiNew.get<DopOplata[]>(
       `${DopOplataService.endpoint}/get-by-mainId/${mainZarplataId}`
     )
+    return res.data
+  }
+
+  static async getById(
+    ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetById, number]>
+  ) {
+    const id = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<DopOplataById>(`${DopOplataService.endpoint}/${id}`)
     return res.data
   }
 

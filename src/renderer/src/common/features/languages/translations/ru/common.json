@@ -367,6 +367,7 @@
   "end_date": "Конечная дата",
   "please_select_report_title": "Пожалуйста, выберите название отчета перед загрузкой.",
   "monthly_saldo": "Сальдо по месяцам",
+  "monthly_report": "Ежемесячный отчет",
   "no_saldo_short": "Нет сальдо",
   "saldo_exists_short": "Есть сальдо",
   "unknown_type": "Неизвестный тип",

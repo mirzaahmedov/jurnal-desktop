@@ -31,7 +31,7 @@ export const DopOplataContainer = ({ mainZarplata }: DopOplataContainerProps) =>
   const [selected, setSelected] = useState<DopOplata>()
 
   const dopOplataQuery = useQuery({
-    queryKey: [DopOplataService.QueryKeys.GetByMainZarplataId, mainZarplata.id],
+    queryKey: [DopOplataService.QueryKeys.GetByMainId, mainZarplata.id],
     queryFn: DopOplataService.getAll
   })
 
@@ -39,7 +39,7 @@ export const DopOplataContainer = ({ mainZarplata }: DopOplataContainerProps) =>
     mutationFn: DopOplataService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [DopOplataService.QueryKeys.GetByMainZarplataId]
+        queryKey: [DopOplataService.QueryKeys.GetByMainId]
       })
       toast.success(t('delete_success'))
     }
