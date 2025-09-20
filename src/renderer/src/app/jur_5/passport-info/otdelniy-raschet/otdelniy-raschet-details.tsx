@@ -10,7 +10,7 @@ import { type FC, useEffect, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, Sigma } from 'lucide-react'
+import { Download, Plus, Sigma } from 'lucide-react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -34,6 +34,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { MonthSelect } from '@/common/components/month-select'
+import { PDFSaver } from '@/common/components/pdf-saver'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
@@ -164,165 +165,185 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
               <DialogHeader className="p-5">
                 <DialogTitle>{t('otdelniy_raschet')}</DialogTitle>
               </DialogHeader>
-              <div className="flex-1 min-h-0 flex flex-col overflow-auto scrollbar relative bg-gray-100">
-                <MainZarplataInfo mainZarplataId={mainZarplata.id} />
-                {otdelniyRaschetQuery.isLoading ? (
-                  <LoadingOverlay />
-                ) : !otdelniyRaschet ? (
-                  <div className="flex-1 grid place-items-center">
-                    <h6 className="text-xl text-gray-500">{t('not_found')}</h6>
-                  </div>
-                ) : (
-                  <>
-                    <OtdelniyRaschetInfo
-                      form={form}
-                      otdelniyRaschet={otdelniyRaschet}
-                    />
-                    <div className="px-5 pb-5 flex justify-end">
-                      <Button
-                        type="button"
-                        onPress={handleCalculateSalaryByPassport}
-                        className="ml-auto"
-                        isPending={updateOtdelniyRaschet.isPending}
-                      >
-                        <Sigma className="btn-icon icon-start" /> {t('recalculate_from_passport')}
-                      </Button>
-                    </div>
-
-                    <div className="flex-1 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] px-5 gap-5">
-                      <div className="bg-teal-700 p-5 rounded-xl h-full flex flex-col">
-                        <div className="flex items-center justify-between gap-5 mb-4">
-                          <h2 className="text-xl text-white font-medium mb-2">
-                            {t('nachislenie')}
-                          </h2>
-                          <Button
-                            className="-my-10"
-                            onPress={() => {
-                              setPaymentData(undefined)
-                              paymentToggle.open()
-                            }}
-                          >
-                            <Plus className="btn-icon icon-start" /> {t('add')}
-                          </Button>
-                        </div>
-                        <div className="flex-1 overflow-auto scrollbar">
-                          <GenericTable
-                            data={payments}
-                            columnDefs={[
-                              {
-                                key: 'paymentName',
-                                header: 'name'
-                              },
-                              {
-                                key: 'percentage',
-                                header: 'foiz'
-                              },
-                              {
-                                numeric: true,
-                                key: 'summa',
-                                renderCell: (row) => <SummaCell summa={row.summa} />
-                              }
-                            ]}
-                            className="table-generic-xs shadow-md rounded overflow-hidden"
-                            onEdit={(row) => {
-                              setPaymentData(row)
-                              paymentToggle.open()
-                            }}
-                            onDelete={(row) => {
-                              confirm({
-                                onConfirm: () => {
-                                  deletePaymentMutation.mutate(row.id)
-                                }
-                              })
-                            }}
-                            footer={
-                              <FooterRow>
-                                <FooterCell
-                                  title={t('total')}
-                                  colSpan={3}
-                                />
-                                <FooterCell
-                                  content={formatNumber(otdelniyRaschet?.nachislenieSum ?? 0)}
-                                />
-                                <FooterCell />
-                              </FooterRow>
-                            }
+              <PDFSaver filename={`otdelniy-raschet-${mainZarplata.fio}.pdf`}>
+                {({ ref, savePDF, isPending }) => (
+                  <div
+                    ref={ref}
+                    className="flex-1 min-h-0 flex flex-col gap-5 overflow-auto scrollbar relative bg-gray-100"
+                  >
+                    <MainZarplataInfo mainZarplataId={mainZarplata.id} />
+                    {otdelniyRaschetQuery.isLoading ? (
+                      <LoadingOverlay />
+                    ) : !otdelniyRaschet ? (
+                      <div className="flex-1 grid place-items-center">
+                        <h6 className="text-xl text-gray-500">{t('not_found')}</h6>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-end justify-between gap-5">
+                          <OtdelniyRaschetInfo
+                            form={form}
+                            otdelniyRaschet={otdelniyRaschet}
                           />
+                          <div className="pdf-hidden px-5 flex justify-end gap-5">
+                            <Button
+                              isPending={isPending}
+                              onPress={savePDF}
+                              IconStart={Download}
+                            >
+                              {t('download_as_pdf')}
+                            </Button>
+                            <Button
+                              type="button"
+                              onPress={handleCalculateSalaryByPassport}
+                              className="ml-auto"
+                              isPending={updateOtdelniyRaschet.isPending}
+                            >
+                              <Sigma className="btn-icon icon-start" />{' '}
+                              {t('recalculate_from_passport')}
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="bg-teal-700 p-5 rounded-xl">
-                        <div className="flex items-center justify-between gap-5 mb-4">
-                          <h2 className="text-xl text-white font-medium mb-2">{t('uderjanie')}</h2>
+
+                        <div className="flex-1 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] px-5 gap-5">
+                          <div className="bg-teal-700 p-5 rounded-xl h-full flex flex-col">
+                            <div className="flex items-center justify-between gap-5 mb-4">
+                              <h2 className="text-xl text-white font-medium mb-2">
+                                {t('nachislenie')}
+                              </h2>
+                              <Button
+                                className="-my-10 pdf-hidden"
+                                onPress={() => {
+                                  setPaymentData(undefined)
+                                  paymentToggle.open()
+                                }}
+                              >
+                                <Plus className="btn-icon icon-start" /> {t('add')}
+                              </Button>
+                            </div>
+                            <div className="flex-1 overflow-auto scrollbar">
+                              <GenericTable
+                                data={payments}
+                                columnDefs={[
+                                  {
+                                    key: 'paymentName',
+                                    header: 'name'
+                                  },
+                                  {
+                                    key: 'percentage',
+                                    header: 'foiz'
+                                  },
+                                  {
+                                    numeric: true,
+                                    key: 'summa',
+                                    renderCell: (row) => <SummaCell summa={row.summa} />
+                                  }
+                                ]}
+                                className="table-generic-xs shadow-md rounded overflow-hidden"
+                                onEdit={(row) => {
+                                  setPaymentData(row)
+                                  paymentToggle.open()
+                                }}
+                                onDelete={(row) => {
+                                  confirm({
+                                    onConfirm: () => {
+                                      deletePaymentMutation.mutate(row.id)
+                                    }
+                                  })
+                                }}
+                                footer={
+                                  <FooterRow>
+                                    <FooterCell
+                                      title={t('total')}
+                                      colSpan={3}
+                                    />
+                                    <FooterCell
+                                      content={formatNumber(otdelniyRaschet?.nachislenieSum ?? 0)}
+                                    />
+                                    <FooterCell />
+                                  </FooterRow>
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="bg-teal-700 p-5 rounded-xl">
+                            <div className="flex items-center justify-between gap-5 mb-4">
+                              <h2 className="text-xl text-white font-medium mb-2">
+                                {t('uderjanie')}
+                              </h2>
+                              <Button
+                                className="-my-10 pdf-hidden"
+                                onPress={() => {
+                                  setDeductionData(undefined)
+                                  deductionToggle.open()
+                                }}
+                              >
+                                <Plus className="btn-icon icon-start" /> {t('add')}
+                              </Button>
+                            </div>
+                            <GenericTable
+                              data={deductions}
+                              columnDefs={[
+                                {
+                                  key: 'deductionName',
+                                  header: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  numeric: true,
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />
+                                }
+                              ]}
+                              className="table-generic-xs shadow-md rounded overflow-hidden"
+                              onEdit={(row) => {
+                                setDeductionData(row)
+                                deductionToggle.open()
+                              }}
+                              onDelete={(row) => {
+                                confirm({
+                                  onConfirm: () => {
+                                    deleteDeductionMutation.mutate(row.id)
+                                  }
+                                })
+                              }}
+                              footer={
+                                <FooterRow>
+                                  <FooterCell
+                                    title={t('total')}
+                                    colSpan={3}
+                                  />
+                                  <FooterCell
+                                    content={formatNumber(otdelniyRaschet?.uderjanieSum ?? 0)}
+                                  />
+                                  <FooterCell />
+                                </FooterRow>
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="px-5 mb-5 flex items-center gap-10">
+                          <h6 className="font-bold">
+                            {t('na_ruki')}: {formatNumber(otdelniyRaschet?.naRukiSum ?? 0)}
+                          </h6>
                           <Button
-                            className="-my-10"
                             onPress={() => {
-                              setDeductionData(undefined)
-                              deductionToggle.open()
+                              calculateChild.mutate(otdelniyRaschet?.id ?? 0)
                             }}
+                            isPending={calculateChild.isPending}
+                            className="pdf-hidden"
                           >
-                            <Plus className="btn-icon icon-start" /> {t('add')}
+                            <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
                           </Button>
                         </div>
-                        <GenericTable
-                          data={deductions}
-                          columnDefs={[
-                            {
-                              key: 'deductionName',
-                              header: 'name'
-                            },
-                            {
-                              key: 'percentage',
-                              header: 'foiz'
-                            },
-                            {
-                              numeric: true,
-                              key: 'summa',
-                              renderCell: (row) => <SummaCell summa={row.summa} />
-                            }
-                          ]}
-                          className="table-generic-xs shadow-md rounded overflow-hidden"
-                          onEdit={(row) => {
-                            setDeductionData(row)
-                            deductionToggle.open()
-                          }}
-                          onDelete={(row) => {
-                            confirm({
-                              onConfirm: () => {
-                                deleteDeductionMutation.mutate(row.id)
-                              }
-                            })
-                          }}
-                          footer={
-                            <FooterRow>
-                              <FooterCell
-                                title={t('total')}
-                                colSpan={3}
-                              />
-                              <FooterCell
-                                content={formatNumber(otdelniyRaschet?.uderjanieSum ?? 0)}
-                              />
-                              <FooterCell />
-                            </FooterRow>
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="px-5 my-5 flex items-center gap-10">
-                      <h6 className="font-bold">
-                        {t('na_ruki')}: {formatNumber(otdelniyRaschet?.naRukiSum ?? 0)}
-                      </h6>
-                      <Button
-                        onPress={() => {
-                          calculateChild.mutate(otdelniyRaschet?.id ?? 0)
-                        }}
-                        isPending={calculateChild.isPending}
-                      >
-                        <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
-                      </Button>
-                    </div>
-                  </>
+                      </>
+                    )}
+                  </div>
                 )}
-              </div>
+              </PDFSaver>
 
               <div className="p-5 flex items-center justify-between border-t">
                 <ContentStepper
@@ -382,7 +403,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
   }, [otdelniyRaschet])
 
   return (
-    <div className="relative flex flex-col gap-5 p-5 mt-5">
+    <div className="relative flex flex-col gap-5 px-5">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(() => {})}
@@ -475,7 +496,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}
@@ -493,7 +514,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}
@@ -511,7 +532,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}
@@ -529,7 +550,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}
@@ -547,7 +568,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}
@@ -565,7 +586,7 @@ export const OtdelniyRaschetInfo = ({ form, otdelniyRaschet }: OtdelniyRaschetIn
                       <NumericInput
                         value={field.value}
                         onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                        className="w-40"
+                        className="w-32"
                       />
                     </FormElement>
                   )}

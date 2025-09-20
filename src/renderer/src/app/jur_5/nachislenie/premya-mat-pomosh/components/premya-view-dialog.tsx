@@ -63,11 +63,11 @@ export const PremyaMatPomoshViewDialog = ({
               <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
             </DialogHeader>
 
-            <div className="flex items-center">
+            <div className="flex items-end">
               <Form {...form}>
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-wrap p-5 gap-2.5 max-w-7xl"
+                  className="flex flex-wrap p-5 gap-2.5"
                 >
                   <FormElement
                     label={t('doc_num')}
@@ -124,63 +124,73 @@ export const PremyaMatPomoshViewDialog = ({
                       }
                     />
                   </FormElement>
-                  <FormElement
-                    label={t('type')}
-                    direction="column"
-                  >
-                    <Input
-                      readOnly
-                      value={t(selectedPremya?.type ?? '')}
-                    />
-                  </FormElement>
-                  <FormElement
-                    label={t('payment_type')}
-                    direction="column"
-                  >
-                    <Input
-                      readOnly
-                      value={t(selectedPremya?.paymentType ?? '')}
-                    />
-                  </FormElement>
-                  <FormElement
-                    label={t('amount')}
-                    direction="column"
-                  >
-                    <NumericInput
-                      readOnly
-                      value={selectedPremya?.amount ?? 0}
-                    />
-                  </FormElement>
-                  <FormElement
-                    label={t('opisanie')}
-                    direction="column"
-                    className="w-full max-w-md"
-                  >
-                    <Textarea
-                      readOnly
-                      rows={3}
-                      value={selectedPremya?.description ?? ''}
-                    />
-                  </FormElement>
+
+                  <div className="bg-sky-50 border border-sky-200 rounded-lg px-5 py-2 flex items-center gap-5 w-full mr-5">
+                    <FormElement
+                      label={t('payment_type')}
+                      direction="column"
+                    >
+                      <Input
+                        readOnly
+                        value={t(selectedPremya?.paymentType ?? '')}
+                      />
+                    </FormElement>
+                    <FormElement
+                      label={t('amount')}
+                      direction="column"
+                    >
+                      <NumericInput
+                        readOnly
+                        value={selectedPremya?.amount ?? 0}
+                      />
+                    </FormElement>
+                    <FormElement
+                      label={t('payment')}
+                      direction="column"
+                      divProps={{
+                        className: 'w-full max-w-md'
+                      }}
+                      className="w-full max-w-md"
+                    >
+                      <Textarea
+                        readOnly
+                        rows={2}
+                        value={selectedPremya?.paymentName || ''}
+                      />
+                    </FormElement>
+                    <FormElement
+                      label={t('opisanie')}
+                      direction="column"
+                      divProps={{
+                        className: 'w-full max-w-md'
+                      }}
+                      className="w-full max-w-md"
+                    >
+                      <Textarea
+                        readOnly
+                        rows={3}
+                        value={selectedPremya?.description ?? ''}
+                      />
+                    </FormElement>
+                    {selectedPremya ? (
+                      <DownloadFile
+                        isZarplata
+                        url="Excel/mat-pomoch"
+                        params={{
+                          mainId: selectedPremya.id
+                        }}
+                        buttonText={t('vedemost')}
+                        fileName={`vedemost_premya_mat_pomosh_${selectedPremya.docNum}.xlsx`}
+                        variant="default"
+                        className="ml-auto"
+                      />
+                    ) : null}
+                  </div>
                 </form>
               </Form>
-
-              <div className="px-5">
-                {selectedPremya ? (
-                  <DownloadFile
-                    isZarplata
-                    url="Excel/mat-pomoch"
-                    params={{
-                      mainId: selectedPremya.id
-                    }}
-                    buttonText={t('vedemost')}
-                    fileName={`vedemost_premya_mat_pomosh_${selectedPremya.docNum}.xlsx`}
-                  />
-                ) : null}
-              </div>
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5">
+            <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5 pt-0">
               <div className="h-full min-h-[400px] overflow-auto scrollbar">
                 <CollapsibleTable
                   data={childrenQuery?.data ?? []}

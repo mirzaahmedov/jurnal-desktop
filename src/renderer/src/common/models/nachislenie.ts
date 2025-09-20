@@ -67,6 +67,8 @@ export interface NachislenieOthers {
   givenDocDate: string
   description: string
   paymentType: string
+  paymentId: number
+  paymentName: string
   amount: number
   type: string
   childCreatDtos: Array<{

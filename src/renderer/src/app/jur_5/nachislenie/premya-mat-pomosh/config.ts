@@ -14,7 +14,7 @@ export const NachislenieOthersFormSchema = z.object({
   description: z.string(),
   paymentType: z.string().nonempty(),
   amount: z.number().gt(0, t('required_field')),
-  type: z.string().nonempty(),
+  paymentId: z.number().min(1),
   childCreatDtos: z.array(
     z.object({
       mainZarplataId: z.number()
@@ -42,7 +42,7 @@ export const defaultValues: NachislenieOthersFormValues = {
   description: '',
   paymentType: '',
   amount: 0,
-  type: '',
+  paymentId: 0,
   childCreatDtos: [],
   payments: []
 }

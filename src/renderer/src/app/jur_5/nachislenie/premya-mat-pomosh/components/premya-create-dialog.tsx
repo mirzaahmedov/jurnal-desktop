@@ -15,7 +15,10 @@ import { useTranslation } from 'react-i18next'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { PaymentColumnDefs } from '@/app/jur_5/payment-types/payments/columns'
-import { PaymentsService } from '@/app/jur_5/payment-types/payments/service'
+import {
+  PaymentsService,
+  createPaymentSpravochnik
+} from '@/app/jur_5/payment-types/payments/service'
 import {
   type ColumnDef,
   GenericTable,
@@ -47,6 +50,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { useRequisitesStore } from '@/common/features/requisites'
+import { useSpravochnik } from '@/common/features/spravochnik'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import { VacantTree, VacantTreeSearch } from '@/common/features/vacant/ui/vacant-tree'
 import { formatLocaleDate } from '@/common/lib/format'
@@ -84,6 +88,15 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
     defaultValues,
     resolver: zodResolver(NachislenieOthersFormSchema)
   })
+
+  const paymentSpravochnik = useSpravochnik(
+    createPaymentSpravochnik({
+      value: form.watch('paymentId'),
+      onChange: (value) => {
+        form.setValue('paymentId', value ?? 0, { shouldValidate: true })
+      }
+    })
+  )
   const mainZarplataQuery = useMainZarplataList({
     vacantId: selectedVacant?.id,
     year: form.watch('nachislenieYear')
@@ -306,101 +319,100 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
                             </FormElement>
                           )}
                         />
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormElement
-                              direction="column"
-                              label={t('opisanie')}
-                              className="w-full max-w-lg"
-                            >
-                              <Textarea {...field} />
-                            </FormElement>
-                          )}
-                        />
 
-                        <FormField
-                          control={form.control}
-                          name="type"
-                          render={({ field }) => (
-                            <FormElement
-                              direction="column"
-                              label={t('type')}
-                            >
-                              <JollySelect
-                                inputRef={field.ref}
-                                onBlur={field.onBlur}
-                                items={[
-                                  { label: t('premya'), value: 'premya' },
-                                  { label: t('mat_pomosh'), value: 'mat_pomosh' },
-                                  { label: t('avans'), value: 'avans' },
-                                  { label: t('otdelniy_raschet'), value: 'otdelniy_raschet' }
-                                ]}
-                                selectedKey={field.value}
-                                onSelectionChange={field.onChange}
-                                className="w-56"
+                        <div className="bg-sky-50 border border-sky-200 rounded-lg px-5 py-2 flex items-center gap-5 w-full mr-5">
+                          <FormField
+                            control={form.control}
+                            name="paymentType"
+                            render={({ field }) => (
+                              <FormElement
+                                direction="column"
+                                label={t('payment_type')}
                               >
-                                {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
-                              </JollySelect>
-                            </FormElement>
-                          )}
-                        />
+                                <JollySelect
+                                  inputRef={field.ref}
+                                  onBlur={field.onBlur}
+                                  items={[
+                                    { label: '%', value: '%' },
+                                    { label: t('summa'), value: 'summa' },
+                                    { label: t('nachislenie'), value: 'nachislenie' }
+                                  ]}
+                                  selectedKey={field.value}
+                                  onSelectionChange={(selectedKey) => {
+                                    if (selectedKey === '%') {
+                                      setTabValue(CreateDialogTabOption.Payments)
+                                      form.setValue('amount', 0)
+                                    } else {
+                                      setTabValue(CreateDialogTabOption.MainZarplata)
+                                      form.setValue('amount', 0)
+                                      setSelectedPayments([])
+                                    }
+                                    field.onChange(selectedKey as string)
+                                  }}
+                                  className="w-40"
+                                >
+                                  {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
+                                </JollySelect>
+                              </FormElement>
+                            )}
+                          />
 
-                        <FormField
-                          control={form.control}
-                          name="paymentType"
-                          render={({ field }) => (
-                            <FormElement
-                              direction="column"
-                              label={t('payment_type')}
-                            >
-                              <JollySelect
-                                inputRef={field.ref}
-                                onBlur={field.onBlur}
-                                items={[
-                                  { label: '%', value: '%' },
-                                  { label: t('summa'), value: 'summa' },
-                                  { label: t('nachislenie'), value: 'nachislenie' }
-                                ]}
-                                selectedKey={field.value}
-                                onSelectionChange={(selectedKey) => {
-                                  if (selectedKey === '%') {
-                                    setTabValue(CreateDialogTabOption.Payments)
-                                    form.setValue('amount', 0)
-                                  } else {
-                                    setTabValue(CreateDialogTabOption.MainZarplata)
-                                    form.setValue('amount', 0)
-                                    setSelectedPayments([])
-                                  }
-                                  field.onChange(selectedKey as string)
+                          <FormField
+                            control={form.control}
+                            name="amount"
+                            render={({ field }) => (
+                              <FormElement
+                                direction="column"
+                                label={t('amount')}
+                              >
+                                <NumericInput
+                                  ref={field.ref}
+                                  value={field.value}
+                                  onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                                  onBlur={field.onBlur}
+                                  decimalScale={undefined}
+                                />
+                              </FormElement>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="paymentId"
+                            render={() => (
+                              <FormElement
+                                label={t('payment')}
+                                direction="column"
+                                divProps={{
+                                  className: 'w-full max-w-md'
                                 }}
-                                className="w-40"
+                                className="w-full max-w-md"
                               >
-                                {(item) => <SelectItem id={item.value}>{item.label}</SelectItem>}
-                              </JollySelect>
-                            </FormElement>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="amount"
-                          render={({ field }) => (
-                            <FormElement
-                              direction="column"
-                              label={t('amount')}
-                            >
-                              <NumericInput
-                                ref={field.ref}
-                                value={field.value}
-                                onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
-                                onBlur={field.onBlur}
-                                decimalScale={undefined}
-                              />
-                            </FormElement>
-                          )}
-                        />
+                                <Textarea
+                                  readOnly
+                                  rows={2}
+                                  value={paymentSpravochnik.selected?.name || ''}
+                                  onDoubleClick={paymentSpravochnik.open}
+                                />
+                              </FormElement>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                              <FormElement
+                                direction="column"
+                                label={t('opisanie')}
+                                divProps={{
+                                  className: 'w-full max-w-md'
+                                }}
+                                className="w-full max-w-md"
+                              >
+                                <Textarea {...field} />
+                              </FormElement>
+                            )}
+                          />
+                        </div>
                       </div>
 
                       <Tabs
