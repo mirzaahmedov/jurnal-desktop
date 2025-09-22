@@ -73,14 +73,14 @@ const provodkaColumns: ColumnDef<MaterialRasxodProvodka>[] = [
   },
   {
     key: 'iznos',
-    headerClassName: 'hidden pdf-visible',
-    className: 'hidden pdf-visible',
+    headerClassName: 'pdf-only-visible',
+    className: 'pdf-only-visible',
     columns: [
       {
         numeric: true,
         key: 'iznos_summa',
-        headerClassName: 'hidden pdf-visible',
-        className: 'hidden pdf-visible',
+        headerClassName: 'pdf-only-visible',
+        className: 'pdf-only-visible',
         header: 'summa'
       }
     ]

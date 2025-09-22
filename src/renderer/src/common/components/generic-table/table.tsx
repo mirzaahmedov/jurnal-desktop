@@ -173,7 +173,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
                 {(onDelete || onEdit || onView || actions) && groupIndex === 0 ? (
                   <GenericTableHead
                     fit
-                    className="text-center sticky right-0 z-10 !bg-inherit border-l"
+                    className="text-center sticky right-0 z-10 !bg-inherit border-l pdf-hidden"
                     key="actions"
                     style={{
                       width: actionsWidth,
@@ -257,7 +257,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
 
                 {onDelete || onEdit || onView || actions ? (
                   <GenericTableCell
-                    className="sticky right-0 bg-inherit shadow-sm border-l !py-px"
+                    className="sticky right-0 bg-inherit shadow-sm border-l !py-px pdf-hidden"
                     style={{
                       width: actionsWidth,
                       minWidth: actionsWidth,

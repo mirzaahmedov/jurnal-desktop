@@ -755,8 +755,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                 <Button
                   onClick={downloadPDF}
                   isDisabled={isDownloading}
-                  variant="ghost"
-                  className="pdf-hidden"
+                  className="pdf-hidden ml-auto"
                   IconStart={Download}
                 >
                   {t('download_as_pdf')}
@@ -778,7 +777,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                       mainZarplataId: nachislenie?.mainZarplataId ?? 0
                     })
                   }}
-                  className="ml-auto pdf-hidden"
+                  className="pdf-hidden"
                   isPending={updateChildNachislenie.isPending}
                 >
                   <Sigma className="btn-icon icon-start" /> {t('recalculate_from_passport')}
@@ -908,6 +907,10 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
               >
                 <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
               </Button>
+              <div className="mt-6 ml-auto flex items-center gap-2.5 pdf-only-visible">
+                <h5 className="font-bold">{t('podpis')}</h5>
+                <span className="inline-block border-b border-b-current w-56 h-5"> </span>
+              </div>
             </div>
             <div className="mt-5 pr-5 flex items-center justify-between pdf-hidden">
               <ContentStepper

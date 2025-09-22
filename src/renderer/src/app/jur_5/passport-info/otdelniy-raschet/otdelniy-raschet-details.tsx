@@ -169,7 +169,7 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                 {({ ref, savePDF, isPending }) => (
                   <div
                     ref={ref}
-                    className="flex-1 min-h-0 flex flex-col gap-5 overflow-auto scrollbar relative bg-gray-100"
+                    className="flex-1 min-h-0 flex flex-col gap-5 overflow-auto scrollbar relative"
                   >
                     <MainZarplataInfo mainZarplataId={mainZarplata.id} />
                     {otdelniyRaschetQuery.isLoading ? (
@@ -338,6 +338,13 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                           >
                             <Sigma className="btn-icon icon-start" /> {t('recalculate_salary')}
                           </Button>
+
+                          <div className="mt-6 ml-auto flex items-center gap-2.5 pdf-only-visible">
+                            <h5 className="font-bold">{t('podpis')}</h5>
+                            <span className="inline-block border-b border-b-current w-56 h-5">
+                              {' '}
+                            </span>
+                          </div>
                         </div>
                       </>
                     )}

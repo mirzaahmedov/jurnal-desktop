@@ -142,7 +142,10 @@ const ui = plugin(function ({ addUtilities }) {
       borderRadius: '10rem',
       backgroundColor: 'currentColor'
     },
-    '.pdf-hidden': {}
+    '.pdf-hidden': {},
+    '.pdf-only-visible': {
+      display: 'none !important'
+    }
   })
 })
 
