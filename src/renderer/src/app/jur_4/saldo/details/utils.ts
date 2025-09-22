@@ -1,15 +1,11 @@
 import type { PodotchetSaldoProvodkaFormValues } from '../config'
 
-export const calculateTotal = (rows: PodotchetSaldoProvodkaFormValues[], skipTotal = false) => {
+export const getProvodkaTotal = (rows: PodotchetSaldoProvodkaFormValues[]) => {
   return rows.reduce(
-    (result, row, index) => {
-      return skipTotal && index === rows.length - 1
-        ? result
-        : {
-            prixod: result.prixod + Number(row.prixod),
-            rasxod: result.rasxod + Number(row.rasxod)
-          }
-    },
+    (result, row) => ({
+      prixod: result.prixod + Number(row.prixod),
+      rasxod: result.rasxod + Number(row.rasxod)
+    }),
     { prixod: 0, rasxod: 0 }
   )
 }

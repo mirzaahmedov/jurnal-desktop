@@ -26,7 +26,7 @@ export const TextEditor: FC<CustomCellEditorProps<unknown, unknown, EditorContex
           onKeyDown={onKeyDown}
           onValueChange={(value) => {
             field.onChange(value)
-            onValueChange(value)
+            onValueChange(field.value)
           }}
           rowIndex={rowIndex}
           context={{

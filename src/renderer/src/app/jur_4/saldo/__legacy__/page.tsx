@@ -1,8 +1,7 @@
 import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { PodotchetSaldoProvodka } from '@/common/models'
-import type { GridApi, GridReadyEvent } from 'ag-grid-community'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
@@ -41,13 +40,12 @@ import {
 import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
 import { PodotchetSaldoTable } from './podotchet-saldo-table'
-import { getProvodkaTotal } from './utils'
+import { getPodochetSaldoProvodkaColumns } from './provodki'
+import { calculateTotal } from './utils'
 
 const PodotchetSaldoDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
-
-  const gridApi = useRef<GridApi>()
 
   const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
@@ -62,12 +60,6 @@ const PodotchetSaldoDetailsPage = () => {
   const [isEditable, setEditable] = useState(false)
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
-  const [rowData, setRowData] = useState<PodotchetSaldoProvodkaFormValues[]>([])
-  const [totalRow, setTotalRow] = useState<Pick<
-    PodotchetSaldoProvodka,
-    'name' | 'prixod' | 'rasxod' | 'summa'
-  > | null>(null)
-
   const { t } = useTranslation(['app'])
   const { budjet_id, main_schet_id, jur4_schet_id } = useRequisitesStore()
 
@@ -76,8 +68,7 @@ const PodotchetSaldoDetailsPage = () => {
       ...defaultValues,
       year: location.state?.year ?? startDate.getFullYear(),
       month: startDate.getMonth() + 1
-    },
-    shouldUnregister: false
+    }
   })
 
   const invalidateQueries = () => {
@@ -162,13 +153,18 @@ const PodotchetSaldoDetailsPage = () => {
       }
 
       if (data.length) {
-        const total = getProvodkaTotal(data)
-        setTotalRow({
+        const total = calculateTotal(data)
+        data.push({
+          id: 0,
+          _total: true,
+          podotchet_id: 0,
           name: t('total'),
+          rayon: '',
+          isdeleted: false,
           prixod: total.prixod,
           rasxod: total.rasxod,
           summa: total.prixod - total.rasxod
-        })
+        } as PodotchetSaldoProvodka)
       }
 
       form.setValue('podotchets', data)
@@ -209,18 +205,20 @@ const PodotchetSaldoDetailsPage = () => {
   useEffect(() => {
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
-        const total = getProvodkaTotal(saldo.data.childs)
-        setTotalRow({
+        const total = calculateTotal(saldo.data.childs)
+        saldo.data.childs.push({
+          _total: true,
+          podotchet_id: 0,
           name: t('total'),
           prixod: total.prixod,
           rasxod: total.rasxod,
           summa: total.prixod - total.rasxod
-        })
+        } as any)
       }
       form.reset({
         month: saldo.data.month,
         year: saldo.data.year,
-        podotchets: Array.from({ length: 20 }).flatMap(() => saldo.data.childs ?? [])
+        podotchets: saldo.data.childs ?? []
       })
       setEditable(saldo.data.first)
     }
@@ -290,20 +288,33 @@ const PodotchetSaldoDetailsPage = () => {
       return
     }
 
-    const total = getProvodkaTotal(rows)
+    const total = calculateTotal(rows, true)
+    const totalRow = rows[rows.length - 1]
     const name = t('total')
 
-    setTotalRow({
-      name,
-      prixod: total.prixod,
-      rasxod: total.rasxod,
-      summa: total.prixod - total.rasxod
-    })
+    if (Number(totalRow?.prixod) !== Number(total.prixod)) {
+      form.setValue(`podotchets.${rows.length - 1}.prixod`, total.prixod)
+    }
+    if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
+      form.setValue(`podotchets.${rows.length - 1}.rasxod`, total.rasxod)
+    }
+    if (Number(totalRow?.summa) !== Number(total.prixod - total.rasxod)) {
+      form.setValue(`podotchets.${rows.length - 1}.summa`, total.prixod - total.rasxod)
+    }
+    if (totalRow?.name !== name) {
+      form.setValue(`podotchets.${rows.length - 1}.name`, name)
+    }
   }, [rows, form, isEditable, t])
 
-  const onGridReady = (params: GridReadyEvent) => {
-    gridApi.current = params.api
-  }
+  const isRowVisible = useCallback<(args: { index: number }) => boolean>(
+    ({ index }) => {
+      return isEmptyRowsHidden ? !isRowEmpty(form.getValues(`podotchets.${index}`)) : true
+    },
+    [isEmptyRowsHidden, form]
+  )
+  const columns = useMemo(() => {
+    return getPodochetSaldoProvodkaColumns(isEditable)
+  }, [isEditable])
 
   useEffect(() => {
     if (error) {
@@ -407,17 +418,11 @@ const PodotchetSaldoDetailsPage = () => {
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <PodotchetSaldoTable
+                columnDefs={columns}
+                methods={tableMethods}
                 form={form}
-                arrayName="podotchets"
-                pinnedBottomRowData={totalRow ? [totalRow] : []}
-                onGridReady={onGridReady}
-                isExternalFilterPresent={() => isEmptyRowsHidden}
-                doesExternalFilterPass={(node) => {
-                  if (!isEmptyRowsHidden) {
-                    return true
-                  }
-                  return !isRowEmpty(node.data)
-                }}
+                name="podotchets"
+                isRowVisible={isRowVisible}
               />
             </div>
           </div>

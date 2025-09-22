@@ -1,4 +1,6 @@
-import { type SVGAttributes, useEffect, useRef } from 'react'
+import type { PodotchetSaldoProvodka } from '@/common/models'
+
+import { type SVGAttributes, useEffect, useRef, useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
@@ -24,18 +26,20 @@ import { useToggle } from '@/common/hooks'
 
 import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
 import { PodotchetSaldoTable } from '../details/podotchet-saldo-table'
-import { getPodochetSaldoProvodkaColumns } from '../details/provodki'
-import { calculateTotal } from '../details/utils'
+import { getProvodkaTotal } from '../details/utils'
 import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
-
-const columnDefs = getPodochetSaldoProvodkaColumns(false)
 
 export const PodotchetSaldoUpdateManager = () => {
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
+
+  const [totalRow, setTotalRow] = useState<Pick<
+    PodotchetSaldoProvodka,
+    'name' | 'prixod' | 'rasxod' | 'summa'
+  > | null>(null)
 
   const { t } = useTranslation()
 
@@ -69,12 +73,13 @@ export const PodotchetSaldoUpdateManager = () => {
       const year = values?.year
       const month = values?.month
       if (childs.length) {
-        const total = calculateTotal(childs)
-        childs.push({
+        const total = getProvodkaTotal(childs)
+        setTotalRow({
           name: t('total'),
           prixod: total.prixod,
-          rasxod: total.rasxod
-        } as any)
+          rasxod: total.rasxod,
+          summa: total.prixod - total.rasxod
+        })
       }
       form.setValue('year', year)
       form.setValue('month', month)
@@ -188,9 +193,9 @@ export const PodotchetSaldoUpdateManager = () => {
                 </div>
               ) : (
                 <PodotchetSaldoTable
-                  columnDefs={columnDefs}
                   form={form}
-                  name="podotchets"
+                  arrayName="podotchets"
+                  pinnedBottomRowData={totalRow ? [totalRow] : []}
                 />
               )}
             </div>

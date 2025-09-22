@@ -35,16 +35,8 @@ export const EditorInput: FC<EditorProps> = (props) => {
   } = props
   return isNumeric ? (
     <NumericFormat
-      getInputRef={(ref) => {
-        ref?.focus()
-        if (typeof inputRef === 'function') {
-          inputRef(ref)
-          return
-        }
-        if (inputRef) {
-          inputRef.current = ref
-        }
-      }}
+      autoFocus
+      getInputRef={inputRef}
       disabled={disabled}
       value={!isNaN(Number(value)) ? Number(value) || null : 0}
       onValueChange={(values) => {
@@ -60,16 +52,8 @@ export const EditorInput: FC<EditorProps> = (props) => {
     />
   ) : (
     <input
-      ref={(ref) => {
-        ref?.focus()
-        if (typeof inputRef === 'function') {
-          inputRef(ref)
-          return
-        }
-        if (inputRef) {
-          inputRef.current = ref!
-        }
-      }}
+      autoFocus
+      ref={inputRef}
       disabled={disabled}
       type="text"
       value={value as string}

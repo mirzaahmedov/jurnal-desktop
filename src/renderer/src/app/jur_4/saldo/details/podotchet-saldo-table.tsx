@@ -1,23 +1,64 @@
 import type { PodotchetSaldoFormValues } from '../config'
 
-import { memo } from 'react'
+import { type FC, memo } from 'react'
 
-import { EditableTable, type EditableTableProps } from '@/common/components/editable-table'
-import { cn } from '@/common/lib/utils'
+import { useTranslation } from 'react-i18next'
 
-export const PodotchetSaldoTable = memo(
-  (props: EditableTableProps<PodotchetSaldoFormValues, 'podotchets'>) => {
+import { AgGridTable, type AgGridTableProps } from '@/app/_demo/ag-grid-table'
+import { NumberEditor } from '@/app/_demo/components/number-editor'
+import { formatNumber } from '@/common/lib/format'
+
+export const PodotchetSaldoTable: FC<AgGridTableProps<PodotchetSaldoFormValues>> = memo(
+  ({ form, arrayName, ...props }) => {
+    const { t } = useTranslation()
     return (
-      <EditableTable
-        getRowClassName={({ index, rows }) =>
-          cn(
-            '[&_input]:p-1 scroll-my-32',
-            index === (rows?.length ?? 0) - 1 &&
-              '[&_input]:font-bold sticky bottom-0 z-50 shadow-sm-up'
-          )
-        }
-        getEditorProps={({ index, rows }) => {
-          return index === (rows?.length ?? 0) - 1 ? { readOnly: true } : {}
+      <AgGridTable
+        form={form}
+        arrayName={arrayName}
+        columnDefs={[
+          {
+            flex: 1,
+            minWidth: 400,
+            field: 'name',
+            headerName: t('name')
+          },
+          {
+            width: 300,
+            field: 'rayon',
+            headerName: t('rayon')
+          },
+          {
+            width: 250,
+            field: 'prixod',
+            editable: (params) => !params.node.rowPinned && params.context?.isEditable,
+            cellEditor: NumberEditor,
+            valueFormatter: (params) => formatNumber(params.value)
+          },
+          {
+            width: 250,
+            field: 'rasxod',
+            editable: (params) => !params.node.rowPinned && params.context?.isEditable,
+            cellEditor: NumberEditor,
+            valueFormatter: (params) => formatNumber(params.value)
+          },
+          {
+            width: 250,
+            field: 'summa',
+            valueFormatter: (params) => formatNumber(params.value)
+          }
+        ]}
+        onCellValueChanged={(params) => {
+          const { colDef, node } = params
+          if (colDef.field === 'prixod' || colDef.field === 'rasxod') {
+            const { data } = node
+            const prixod = Number(data.prixod) || 0
+            const rasxod = Number(data.rasxod) || 0
+            form.setValue(`${arrayName}.${params.rowIndex!}.summa`, prixod - rasxod)
+            node.setDataValue('summa', prixod - rasxod)
+          }
+        }}
+        context={{
+          isEditable: true
         }}
         {...props}
       />

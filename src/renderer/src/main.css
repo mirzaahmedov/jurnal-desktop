@@ -150,6 +150,14 @@ b {
 .always-show-scrollbar {
   scrollbar-width: auto;
 }
+
 .ag-root-wrapper {
   border-radius: 0 !important;
+}
+.ag-body-vertical-scroll-viewport {
+  @apply scrollbar;
+}
+.ag-row-pinned {
+  font-weight: bold;
+  border-top: 1px solid hsl(var(--border));
 }
