@@ -4,8 +4,10 @@ import type { UseFormReturn } from 'react-hook-form'
 
 import { formatLocaleDate } from '@/common/lib/format'
 
-const shartnomaRegExp = /№ (.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
-const smetaRegExp = / Ст:(.*?)$/
+export const shartnomaRegExp = /№ (.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?/
+export const smetaRegExp = / Ст:(.*?)$/
+export const summaRegexp =
+  /(№ (?:.*?)-сонли \d{2}.\d{2}.\d{4} йил кунги шартномага асосан\s?)(?:\d+% олдиндан тўлов)?/
 
 export interface ChangeOpisanieContractArgs {
   form: UseFormReturn<BankRasxodFormValues>
@@ -57,4 +59,28 @@ export const changeOpisanieOperatsii = ({ form, operatsii }: ChangeOpisanieOpera
   }
 
   form.setValue('opisanie', `${form.getValues('opisanie') ?? ''} Ст: ${value}`)
+}
+
+export interface ChangeOpisanieSummaArgs {
+  form: UseFormReturn<BankRasxodFormValues>
+  percent: number | undefined
+}
+export const changeOpisanieSumma = ({ form, percent }: ChangeOpisanieSummaArgs) => {
+  if (!percent) {
+    form.setValue(
+      'opisanie',
+      form.getValues('opisanie')?.replace(summaRegexp, (_, match) => {
+        return match + ''
+      }) ?? ''
+    )
+    return
+  }
+
+  form.setValue(
+    'opisanie',
+    form.getValues('opisanie')?.replace(summaRegexp, (_, match) => {
+      return match + `${percent}% олдиндан тўлов`
+    }) ?? ''
+  )
+  return
 }

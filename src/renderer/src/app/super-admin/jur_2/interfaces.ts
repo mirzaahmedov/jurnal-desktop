@@ -1,3 +1,5 @@
+import type { AdminDocumentsType } from '../components/view-documents-modal'
+
 export interface AdminBank {
   id: number
   name: string
@@ -72,5 +74,5 @@ export interface AdminBankDocument {
     provodki_schet: string
     provodki_sub_schet: string
   }>
-  type: string
+  type: AdminDocumentsType.Bank
 }

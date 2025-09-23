@@ -63,7 +63,7 @@ import { BankRasxodQueryKeys, defaultValues } from '../config'
 import { BankRasxodFormSchema, BankRasxodPodvodkaFormSchema, BankRasxodService } from '../service'
 import { ImportPlastik } from '../zarplata/import-plastik'
 import { podvodkaColumns } from './podvodki'
-import { changeOpisanieContract, changeOpisanieOperatsii } from './utils'
+import { changeOpisanieContract, changeOpisanieOperatsii, changeOpisanieSumma } from './utils'
 
 const BankRasxodDetailsPage = () => {
   const { id } = useParams()
@@ -114,8 +114,13 @@ const BankRasxodDetailsPage = () => {
       value: form.watch('id_spravochnik_organization'),
       onChange: (value, organization) => {
         form.setValue('id_spravochnik_organization', value ?? 0)
-        form.setValue('id_shartnomalar_organization', 0)
-        form.trigger('id_spravochnik_organization')
+
+        const shartnomaId = organization?.sub_childs?.[0]?.contract_id
+        if (shartnomaId) {
+          form.setValue('id_shartnomalar_organization', shartnomaId, { shouldValidate: true })
+        } else {
+          form.setValue('id_shartnomalar_organization', 0, { shouldValidate: true })
+        }
 
         if (organization?.account_numbers?.length === 1) {
           form.setValue('organization_by_raschet_schet_id', organization.account_numbers[0].id)
@@ -451,7 +456,11 @@ const BankRasxodDetailsPage = () => {
                     summa: form.watch('summa'),
                     summaContarct: form.watch('contract_summa')
                   }}
-                  onSubmitSumma={(summa) => {
+                  onSubmitSumma={(summa, percent) => {
+                    changeOpisanieSumma({
+                      form,
+                      percent
+                    })
                     applyContractSumma(summa)
                   }}
                 />

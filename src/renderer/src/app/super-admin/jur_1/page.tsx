@@ -78,7 +78,17 @@ const AdminKassaPage = () => {
         />
         <div className="flex items-center gap-2.5">
           <DownloadFile
-            url="/admin/jur1/cap?"
+            url="/admin/jur1/daily"
+            fileName={`${t('pages.kassa')}_${t('daily-report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('daily-report')}
+          />
+          <DownloadFile
+            url="/admin/jur1/cap"
             fileName={`${t('pages.kassa')}_${t('cap')}_${from}:${to}.xlsx`}
             params={{
               from: from,
@@ -96,6 +106,26 @@ const AdminKassaPage = () => {
               excel: true
             }}
             buttonText={t('summarized_report')}
+          />
+          <DownloadFile
+            url="/admin/jur1/by-schet2"
+            fileName={`${t('pages.kassa')}_${t('summary_report')}_2.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('summarized_report') + '(2)'}
+          />
+          <DownloadFile
+            url="/admin/jur1/2169"
+            fileName="2169.xlsx"
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText="2169"
           />
         </div>
       </ListView.Header>

@@ -4,6 +4,7 @@ import type { RefObject } from 'react'
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { t } from 'i18next'
 
 import { useSpravochnikStore } from './store'
 
@@ -87,8 +88,9 @@ export const useSpravochnik = <T extends { id: number }>(
     }
     open({
       id,
-      title: options.title ?? 'Выберите',
-      endpoint: options.endpoint,
+      title: options.title ?? t('choose'),
+      pagination: typeof options.pagination === 'boolean' ? options.pagination : true,
+      endpoint: options.endpoint ?? true,
       filters: options.filters,
       defaultFilters: options.defaultFilters,
       params: options.params,
@@ -119,6 +121,7 @@ export const useSpravochnik = <T extends { id: number }>(
     })
   }, [
     id,
+    options.pagination,
     options.columnDefs,
     options.service,
     options.title,

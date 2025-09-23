@@ -1,3 +1,5 @@
+import type { AdminDocumentsType } from '../components/view-documents-modal'
+
 export interface AdminKassa {
   id: number
   name: string
@@ -49,7 +51,7 @@ export interface AdminKassaMainSchet {
 }
 export interface AdminKassaDocument {
   id: number
-  type: string
+  type: AdminDocumentsType.Kassa
   organization_name: null
   doc_num: string
   doc_date: string

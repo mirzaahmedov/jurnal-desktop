@@ -22,6 +22,7 @@ import {
 } from '@/common/components/jolly/dialog'
 import { Pagination } from '@/common/components/pagination'
 import { ProvodkaBadge } from '@/common/components/provodka-badge'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { HoverInfoCell } from '@/common/components/table/renderers'
 import { ProvodkaCell } from '@/common/components/table/renderers/provodka-operatsii'
 import { SummaCell } from '@/common/components/table/renderers/summa'
@@ -53,17 +54,40 @@ interface ViewDocumentsModalProps extends Omit<DialogTriggerProps, 'children'> {
 export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ type, docs, ...props }) => {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
+  const [searchValue, setSearchValue] = useState('')
 
   const { t } = useTranslation()
-  const { currentData, totalPages, totalCount } = usePagination(docs ?? [], page, limit)
+  const { currentData, totalPages, totalCount } = usePagination(
+    (docs ?? []).filter((doc) => {
+      const search = searchValue.toLowerCase()
+      if (doc.type === AdminDocumentsType.Material) {
+        return (
+          doc.debet_schet?.toLowerCase()?.includes(search) ||
+          doc.debet_sub_schet?.toLowerCase()?.includes(search) ||
+          doc.kredit_schet?.toLowerCase()?.includes(search) ||
+          doc.kredit_sub_schet?.toLowerCase()?.includes(search)
+        )
+      }
+      return (
+        doc.doc_num?.toLowerCase()?.includes(search) ||
+        doc.opisanie?.toLowerCase()?.includes(search)
+      )
+    }),
+    page,
+    limit
+  )
 
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="w-full max-w-full h-full max-h-[800px] overflow-hidden">
           <div className="h-full overflow-hidden flex flex-col gap-5">
-            <DialogHeader>
+            <DialogHeader className="flex flex-row items-center gap-10">
               <DialogTitle>{t('documents')}</DialogTitle>
+              <SearchInputDebounced
+                value={searchValue}
+                onValueChange={setSearchValue}
+              />
             </DialogHeader>
             <div className="flex-1 overflow-y-auto scrollbar">
               <GenericTable

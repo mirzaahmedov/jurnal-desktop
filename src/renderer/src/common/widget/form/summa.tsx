@@ -24,7 +24,7 @@ export const SummaFields: FormFieldsComponent<
   HTMLInputElement,
   {
     dialog?: boolean
-    onSubmitSumma?: (value: number) => void
+    onSubmitSumma?: (value: number, percent: number) => void
   }
 > = ({ data, dialog = false, onSubmitSumma, name, ...props }) => {
   const { t, i18n } = useTranslation()
@@ -91,6 +91,10 @@ export const SummaFields: FormFieldsComponent<
                   <FormElement label={t('payment_percent')}>
                     <NumericInput
                       tabIndex={-1}
+                      allowNegative={false}
+                      isAllowed={(values) =>
+                        (values.floatValue ?? 0) <= 100 && (values.floatValue ?? 0) >= 0
+                      }
                       value={percent}
                       onValueChange={(values) => setPercent?.(values.floatValue ?? 0)}
                       className="w-32"
@@ -102,7 +106,7 @@ export const SummaFields: FormFieldsComponent<
                       type="button"
                       IconStart={Calculator}
                       onPress={() => {
-                        onSubmitSumma?.(((data?.summaContarct ?? 0) * percent) / 100)
+                        onSubmitSumma?.(((data?.summaContarct ?? 0) * percent) / 100, percent)
                       }}
                     >
                       {t('calculate')}

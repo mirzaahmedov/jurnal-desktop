@@ -24,7 +24,7 @@ export const GroupService = new CRUDService<Group, GroupFormValues>({
 
 type GroupTableProps = Omit<
   CollapsibleTableProps<PathTreeNode<Group>, PathTreeNode<Group>>,
-  'data' | 'getRowId' | 'getChildRows'
+  'data' | 'getRowId' | 'getChildRows' | 'children'
 > & {
   data: Group[]
 }
@@ -42,7 +42,7 @@ export const GroupTable = ({ data, ...props }: GroupTableProps) => {
     <CollapsibleTable
       data={treeData}
       getRowId={(row) => row.id}
-      getChildRows={(row) => row.children}
+      getChildRows={(row) => row.children as any}
       {...props}
     />
   )
@@ -53,10 +53,11 @@ export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Gr
     {
       title: t('group'),
       endpoint: ApiEndpoints.jur7_group,
-      columnDefs: GroupColumns, // Todo: fix this
+      columnDefs: GroupColumns as any, // Todo: fix this
       service: GroupService,
       filters: [SpravochnikSearchField],
-      CustomTable: GroupTable, // Todo: fix this
+      CustomTable: GroupTable as any, // Todo: fix this
+      pagination: false,
       params: extendObject(
         {
           page: 1,

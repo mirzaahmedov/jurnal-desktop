@@ -1,4 +1,4 @@
-import type { ProvodkaType } from '@/common/models'
+import type { AdminDocumentsType } from '../../components/view-documents-modal'
 
 export interface AdminOrgan159 {
   id: number
@@ -96,7 +96,7 @@ export interface AdminOrgan159Document {
   fio: string
   provodki_schet: string
   provodki_sub_schet: string
-  type: ProvodkaType
+  type: AdminDocumentsType.Organ159
   combined_doc_date: string
   combined_id: number
   combined_doc_num: string

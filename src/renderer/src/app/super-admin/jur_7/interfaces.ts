@@ -1,3 +1,5 @@
+import type { AdminDocumentsType } from '../components/view-documents-modal'
+
 export interface AdminMaterial {
   id: number
   name: string
@@ -62,7 +64,7 @@ export interface AdminMaterialDocument {
   summa: number
   iznos_summa: number
   responsible_id: number
-  type: string
+  type: AdminDocumentsType.Material
   kredit_schet: string
   kredit_sub_schet: string
   debet_schet: string

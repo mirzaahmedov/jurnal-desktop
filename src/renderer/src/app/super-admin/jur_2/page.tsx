@@ -70,13 +70,13 @@ const AdminBankPage = () => {
 
   return (
     <ListView>
-      <ListView.Header className="flex justify-between">
+      <ListView.Header className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2">
         <EndDatePicker
           value={to}
           onChange={setTo}
           refetch={refetch}
         />
-        <div>
+        <div className="flex flex-wrap gap-2.5">
           <DownloadFile
             url="/admin/jur2/cap?"
             fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
@@ -96,6 +96,56 @@ const AdminBankPage = () => {
               excel: true
             }}
             buttonText={t('summarized_report')}
+          />
+          <DownloadFile
+            url="/admin/jur2/daily"
+            fileName={`${t('pages.bank')}_${t('daily-report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('daily-report')}
+          />
+          <DownloadFile
+            url="/admin/jur2/by-contract"
+            fileName={`${t('pages.bank')}_${t('by_contract')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('by_contract')}
+          />
+          <DownloadFile
+            url="/admin/jur2/by-smeta"
+            fileName={`${t('pages.bank')}_${t('by_smeta')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('by_smeta')}
+          />
+          <DownloadFile
+            url="/admin/jur2/by-schet"
+            fileName={`${t('pages.bank')}_${t('cap_prixod_rasxod')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('cap_prixod_rasxod')}
+          />
+          <DownloadFile
+            url="/admin/jur2/2169"
+            fileName={`${t('pages.bank')}_${t('2169')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('2169')}
           />
         </div>
       </ListView.Header>

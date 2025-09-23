@@ -240,24 +240,26 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
                       />
                     )}
                   </div>
-                  <div className="flex-0 p-5 flex items-center gap-10">
-                    {data?.meta?.pageCount ? (
-                      <Pagination
-                        count={data.meta.count ?? 0}
-                        pageCount={data.meta.pageCount ?? 0}
-                        page={page}
-                        limit={pageSize}
-                        onChange={({ page, limit }) => {
-                          if (page) {
-                            setPage(page)
-                          }
-                          if (limit) {
-                            setPageSize(limit)
-                          }
-                        }}
-                      />
-                    ) : null}
-                  </div>
+                  {spravochnik.pagination ? (
+                    <div className="flex-0 p-5 flex items-center gap-10">
+                      {data?.meta?.pageCount ? (
+                        <Pagination
+                          count={data.meta.count ?? 0}
+                          pageCount={data.meta.pageCount ?? 0}
+                          page={page}
+                          limit={pageSize}
+                          onChange={({ page, limit }) => {
+                            if (page) {
+                              setPage(page)
+                            }
+                            if (limit) {
+                              setPageSize(limit)
+                            }
+                          }}
+                        />
+                      ) : null}
+                    </div>
+                  ) : null}
                 </>
               ) : null}
             </div>

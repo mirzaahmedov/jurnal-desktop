@@ -40,6 +40,7 @@ export type SpravochnikData<T extends object> = {
   id: string
   endpoint: ApiEndpoints
   title?: ReactNode
+  pagination?: boolean
   service: Pick<CRUDService<T>, 'getAll' | 'getById'>
   selectedId?: number
   disabledIds: number[]

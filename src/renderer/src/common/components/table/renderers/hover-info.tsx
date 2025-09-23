@@ -49,6 +49,7 @@ export const HoverInfoCell = ({
         <Tooltip
           {...tooltipProps}
           crossOffset={0}
+          placement="end"
           className={cn('bg-white shadow-xl p-5 min-w-96 max-w-2xl', tooltipProps.className)}
         >
           {tooltipContent}

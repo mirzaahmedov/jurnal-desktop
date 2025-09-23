@@ -1,5 +1,5 @@
 import type { EditableColumnDef } from '@/common/components/editable-table'
-import type { OdinoxProvodka } from '@/common/models'
+import type { ApiResponseMeta, OdinoxProvodka } from '@/common/models'
 
 import { t } from 'i18next'
 
@@ -14,7 +14,7 @@ import {
   OdinoxTypeName
 } from './interfaces'
 
-export interface OdinoxMeta {
+export interface OdinoxMeta extends ApiResponseMeta {
   title: string
   title_summa: number
   title_rasxod_summa: number

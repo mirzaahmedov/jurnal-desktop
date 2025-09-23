@@ -11,6 +11,7 @@ export interface Organization {
   inn: string
   okonx: string
   childs: Organization[]
+  sub_childs: OrganizationSubchild[]
 }
 
 export interface OrganizationMonitor {
@@ -46,4 +47,25 @@ export namespace Organization {
     spravochnik_organization_id: number
     raschet_schet_gazna: string
   }
+}
+
+export interface OrganizationSubchild {
+  id: number
+  doc_num: string
+  doc_date: string
+  user_id: number
+  summa: number
+  opisanie: string
+  smeta_id: null
+  smeta2_id: null
+  spravochnik_organization_id: number
+  pudratchi_bool: boolean
+  created_at: string
+  updated_at: string
+  isdeleted: boolean
+  yillik_oylik: null
+  budjet_id: null
+  main_schet_id: number
+  contract_id: number
+  conrtact_summa: number
 }

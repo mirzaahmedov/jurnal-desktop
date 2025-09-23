@@ -1,5 +1,5 @@
 export * from './dialog'
-export * from './hook'
+export * from './use-spravochnik'
 export * from './store'
 export * from './key-bindings'
 export * from './components'

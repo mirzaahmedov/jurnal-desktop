@@ -98,6 +98,7 @@ export interface AdminRealCost {
   accept_user_id: null | number
   accept_user_fio: null | string
   accept_user_login: null | string
+  region_id: number
   region_name: string
   childs: RealCostProvodka[]
 }
