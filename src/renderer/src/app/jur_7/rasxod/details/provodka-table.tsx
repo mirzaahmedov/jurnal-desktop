@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
 import { CircleMinus, CirclePlus } from 'lucide-react'
+import { Pressable } from 'react-aria-components'
 import { type UseFormReturn, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { NumericInput } from '@/common/components'
+import { Copyable, NumericInput } from '@/common/components'
 import {
   EditableTableCell,
   EditableTableHead,
@@ -13,6 +14,7 @@ import {
 import { SchetEditor } from '@/common/components/editable-table/editors'
 import { EmptyList } from '@/common/components/empty-states'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Input } from '@/common/components/ui/input'
@@ -277,79 +279,108 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
       />
       <EditableTableCell>
         <div className="relative">
-          <NumericInput
-            adjustWidth
-            allowNegative={false}
-            isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
-            value={row.kol || 0}
-            onValueChange={(values, src) => {
-              const summa = calcSumma(values.floatValue ?? 0, row.sena)
-              if (src.source === 'event' && summa !== row.summa) {
-                handleChangeChildField(rowIndex, 'summa', summa ?? 0)
-              }
-              if (src.source === 'event') {
-                handleChangeChildField(rowIndex, 'kol', values.floatValue ?? 0)
-              }
-            }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.kol
-            })}
-            error={!!errors?.kol}
-            tabIndex={tabIndex}
-            title={formatNumber(row.kol || 0, 10, 10)}
-            decimalScale={100}
-          />
+          <TooltipTrigger delay={100}>
+            <Pressable>
+              <NumericInput
+                adjustWidth
+                allowNegative={false}
+                isAllowed={(values) => (values.floatValue ?? 0) <= (row.max_kol || Infinity)}
+                value={row.kol || 0}
+                onValueChange={(values, src) => {
+                  const summa = calcSumma(values.floatValue ?? 0, row.sena)
+                  if (src.source === 'event' && summa !== row.summa) {
+                    handleChangeChildField(rowIndex, 'summa', summa ?? 0)
+                  }
+                  if (src.source === 'event') {
+                    handleChangeChildField(rowIndex, 'kol', values.floatValue ?? 0)
+                  }
+                }}
+                className={inputVariants({
+                  editor: true,
+                  error: !!errors?.kol
+                })}
+                error={!!errors?.kol}
+                tabIndex={tabIndex}
+                title={formatNumber(row.kol || 0, 10, 10)}
+                decimalScale={100}
+              />
+            </Pressable>
+            <Tooltip>
+              <Copyable value={row.kol}>
+                <span className="text-xs">{formatNumber(row.kol, 0, 15)}</span>
+              </Copyable>
+            </Tooltip>
+          </TooltipTrigger>
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <NumericInput
-            adjustWidth
-            allowNegative={false}
-            value={row.sena || 0}
-            onValueChange={(values, src) => {
-              const summa = calcSumma(row.kol, values.floatValue ?? 0)
-              if (src.source === 'event' && summa !== row.summa) {
-                handleChangeChildField(rowIndex, 'summa', summa ?? 0)
-              }
-              if (src.source === 'event') {
-                handleChangeChildField(rowIndex, 'sena', values.floatValue ?? 0)
-              }
-            }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.sena
-            })}
-            error={!!errors?.sena}
-            title={formatNumber(row.sena || 0, 10, 10)}
-            tabIndex={tabIndex}
-          />
+          <TooltipTrigger delay={100}>
+            <Pressable>
+              <NumericInput
+                adjustWidth
+                allowNegative={false}
+                value={row.sena || 0}
+                onValueChange={(values, src) => {
+                  const summa = calcSumma(row.kol, values.floatValue ?? 0)
+                  if (src.source === 'event' && summa !== row.summa) {
+                    handleChangeChildField(rowIndex, 'summa', summa ?? 0)
+                  }
+                  if (src.source === 'event') {
+                    handleChangeChildField(rowIndex, 'sena', values.floatValue ?? 0)
+                  }
+                }}
+                className={inputVariants({
+                  editor: true,
+                  error: !!errors?.sena
+                })}
+                error={!!errors?.sena}
+                tabIndex={tabIndex}
+              />
+            </Pressable>
+            <Tooltip>
+              <Copyable value={row.sena}>
+                <span className="text-xs">{formatNumber(row.sena, 0, 15)}</span>
+              </Copyable>
+            </Tooltip>
+          </TooltipTrigger>
         </div>
       </EditableTableCell>
       <EditableTableCell>
         <div className="relative">
-          <NumericInput
-            adjustWidth
-            allowNegative={false}
-            value={row.summa || 0}
-            onValueChange={(values, src) => {
-              const sena = calcSena(values.floatValue ?? 0, row.kol)
-              if (src.source === 'event' && (values.floatValue ?? 0) !== 0 && row.sena !== sena) {
-                handleChangeChildField(rowIndex, 'sena', sena ?? 0)
-              }
-              if (src.source === 'event') {
-                handleChangeChildField(rowIndex, 'summa', values.floatValue ?? 0)
-              }
-            }}
-            className={inputVariants({
-              editor: true,
-              error: !!errors?.summa
-            })}
-            title={formatNumber(row.summa || 0, 10, 10)}
-            error={!!errors?.summa}
-            tabIndex={tabIndex}
-          />
+          <TooltipTrigger delay={100}>
+            <Pressable>
+              <NumericInput
+                adjustWidth
+                allowNegative={false}
+                value={row.summa || 0}
+                onValueChange={(values, src) => {
+                  const sena = calcSena(values.floatValue ?? 0, row.kol)
+                  if (
+                    src.source === 'event' &&
+                    (values.floatValue ?? 0) !== 0 &&
+                    row.sena !== sena
+                  ) {
+                    handleChangeChildField(rowIndex, 'sena', sena ?? 0)
+                  }
+                  if (src.source === 'event') {
+                    handleChangeChildField(rowIndex, 'summa', values.floatValue ?? 0)
+                  }
+                }}
+                className={inputVariants({
+                  editor: true,
+                  error: !!errors?.summa
+                })}
+                error={!!errors?.summa}
+                tabIndex={tabIndex}
+              />
+            </Pressable>
+            <Tooltip>
+              <Copyable value={row.summa}>
+                <span className="text-xs">{formatNumber(row.summa, 0, 15)}</span>
+              </Copyable>
+            </Tooltip>
+          </TooltipTrigger>
         </div>
       </EditableTableCell>
 
