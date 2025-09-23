@@ -1,56 +1,29 @@
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'
-import { AgGridReact } from 'ag-grid-react'
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { useState } from 'react'
 
+import { NumericInput } from '@/common/components'
+import { Button } from '@/common/components/jolly/button'
 import { formatNumber } from '@/common/lib/format'
 
-import { NumberEditor } from './components/number-editor'
-import { TextEditor } from './components/text-editor'
-import { bankRasxodData } from './data'
-
-ModuleRegistry.registerModules([AllCommunityModule])
-
 const DemoPage = () => {
-  const form = useForm({
-    defaultValues: bankRasxodData
-  })
-
-  const dataSource = useFieldArray({
-    control: form.control,
-    name: 'childs'
-  })
+  const [value, setValue] = useState<number>(432.12333399393)
+  console.log('value', value)
 
   return (
     <div className="flex-1">
-      <FormProvider {...form}>
-        <AgGridReact
-          rowData={dataSource.fields}
-          columnDefs={[
-            {
-              field: 'summa',
-              headerName: 'summa',
-              editable: true,
-              valueFormatter: (params) => formatNumber(params.value),
-              cellEditor: NumberEditor
-            },
-            {
-              field: 'schet',
-              headerName: 'Schet',
-              editable: true,
-              cellEditor: TextEditor
-            }
-          ]}
-          defaultColDef={{
-            valueParser: (params) => params.newValue
-          }}
-          containerStyle={{
-            height: '100%'
-          }}
-          context={{
-            arrayName: 'childs'
-          }}
-        />
-      </FormProvider>
+      <Button
+        onPress={() => {
+          setValue(123456789.1234567)
+        }}
+      >
+        Set Value
+      </Button>
+      <NumericInput
+        value={value}
+        title={formatNumber(value, 10, 10)}
+        onValueChange={(values) => {
+          setValue(values.floatValue ?? 0)
+        }}
+      />
     </div>
   )
 }

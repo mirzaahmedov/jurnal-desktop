@@ -19,7 +19,7 @@ import { Input } from '@/common/components/ui/input'
 import { Table, TableBody, TableHeader } from '@/common/components/ui/table'
 import { inputVariants } from '@/common/features/spravochnik'
 import { useToggle } from '@/common/hooks'
-import { formatLocaleDate } from '@/common/lib/format'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { calcSena, calcSumma } from '@/common/lib/pricing'
 
 import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
@@ -84,7 +84,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                   kol: p.to.kol,
                   max_kol: p.to.kol,
                   sena: p.to.sena,
-                  summa: calcSumma(p.to.kol, p.to.sena),
+                  summa: p.to.summa,
                   debet_schet: '',
                   kredit_schet: p.debet_schet ?? '',
                   debet_sub_schet: p?.debet_sub_schet ?? '',
@@ -287,7 +287,9 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               if (src.source === 'event' && summa !== row.summa) {
                 handleChangeChildField(rowIndex, 'summa', summa ?? 0)
               }
-              handleChangeChildField(rowIndex, 'kol', values.floatValue ?? 0)
+              if (src.source === 'event') {
+                handleChangeChildField(rowIndex, 'kol', values.floatValue ?? 0)
+              }
             }}
             className={inputVariants({
               editor: true,
@@ -295,6 +297,7 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
             })}
             error={!!errors?.kol}
             tabIndex={tabIndex}
+            title={formatNumber(row.kol || 0, 10, 10)}
             decimalScale={100}
           />
         </div>
@@ -310,13 +313,16 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               if (src.source === 'event' && summa !== row.summa) {
                 handleChangeChildField(rowIndex, 'summa', summa ?? 0)
               }
-              handleChangeChildField(rowIndex, 'sena', values.floatValue ?? 0)
+              if (src.source === 'event') {
+                handleChangeChildField(rowIndex, 'sena', values.floatValue ?? 0)
+              }
             }}
             className={inputVariants({
               editor: true,
               error: !!errors?.sena
             })}
             error={!!errors?.sena}
+            title={formatNumber(row.sena || 0, 10, 10)}
             tabIndex={tabIndex}
           />
         </div>
@@ -332,12 +338,15 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
               if (src.source === 'event' && (values.floatValue ?? 0) !== 0 && row.sena !== sena) {
                 handleChangeChildField(rowIndex, 'sena', sena ?? 0)
               }
-              handleChangeChildField(rowIndex, 'summa', values.floatValue ?? 0)
+              if (src.source === 'event') {
+                handleChangeChildField(rowIndex, 'summa', values.floatValue ?? 0)
+              }
             }}
             className={inputVariants({
               editor: true,
               error: !!errors?.summa
             })}
+            title={formatNumber(row.summa || 0, 10, 10)}
             error={!!errors?.summa}
             tabIndex={tabIndex}
           />

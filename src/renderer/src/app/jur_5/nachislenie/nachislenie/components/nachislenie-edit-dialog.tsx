@@ -765,7 +765,7 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
                   type="button"
                   onPress={() => {
                     updateChildNachislenie.mutate({
-                      id: nachislenie?.id ?? 0,
+                      id: nachislenie?.tabel?.id ?? 0,
                       doljnost: nachislenie?.doljnostName ?? '',
                       fio: nachislenie?.fio ?? '',
                       kazarma: form.getValues('kazarma'),
