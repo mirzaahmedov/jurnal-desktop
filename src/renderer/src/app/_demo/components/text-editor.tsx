@@ -6,15 +6,18 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { type EditorContext, EditorInput } from './input'
 
 export const TextEditor: FC<CustomCellEditorProps<unknown, unknown, EditorContext>> = (props) => {
-  const { rowIndex, colDef, onKeyDown, onValueChange } = props
+  const { rowIndex, colDef, onKeyDown, onValueChange, data } = props
   const { arrayName } = props.context
   const { control } = useFormContext()
   const { field: fieldName } = colDef
+  const { _originalIndex } = (data as { _originalIndex: string }) || {}
+
+  const index = _originalIndex ? Number(_originalIndex) : rowIndex
 
   return (
     <Controller
       control={control}
-      name={`${arrayName}.${rowIndex}.${fieldName}`}
+      name={`${arrayName}.${index}.${fieldName}`}
       render={({ field }) => (
         <EditorInput
           disabled={field.disabled}
@@ -26,9 +29,9 @@ export const TextEditor: FC<CustomCellEditorProps<unknown, unknown, EditorContex
           onKeyDown={onKeyDown}
           onValueChange={(value) => {
             field.onChange(value)
-            onValueChange(field.value)
+            onValueChange(value)
           }}
-          rowIndex={rowIndex}
+          rowIndex={index}
           context={{
             arrayName
           }}

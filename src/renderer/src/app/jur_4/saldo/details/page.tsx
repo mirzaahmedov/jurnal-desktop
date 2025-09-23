@@ -1,12 +1,11 @@
-import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { PodotchetSaldoProvodka } from '@/common/models'
 import type { GridApi, GridReadyEvent } from 'ag-grid-community'
 
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -49,7 +48,6 @@ const PodotchetSaldoDetailsPage = () => {
 
   const gridApi = useRef<GridApi>()
 
-  const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
@@ -62,7 +60,6 @@ const PodotchetSaldoDetailsPage = () => {
   const [isEditable, setEditable] = useState(false)
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
-  const [rowData, setRowData] = useState<PodotchetSaldoProvodkaFormValues[]>([])
   const [totalRow, setTotalRow] = useState<Pick<
     PodotchetSaldoProvodka,
     'name' | 'prixod' | 'rasxod' | 'summa'
@@ -220,7 +217,7 @@ const PodotchetSaldoDetailsPage = () => {
       form.reset({
         month: saldo.data.month,
         year: saldo.data.year,
-        podotchets: Array.from({ length: 20 }).flatMap(() => saldo.data.childs ?? [])
+        podotchets: saldo.data.childs ?? []
       })
       setEditable(saldo.data.first)
     }
@@ -248,7 +245,8 @@ const PodotchetSaldoDetailsPage = () => {
     }
   }, [id, year, month, budjet_id, main_schet_id, jur4_schet_id])
 
-  const onSubmit = form.handleSubmit((values) => {
+  const handleSubmit = () => {
+    const values = form.getValues()
     values.podotchets.pop()
 
     if (id === 'create') {
@@ -259,7 +257,7 @@ const PodotchetSaldoDetailsPage = () => {
         ...values
       })
     }
-  })
+  }
 
   const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -268,11 +266,12 @@ const PodotchetSaldoDetailsPage = () => {
 
       const value = e.currentTarget.value
       if (value.length > 0) {
-        const rows = form.getValues('podotchets')
-        const index = rows.findIndex((row) =>
-          row.name?.toLowerCase()?.includes(value?.toLowerCase())
-        )
-        tableMethods.current?.scrollToRow(index)
+        gridApi.current?.forEachNodeAfterFilterAndSort((node) => {
+          if (node?.data?.name?.toLowerCase()?.includes(value?.toLowerCase())) {
+            gridApi.current?.ensureIndexVisible(node.rowIndex!)
+            gridApi.current?.setFocusedCell(node.rowIndex!, 'name')
+          }
+        })
       }
     }
   }
@@ -280,26 +279,6 @@ const PodotchetSaldoDetailsPage = () => {
   const isRowEmpty = (row: PodotchetSaldoProvodkaFormValues) => {
     return !row.prixod && !row.rasxod
   }
-
-  const rows = useWatch({
-    control: form.control,
-    name: 'podotchets'
-  })
-  useEffect(() => {
-    if (!isEditable || rows.length === 0) {
-      return
-    }
-
-    const total = getProvodkaTotal(rows)
-    const name = t('total')
-
-    setTotalRow({
-      name,
-      prixod: total.prixod,
-      rasxod: total.rasxod,
-      summa: total.prixod - total.rasxod
-    })
-  }, [rows, form, isEditable, t])
 
   const onGridReady = (params: GridReadyEvent) => {
     gridApi.current = params.api
@@ -311,6 +290,19 @@ const PodotchetSaldoDetailsPage = () => {
     }
   }, [error])
 
+  useEffect(() => {
+    gridApi.current?.refreshCells({ force: true })
+  }, [isEmptyRowsHidden])
+
+  const isExternalFilterPresent = useCallback(() => isEmptyRowsHidden, [isEmptyRowsHidden])
+  const doesExternalFilterPass = useCallback(
+    (node) => {
+      const data = node.data as PodotchetSaldoProvodkaFormValues
+      return !isEmptyRowsHidden || !isRowEmpty(data)
+    },
+    [isEmptyRowsHidden]
+  )
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -319,7 +311,7 @@ const PodotchetSaldoDetailsPage = () => {
       >
         <form
           noValidate
-          onSubmit={onSubmit}
+          onSubmit={form.handleSubmit(() => {})}
           className="h-full"
         >
           <div className="relative h-full flex flex-col">
@@ -332,7 +324,12 @@ const PodotchetSaldoDetailsPage = () => {
                 >
                   {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
                   <Badge className="ml-2.5 text-xs">
-                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                    {
+                      form
+                        .watch('podotchets')
+                        .slice(0, form.watch('podotchets').length - 1)
+                        .filter(isRowEmpty).length
+                    }
                   </Badge>
                 </Button>
 
@@ -411,12 +408,34 @@ const PodotchetSaldoDetailsPage = () => {
                 arrayName="podotchets"
                 pinnedBottomRowData={totalRow ? [totalRow] : []}
                 onGridReady={onGridReady}
-                isExternalFilterPresent={() => isEmptyRowsHidden}
-                doesExternalFilterPass={(node) => {
-                  if (!isEmptyRowsHidden) {
-                    return true
+                isExternalFilterPresent={isExternalFilterPresent}
+                doesExternalFilterPass={doesExternalFilterPass}
+                context={{
+                  isEditable
+                }}
+                onCellValueChanged={(params) => {
+                  const { colDef, node } = params
+                  if (colDef.field === 'prixod' || colDef.field === 'rasxod') {
+                    const { data } = node
+                    const prixod = Number(data.prixod) || 0
+                    const rasxod = Number(data.rasxod) || 0
+                    form.setValue(
+                      `podotchets.${params.data?._originalIndex}.summa`,
+                      prixod - rasxod
+                    )
+                    node.setDataValue('summa', prixod - rasxod)
                   }
-                  return !isRowEmpty(node.data)
+
+                  const values = form.getValues('podotchets') ?? []
+                  const total = getProvodkaTotal(values)
+                  const name = t('total')
+
+                  setTotalRow({
+                    name,
+                    prixod: total.prixod,
+                    rasxod: total.rasxod,
+                    summa: total.prixod - total.rasxod
+                  })
                 }}
               />
             </div>
@@ -424,7 +443,8 @@ const PodotchetSaldoDetailsPage = () => {
 
           <DetailsView.Footer>
             <Button
-              type="submit"
+              type="button"
+              onPress={handleSubmit}
               isDisabled={isCreatingMainbook || isUpdatingMainbook}
               isPending={isCreatingMainbook || isUpdatingMainbook}
             >

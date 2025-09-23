@@ -154,10 +154,15 @@ b {
 .ag-root-wrapper {
   border-radius: 0 !important;
 }
-.ag-body-vertical-scroll-viewport {
+.ag-body-vertical-scroll-viewport,
+.ag-body-horizontal-scroll-viewport {
   @apply scrollbar;
 }
 .ag-row-pinned {
   font-weight: bold;
   border-top: 1px solid hsl(var(--border));
+}
+
+.ag-root-wrapper .ag-cell {
+  border-right: 1px solid hsl(var(--border));
 }

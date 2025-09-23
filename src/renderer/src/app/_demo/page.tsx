@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form'
 
 import { Button } from '@/common/components/jolly/button'
 
-import { AgGridTable } from './ag-grid-table'
+import { AgGridTable, TextFilterComponent } from './ag-grid-table'
 import { TextEditor } from './components/text-editor'
 
 const data = {
-  income: 1000,
-  expense: 3000,
-  summa: 4000,
-  name: 'Testing'
+  firstName: 'John',
+  lastName: 'Doe',
+  name: 'John Doe',
+  address: '123 Main St, City, Country'
 }
 
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -46,16 +46,38 @@ const DemoPage = () => {
           arrayName="rows"
           isExternalFilterPresent={() => hideEmptyRows}
           doesExternalFilterPass={(node) => {
-            if (!hideEmptyRows) {
-              return true
-            }
-            const { data } = node
-            return !!data.name
+            const data = node.data as { name: string }
+            return Boolean(data?.name)
           }}
           columnDefs={[
             {
+              field: 'originalIndex',
+              headerName: '#',
+              valueGetter: (params) => {
+                return params.data?._originalIndex + 1
+              }
+            },
+            {
               field: 'name',
               headerName: 'Name',
+              filter: {
+                component: TextFilterComponent
+              },
+              sortable: true,
+              editable: true,
+              cellEditor: TextEditor,
+              flex: 1
+            },
+            {
+              field: 'firstName',
+              headerName: 'First Name',
+              editable: true,
+              cellEditor: TextEditor,
+              flex: 1
+            },
+            {
+              field: 'lastName',
+              headerName: 'Last Name',
               editable: true,
               cellEditor: TextEditor,
               flex: 1

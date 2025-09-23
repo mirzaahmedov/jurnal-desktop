@@ -577,5 +577,7 @@
   "recalculate_from_passport": "Пересчитать по паспорту",
   "material_product_history": "История движения материалов",
   "category_num": "Номер категории",
-  "category_name": "Название категории"
+  "category_name": "Название категории",
+  "filter_label": "Фильтр",
+  "filter_placeholder": "Введите для фильтрации..."
 }

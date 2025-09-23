@@ -1,67 +1,89 @@
 import type { PodotchetSaldoFormValues } from '../config'
-
-import { type FC, memo } from 'react'
+import type { FC } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import { AgGridTable, type AgGridTableProps } from '@/app/_demo/ag-grid-table'
+import { AgGridTable, type AgGridTableProps, TextFilterComponent } from '@/app/_demo/ag-grid-table'
 import { NumberEditor } from '@/app/_demo/components/number-editor'
 import { formatNumber } from '@/common/lib/format'
 
-export const PodotchetSaldoTable: FC<AgGridTableProps<PodotchetSaldoFormValues>> = memo(
-  ({ form, arrayName, ...props }) => {
-    const { t } = useTranslation()
-    return (
-      <AgGridTable
-        form={form}
-        arrayName={arrayName}
-        columnDefs={[
-          {
-            flex: 1,
-            minWidth: 400,
-            field: 'name',
-            headerName: t('name')
-          },
-          {
-            width: 300,
-            field: 'rayon',
-            headerName: t('rayon')
-          },
-          {
-            width: 250,
-            field: 'prixod',
-            editable: (params) => !params.node.rowPinned && params.context?.isEditable,
-            cellEditor: NumberEditor,
-            valueFormatter: (params) => formatNumber(params.value)
-          },
-          {
-            width: 250,
-            field: 'rasxod',
-            editable: (params) => !params.node.rowPinned && params.context?.isEditable,
-            cellEditor: NumberEditor,
-            valueFormatter: (params) => formatNumber(params.value)
-          },
-          {
-            width: 250,
-            field: 'summa',
-            valueFormatter: (params) => formatNumber(params.value)
+export const PodotchetSaldoTable: FC<AgGridTableProps<PodotchetSaldoFormValues>> = ({
+  form,
+  ...props
+}) => {
+  const { t } = useTranslation()
+  return (
+    <AgGridTable
+      form={form}
+      columnDefs={[
+        {
+          field: 'rowIndex',
+          headerName: ' ',
+          width: 80,
+          valueGetter: (params) => {
+            if (params.node?.rowPinned) {
+              return ''
+            }
+            return (params.node?.rowIndex ?? 0) + 1
           }
-        ]}
-        onCellValueChanged={(params) => {
-          const { colDef, node } = params
-          if (colDef.field === 'prixod' || colDef.field === 'rasxod') {
-            const { data } = node
-            const prixod = Number(data.prixod) || 0
-            const rasxod = Number(data.rasxod) || 0
-            form.setValue(`${arrayName}.${params.rowIndex!}.summa`, prixod - rasxod)
-            node.setDataValue('summa', prixod - rasxod)
-          }
-        }}
-        context={{
-          isEditable: true
-        }}
-        {...props}
-      />
-    )
-  }
-)
+        },
+        {
+          flex: 1,
+          minWidth: 400,
+          field: 'name',
+          sortable: true,
+          filter: {
+            component: TextFilterComponent,
+            doesFilterPass: ({ model, node }) => {
+              if (!model) {
+                return true
+              }
+              const data = node.data as { name: string }
+              return data?.name?.toLowerCase().includes(model.toLowerCase())
+            }
+          },
+          headerName: t('name')
+        },
+        {
+          width: 300,
+          field: 'rayon',
+          sortable: true,
+          filter: {
+            component: TextFilterComponent,
+            doesFilterPass: ({ model, node }) => {
+              if (!model) {
+                return true
+              }
+              const data = node.data as { rayon: string }
+              return data?.rayon?.toLowerCase().includes(model.toLowerCase())
+            }
+          },
+          headerName: t('rayon')
+        },
+        {
+          width: 250,
+          field: 'prixod',
+          sortable: true,
+          editable: (params) => !params.node.rowPinned && params.context?.isEditable,
+          cellEditor: NumberEditor,
+          valueFormatter: (params) => formatNumber(params.value)
+        },
+        {
+          width: 250,
+          field: 'rasxod',
+          sortable: true,
+          editable: (params) => !params.node.rowPinned && params.context?.isEditable,
+          cellEditor: NumberEditor,
+          valueFormatter: (params) => formatNumber(params.value)
+        },
+        {
+          width: 250,
+          field: 'summa',
+          sortable: true,
+          valueFormatter: (params) => formatNumber(params.value)
+        }
+      ]}
+      {...props}
+    />
+  )
+}
