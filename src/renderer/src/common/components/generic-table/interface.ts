@@ -62,6 +62,7 @@ export interface GenericTableProps<T extends object>
   onView?(row: T): void
   onSort?(column: ColumnDef<T>, direction: TableSortDirection | undefined): void
   actions?: (row: T, tableProps: GenericTableProps<T>) => ReactNode
+  actionsWidth?: number | string
   activeRowId?: string | number
   footer?: ReactNode
   params?: Record<string, unknown>

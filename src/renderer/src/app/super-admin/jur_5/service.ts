@@ -52,26 +52,44 @@ export class AdminZarplataDashboardService {
 
   static async getVacant(
     ctx: QueryFunctionContext<
-      [typeof AdminZarplataDashboardService.QueryKeys.GetVacant, { mainSchetId: number }]
+      [
+        typeof AdminZarplataDashboardService.QueryKeys.GetVacant,
+        {
+          budjetId: number
+          regionId: number
+        }
+      ]
     >
   ) {
     const params = ctx.queryKey[1]
     const res = await zarplataApi.get<Vacant[]>(`/ExportZarplata/get-dashboard-vacant`, {
-      params
+      params: {
+        regionId: params.regionId,
+        spId: params.budjetId
+      }
     })
     return res.data
   }
 
   static async getMainZarplata(
     ctx: QueryFunctionContext<
-      [typeof AdminZarplataDashboardService.QueryKeys.GetMainZarplata, { mainSchetId: number }]
+      [
+        typeof AdminZarplataDashboardService.QueryKeys.GetMainZarplata,
+        {
+          budjetId: number
+          regionId: number
+        }
+      ]
     >
   ) {
     const params = ctx.queryKey[1]
     const res = await zarplataApi.get<MainZarplata[]>(
       `/ExportZarplata/get-dashboard-mainZarplata`,
       {
-        params
+        params: {
+          regionId: params.regionId,
+          spId: params.budjetId
+        }
       }
     )
     return res.data

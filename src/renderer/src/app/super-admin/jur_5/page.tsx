@@ -23,18 +23,12 @@ import { AdminZarplataDashboardColumnsDefs } from './columns'
 import { AdminZarplataDashboardService } from './service'
 import { ViewModal } from './view-modal'
 
-enum TabOption {
-  Documents = 'documents',
-  Vacant = 'vacant'
-}
-
 const AdminPodotchetPage = () => {
-  const viewToggle = useToggle()
   const setLayout = useLayout()
+  const docsViewToggle = useToggle()
   const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
-  const [tabValue, setTabValue] = useState(TabOption.Documents)
   const [selected, setSelected] = useState<AdminZarplataDashboard | null>(null)
 
   const [to, setTo] = useState(defaultDate)
@@ -61,7 +55,7 @@ const AdminPodotchetPage = () => {
 
   const handleClickRow = (row: AdminZarplataDashboard) => {
     setSelected(row)
-    viewToggle.open()
+    docsViewToggle.open()
   }
 
   useEffect(() => {
@@ -77,7 +71,7 @@ const AdminPodotchetPage = () => {
         }
       ]
     })
-  }, [setLayout, tabValue, t])
+  }, [setLayout, t])
 
   return (
     <ListView>
@@ -107,8 +101,8 @@ const AdminPodotchetPage = () => {
 
       <ViewModal
         selected={selected}
-        isOpen={viewToggle.isOpen}
-        onOpenChange={viewToggle.setOpen}
+        isOpen={docsViewToggle.isOpen}
+        onOpenChange={docsViewToggle.setOpen}
       />
     </ListView>
   )

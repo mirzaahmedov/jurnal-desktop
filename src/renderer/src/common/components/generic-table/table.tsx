@@ -44,6 +44,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
     activeRowId,
     footer,
     actions,
+    actionsWidth: _actionsWidth,
     ...tableProps
   } = props
 
@@ -85,7 +86,7 @@ export const GenericTable = <T extends object>(props: GenericTableProps<T>) => {
   }
 
   const actionsCount = [onEdit, onDelete, onView, actions].filter(Boolean).length
-  const actionsWidth = actionsCount * 36 + (actionsCount - 1) * 4 + 48
+  const actionsWidth = _actionsWidth || actionsCount * 36 + (actionsCount - 1) * 4 + 48
 
   return (
     <Table
