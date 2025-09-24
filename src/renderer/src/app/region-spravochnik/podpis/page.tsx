@@ -102,6 +102,7 @@ const PodpisPage = () => {
       </ListView.Footer>
       <PodpisDialog
         selected={selected}
+        defaultTypeDocument={podpisType}
         isOpen={dialogToggle.isOpen}
         onOpenChange={dialogToggle.setOpen}
       />

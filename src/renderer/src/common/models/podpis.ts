@@ -14,6 +14,10 @@ export interface Podpis {
   doljnost_name: string
   fio_name: string
   type_document: PodpisTypeDocument
+  rank: string | null
+  user_id: number
+  login: string
+  fio: string
 }
 
 export interface PodpisType {

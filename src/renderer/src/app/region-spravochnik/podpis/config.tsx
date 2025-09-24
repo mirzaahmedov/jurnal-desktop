@@ -37,6 +37,7 @@ export const PodpisPayloadSchema = z.object({
   numeric_poryadok: z.number().min(1),
   doljnost_name: z.string().nonempty(),
   fio_name: z.string().nonempty(),
+  rank: z.string().nullable(),
   type_document: z.string()
 })
 export type PodpisPayloadType = z.infer<typeof PodpisPayloadSchema>
@@ -54,5 +55,6 @@ export const defaultValues: PodpisPayloadType = {
   numeric_poryadok: 1,
   doljnost_name: '',
   fio_name: '',
+  rank: '',
   type_document: PodpisTypeDocument.BANK_RASXOD_PORUCHENIYA
 }

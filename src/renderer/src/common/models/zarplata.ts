@@ -21,3 +21,18 @@ export namespace Zarplata {
     spravochnikZarplata: Array<any>
   }
 }
+
+export interface AdminZarplataDashboard {
+  regionId: number
+  regionName: string
+  uderjanieSum: number
+  mainSchet: AdminZarplataMainSchet[]
+}
+export interface AdminZarplataMainSchet {
+  mainSchetId: number
+  spravochnikBudjetNameId: number
+  budjetName: string
+  accountNumber: string
+  schet: string
+  uderjanieSumma: number
+}

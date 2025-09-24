@@ -36,9 +36,15 @@ import { PodpisPayloadSchema, PodpisQueryKeys, defaultValues } from './config'
 import { PodpisService } from './service'
 
 interface PodpisDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  defaultTypeDocument?: string
   selected?: Podpis
 }
-export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogProps) => {
+export const PodpisDialog = ({
+  defaultTypeDocument,
+  selected,
+  isOpen,
+  onOpenChange
+}: PodpisDialogProps) => {
   const { t } = useTranslation(['app', 'podpis'])
 
   const positions = useConstantsStore((store) => store.positions)
@@ -87,9 +93,17 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
 
   useEffect(() => {
     if (isOpen) {
-      form.reset(selected ?? defaultValues)
+      form.reset(
+        selected ?? {
+          ...defaultValues,
+          type_document: defaultTypeDocument || defaultValues.type_document
+        }
+      )
     }
-  }, [form, isOpen, selected])
+  }, [form, isOpen, selected, defaultTypeDocument])
+  useEffect(() => {
+    form.setValue('type_document', defaultTypeDocument || defaultValues.type_document)
+  }, [form, defaultTypeDocument])
 
   return (
     <DialogTrigger
@@ -146,22 +160,40 @@ export const PodpisDialog = ({ selected, isOpen, onOpenChange }: PodpisDialogPro
               />
               <FormField
                 control={form.control}
-                name="type_document"
+                name="rank"
                 render={({ field }) => (
                   <FormElement
                     grid="1:2"
-                    label={t('type-document')}
+                    label={t('military_rank')}
                   >
-                    <JollySelect
-                      items={podpisTypes}
-                      placeholder={t('type-document')}
-                      onSelectionChange={(value) => field.onChange(value)}
-                      selectedKey={field.value}
-                    >
-                      {(item) => <SelectItem id={item.key}>{item.name}</SelectItem>}
-                    </JollySelect>
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                    />
                   </FormElement>
                 )}
+              />
+              <FormField
+                control={form.control}
+                name="type_document"
+                render={({ field }) => {
+                  console.log({ value: field.value })
+                  return (
+                    <FormElement
+                      grid="1:2"
+                      label={t('type-document')}
+                    >
+                      <JollySelect
+                        items={podpisTypes}
+                        placeholder={t('type-document')}
+                        onSelectionChange={(value) => field.onChange(value)}
+                        selectedKey={field.value}
+                      >
+                        {(item) => <SelectItem id={item.key}>{item.name}</SelectItem>}
+                      </JollySelect>
+                    </FormElement>
+                  )
+                }}
               />
               <FormField
                 control={form.control}

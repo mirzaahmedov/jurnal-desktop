@@ -15,6 +15,7 @@ const AdminBankPage = lazy(() => import('./super-admin/jur_2/page'))
 const AdminOrgan152Page = lazy(() => import('./super-admin/jur_3/152/page'))
 const AdminOrgan159Page = lazy(() => import('./super-admin/jur_3/159/page'))
 const AdminPodotchetPage = lazy(() => import('./super-admin/jur_4/page'))
+const AdminZarplataPage = lazy(() => import('./super-admin/jur_5/page'))
 const AdminMaterialPage = lazy(() => import('./super-admin/jur_7/page'))
 const MaterialMonitorPage = lazy(() => import('./jur_7/monitor/page'))
 const PrixodSchetPage = lazy(() => import('./jur_8/schet/page'))
@@ -456,6 +457,10 @@ export const routes: RouteObject[] = [
           {
             path: 'jur_3/159',
             element: <AdminOrgan159Page />
+          },
+          {
+            path: 'jur_5',
+            element: <AdminZarplataPage />
           },
           {
             path: 'jur_4',

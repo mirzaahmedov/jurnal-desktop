@@ -20,6 +20,10 @@ export const podpisColumns: ColumnDef<Podpis>[] = [
     key: 'doljnost_name'
   },
   {
+    header: 'military_rank',
+    key: 'rank'
+  },
+  {
     header: 'fio',
     key: 'fio_name'
   },

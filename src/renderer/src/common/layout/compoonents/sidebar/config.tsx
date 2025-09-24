@@ -485,6 +485,11 @@ export const getNavElements = (t: TFunction): INavElement[] => {
               icon: Landmark
             },
             {
+              path: '/jur_5',
+              title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,
+              icon: Receipt
+            },
+            {
               path: '/jur_3',
               title: `6-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_6').toLowerCase()}`,
               icon: Building2,
