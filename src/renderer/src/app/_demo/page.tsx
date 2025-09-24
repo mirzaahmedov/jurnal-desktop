@@ -42,6 +42,7 @@ const DemoPage = () => {
       </div>
       <div className="flex-1">
         <AgGridTable
+          rowNumbers
           form={form}
           arrayName="rows"
           isExternalFilterPresent={() => hideEmptyRows}
@@ -50,13 +51,6 @@ const DemoPage = () => {
             return Boolean(data?.name)
           }}
           columnDefs={[
-            {
-              field: 'originalIndex',
-              headerName: '#',
-              valueGetter: (params) => {
-                return params.data?._originalIndex + 1
-              }
-            },
             {
               field: 'name',
               headerName: 'Name',

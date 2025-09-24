@@ -14,18 +14,16 @@ export const PodotchetSaldoTable: FC<AgGridTableProps<PodotchetSaldoFormValues>>
   const { t } = useTranslation()
   return (
     <AgGridTable
+      rowNumbers
       form={form}
       columnDefs={[
         {
-          field: 'rowIndex',
-          headerName: ' ',
+          headerName: '#',
+          valueGetter: 'node.rowIndex + 1',
           width: 80,
-          valueGetter: (params) => {
-            if (params.node?.rowPinned) {
-              return ''
-            }
-            return (params.node?.rowIndex ?? 0) + 1
-          }
+          sortable: false,
+          filter: false,
+          pinned: 'left'
         },
         {
           flex: 1,
