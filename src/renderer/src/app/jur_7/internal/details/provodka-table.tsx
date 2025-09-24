@@ -5,6 +5,7 @@ import { type UseFormReturn, useFieldArray, useWatch } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { calculateProductSum } from '@/app/jur_7/rasxod/details/utils'
 import { SaldoProductSpravochnikDialog } from '@/app/jur_7/saldo/components/spravochnik-dialog'
 import { NumericInput } from '@/common/components'
 import {
@@ -82,7 +83,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                   kol: p.to.kol,
                   max_kol: p.to.kol,
                   sena: p.to.sena,
-                  summa: calcSumma(p.to.kol, p.to.sena),
+                  summa: calculateProductSum(p.to.kol, p.to.sena, p.to.summa),
                   debet_schet: p.debet_schet ?? '',
                   kredit_schet: p?.debet_schet ?? '',
                   debet_sub_schet: p?.debet_sub_schet ?? '',

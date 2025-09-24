@@ -129,11 +129,42 @@ const OrganSaldoDetailsPage = () => {
 
         data = newData.map((item) => {
           const prev = prevData.find((prev) => prev.organization_id === item.organization_id)
+
+          item.sub_childs = item.sub_childs?.map((child) => {
+            const prevChild = prev?.sub_childs?.find(
+              (prevChild) => prevChild.contract_id === child.contract_id
+            )
+            const prixod = prevChild?.prixod ?? child.prixod ?? 0
+            const rasxod = prevChild?.rasxod ?? child.rasxod ?? 0
+            const summa = prixod - rasxod
+            return {
+              ...child,
+              prixod,
+              rasxod,
+              summa
+            }
+          })
+
+          const totalSums = item.sub_childs.reduce(
+            (sum, item) => {
+              return {
+                prixod: sum.prixod + (item.prixod ?? 0),
+                rasxod: sum.rasxod + (item.rasxod ?? 0),
+                summa: sum.summa + (item.summa ?? 0)
+              }
+            },
+            {
+              prixod: 0,
+              rasxod: 0,
+              summa: 0
+            }
+          )
+
           return {
             ...item,
-            prixod: prev?.prixod ?? 0,
-            rasxod: prev?.rasxod ?? 0,
-            summa: prev?.summa ?? 0
+            prixod: totalSums.prixod,
+            rasxod: totalSums.rasxod,
+            summa: totalSums.summa
           } satisfies OrganSaldoProvodka
         })
       }
@@ -449,6 +480,16 @@ const OrganSaldoDetailsPage = () => {
           form={form}
           rowIndex={selectedRowIndex}
           isEditable={isEditable}
+          refetch={() => {
+            handleAutofill({
+              year,
+              month,
+              budjet_id: budjet_id!,
+              main_schet_id: main_schet_id!,
+              schet_id: jur3_schet_152_id!,
+              first: isEditable
+            })
+          }}
         />
       </DetailsView.Content>
     </DetailsView>

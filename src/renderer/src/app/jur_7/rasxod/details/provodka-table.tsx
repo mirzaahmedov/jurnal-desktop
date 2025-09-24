@@ -26,6 +26,7 @@ import { calcSena, calcSumma } from '@/common/lib/pricing'
 
 import { SaldoProductSpravochnikDialog } from '../../saldo/components/spravochnik-dialog'
 import { type RasxodFormValues, type RasxodProvodkaFormValues, defaultValues } from '../config'
+import { calculateProductSum } from './utils'
 
 type ProvodkaTableProps = {
   form: UseFormReturn<RasxodFormValues>
@@ -86,7 +87,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
                   kol: p.to.kol,
                   max_kol: p.to.kol,
                   sena: p.to.sena,
-                  summa: p.to.summa,
+                  summa: calculateProductSum(p.to.kol, p.to.sena, p.to.summa),
                   debet_schet: '',
                   kredit_schet: p.debet_schet ?? '',
                   debet_sub_schet: p?.debet_sub_schet ?? '',
