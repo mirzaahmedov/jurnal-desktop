@@ -66,7 +66,7 @@ export const RasxodFormSchema = withPreprocessor(
     opisanie: z.string().optional(),
     doverennost: z.string().optional(),
     kimdan_id: z.number(),
-    kimga_id: z.number(),
+    kimga_id: z.number().nullable().optional(),
     childs: z.array(RasxodProvodkaFormSchema).superRefine((childs, ctx) => {
       childs.forEach((child, index) => {
         if (child.max_kol && child.kol > child.max_kol) {
