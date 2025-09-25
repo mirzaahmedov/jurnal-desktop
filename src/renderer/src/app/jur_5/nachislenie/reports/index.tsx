@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 
+import { ChevronLeft, ChevronRight, CircleArrowDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { MonthSelect } from '@/common/components/month-select'
-import { YearSelect } from '@/common/components/year-select'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { Button } from '@/common/components/jolly/button'
 import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useLayout } from '@/common/layout'
+import { formatDate } from '@/common/lib/date'
 
 import { NachislenieTabs } from '../nachislenie-tabs'
 
@@ -14,8 +16,8 @@ export const NachislenieReports = () => {
   const budjetId = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayout()
 
-  const [year, setYear] = useState(new Date().getFullYear())
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [startDate, setStartDate] = useState(formatDate(new Date()))
+  const [endDate, setEndDate] = useState(formatDate(new Date()))
 
   const { t } = useTranslation(['app'])
 
@@ -31,6 +33,21 @@ export const NachislenieReports = () => {
     })
   }, [t, setLayout])
 
+  const handleNextDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(field === 'from' ? startDate! : endDate!)
+    date.setDate(date.getDate() + amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (field === 'from') setStartDate(newDate)
+    else setEndDate(newDate)
+  }
+  const handlePrevDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(field === 'from' ? startDate! : endDate!)
+    date.setDate(date.getDate() - amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (field === 'from') setStartDate(newDate)
+    else setEndDate(newDate)
+  }
+
   return (
     <div className="p-20">
       <div className="mx-auto w-full max-w-4xl rounded-2xl border border-gray-200 p-10">
@@ -38,15 +55,58 @@ export const NachislenieReports = () => {
           <h2 className="mb-5 text-2xl font-semibold">{t('reports')}</h2>
         </div>
         <div className="flex items-center flex-wrap gap-5">
-          <YearSelect
-            selectedKey={year}
-            onSelectionChange={(value) => setYear((value as number) || new Date().getFullYear())}
-          />
-          <MonthSelect
-            selectedKey={month}
-            onSelectionChange={(value) => setMonth((value as number) || new Date().getMonth() + 1)}
-            className="w-48"
-          />
+          <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onPress={() => handlePrevDay('from', 1)}
+            >
+              <ChevronLeft className="btn-icon" />
+            </Button>
+            <JollyDatePicker
+              autoFocus
+              value={startDate}
+              onChange={(date) => setStartDate(date)}
+              containerProps={{ className: 'w-36 min-w-36' }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onPress={() => handleNextDay('from', 1)}
+            >
+              <ChevronRight className="btn-icon" />
+            </Button>
+            <b className="mx-0.5">-</b>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onPress={() => handlePrevDay('to', 1)}
+            >
+              <ChevronLeft className="btn-icon" />
+            </Button>
+            <JollyDatePicker
+              value={endDate}
+              onChange={(date) => setEndDate(date)}
+              containerProps={{ className: 'w-36 min-w-36' }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onPress={() => handleNextDay('to', 1)}
+            >
+              <ChevronRight className="btn-icon" />
+            </Button>
+            <div className="space-x-1">
+              <Button type="submit">
+                <CircleArrowDown className="btn-icon icon-start" />
+                {t('load')}
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center flex-wrap justify-end mt-10 gap-2.5">
@@ -55,10 +115,10 @@ export const NachislenieReports = () => {
             url="Excel/inps-otchet"
             params={{
               spBudnameId: budjetId,
-              year,
-              month
+              from: startDate,
+              to: endDate
             }}
-            fileName={`inps_${year}_${month}.xlsx`}
+            fileName={`inps_${startDate}_${endDate}.xlsx`}
             buttonText={t('inps')}
             variant="default"
           />
@@ -67,10 +127,10 @@ export const NachislenieReports = () => {
             url="Excel/podoxod-otchet"
             params={{
               spBudnameId: budjetId,
-              year,
-              month
+              from: startDate,
+              to: endDate
             }}
-            fileName={`podoxod_${year}_${month}.xlsx`}
+            fileName={`podoxod_${startDate}_${endDate}.xlsx`}
             buttonText={t('podoxod')}
             variant="default"
           />
@@ -79,10 +139,10 @@ export const NachislenieReports = () => {
             url="Excel/plastik-otchet"
             params={{
               spBudnameId: budjetId,
-              year,
-              month
+              from: startDate,
+              to: endDate
             }}
-            fileName={`plastik_${year}_${month}.xlsx`}
+            fileName={`plastik_${startDate}_${endDate}.xlsx`}
             buttonText={t('plastik')}
             variant="default"
           />
@@ -91,10 +151,10 @@ export const NachislenieReports = () => {
             url="Excel/jur5-otchet"
             params={{
               spBudnameId: budjetId,
-              year,
-              month
+              from: startDate,
+              to: endDate
             }}
-            fileName={`${t('monthly_report')}_${year}_${month}.xlsx`}
+            fileName={`${t('monthly_report')}_${startDate}_${endDate}.xlsx`}
             buttonText={t('monthly_report')}
             variant="default"
           />

@@ -1,6 +1,6 @@
 import type { AdminZarplataDocument } from './interfaces'
 import type { ColumnDef } from '@/common/components'
-import type { AdminZarplataDashboard, AdminZarplataMainSchet } from '@/common/models'
+import type { AdminZarplataDashboard, AdminZarplataMainSchet, MainZarplata } from '@/common/models'
 
 export const AdminZarplataDashboardColumnsDefs: ColumnDef<AdminZarplataDashboard>[] = [
   {
@@ -60,4 +60,18 @@ export const AdminZarplataDocumentColumnDefs: ColumnDef<AdminZarplataDocument>[]
     className: 'font-black',
     key: 'amount'
   }
+]
+
+export const AdminMainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
+  { key: 'fio', header: 'fio' },
+  { key: 'inn', header: 'inn' },
+  { key: 'bank', header: 'bank' },
+  { key: 'kartochka', header: 'kartochka' },
+  { key: 'rayon', header: 'rayon' },
+  { key: 'stavka', header: 'stavka', numeric: true },
+  { key: 'itogo', header: 'itogo', numeric: true, className: 'font-black' },
+  { key: 'doljnostName', header: 'doljnost' },
+  { key: 'doljnostOklad', header: 'oklad', numeric: true },
+  { key: 'nachaloSlujbi', header: 'nachalo_slujbi' },
+  { key: 'dateBirth', header: 'date_birth' }
 ]

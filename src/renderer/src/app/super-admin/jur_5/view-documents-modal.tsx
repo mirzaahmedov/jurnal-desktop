@@ -1,6 +1,6 @@
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -42,6 +42,13 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ selectedId, ..
     limit
   )
 
+  useEffect(() => {
+    if (!props.isOpen) {
+      setPage(1)
+      setLimit(10)
+    }
+  }, [props.isOpen])
+
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
@@ -54,6 +61,7 @@ export const ViewDocumentsModal: FC<ViewDocumentsModalProps> = ({ selectedId, ..
             <GenericTable
               columnDefs={AdminZarplataDocumentColumnDefs}
               data={currentData ?? []}
+              className="table-generic-xs"
             />
           </div>
           <div>

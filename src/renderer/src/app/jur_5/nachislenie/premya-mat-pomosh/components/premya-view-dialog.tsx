@@ -172,6 +172,7 @@ export const PremyaMatPomoshViewDialog = ({
                         value={selectedPremya?.description ?? ''}
                       />
                     </FormElement>
+
                     {selectedPremya ? (
                       <DownloadFile
                         isZarplata
@@ -183,6 +184,18 @@ export const PremyaMatPomoshViewDialog = ({
                         fileName={`vedemost_premya_mat_pomosh_${selectedPremya.docNum}.xlsx`}
                         variant="default"
                         className="ml-auto"
+                      />
+                    ) : null}
+                    {selectedPremya ? (
+                      <DownloadFile
+                        isZarplata
+                        url="Excel/plastik-otchet-others-vedemost"
+                        params={{
+                          mainId: selectedPremya.id
+                        }}
+                        buttonText={t('plastik')}
+                        fileName={`plastik_${selectedPremya.docNum}.xlsx`}
+                        variant="default"
                       />
                     ) : null}
                   </div>

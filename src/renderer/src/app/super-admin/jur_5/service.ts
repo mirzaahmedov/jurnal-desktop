@@ -76,8 +76,8 @@ export class AdminZarplataDashboardService {
       [
         typeof AdminZarplataDashboardService.QueryKeys.GetMainZarplata,
         {
-          budjetId: number
           regionId: number
+          vacantId: number
         }
       ]
     >
@@ -88,7 +88,7 @@ export class AdminZarplataDashboardService {
       {
         params: {
           regionId: params.regionId,
-          spId: params.budjetId
+          vacantId: params.vacantId
         }
       }
     )
