@@ -242,10 +242,7 @@ export const PassportInfoViewDialog = ({
                     className="mt-0"
                   >
                     {mainZarplata?.data ? (
-                      <OtdelniyRaschetContainer
-                        mainZarplata={mainZarplata?.data}
-                        navigateHome={() => setCurrentTab(PassportInfoTabs.Main)}
-                      />
+                      <OtdelniyRaschetContainer mainZarplata={mainZarplata?.data} />
                     ) : null}
                   </TabsContent>
 

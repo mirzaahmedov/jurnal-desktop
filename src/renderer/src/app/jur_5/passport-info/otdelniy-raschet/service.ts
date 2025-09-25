@@ -19,16 +19,16 @@ export class OtdelniyRaschetService {
         typeof OtdelniyRaschetService.QueryKeys.GetByMainZarplataId,
         number,
         {
-          year: number
-          month: number
+          from: string
+          to: string
         }
       ]
     >
   ) {
     const mainZarplataId = ctx.queryKey[1]
-    const { year, month } = ctx.queryKey[2]
+    const { from, to } = ctx.queryKey[2]
     const res = await zarplataApiNew.get<OtdelniyRaschet[]>(
-      `${OtdelniyRaschetService.endpoint}/${mainZarplataId}?year=${year}&month=${month}`
+      `${OtdelniyRaschetService.endpoint}/${mainZarplataId}?from=${from}&to=${to}`
     )
     return res.data
   }

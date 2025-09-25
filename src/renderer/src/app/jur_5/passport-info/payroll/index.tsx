@@ -1,14 +1,17 @@
 import { type FC, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { FooterCell, FooterRow, GenericTable, LoadingOverlay } from '@/common/components'
 import { CollapsibleTable } from '@/common/components/collapsible-table'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { Button } from '@/common/components/jolly/button'
 import { SummaCell } from '@/common/components/table/renderers/summa'
-import { YearMonthCombo } from '@/common/components/year-month-combo'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { formatNumber } from '@/common/lib/format'
+import { formatDate } from '@/common/lib/date'
+import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface PayrollProps {
   mainZarplataId: number
@@ -16,32 +19,90 @@ export interface PayrollProps {
 export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
   const { t } = useTranslation()
 
-  const [year, setYear] = useState(new Date().getFullYear())
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [startDate, setStartDate] = useState(formatDate(new Date()))
+  const [endDate, setEndDate] = useState(formatDate(new Date()))
+
+  const from = formatLocaleDate(startDate)
+  const to = formatLocaleDate(endDate)
 
   const nachislenieQuery = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetNachislenies,
       mainZarplataId,
       {
-        year,
-        month
+        from,
+        to
       }
     ],
     queryFn: MainZarplataService.getNachislenies,
-    enabled: !!year && !!month
+    enabled: !!from && !!to
   })
   const nachislenies = nachislenieQuery.data ?? []
+
+  const handleNextDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(field === 'from' ? startDate! : endDate!)
+    date.setDate(date.getDate() + amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (field === 'from') setStartDate(newDate)
+    else setEndDate(newDate)
+  }
+  const handlePrevDay = (field: 'from' | 'to', amount: number) => {
+    const date = new Date(field === 'from' ? startDate! : endDate!)
+    date.setDate(date.getDate() - amount)
+    const newDate = date.toISOString().split('T')[0]
+    if (field === 'from') setStartDate(newDate)
+    else setEndDate(newDate)
+  }
 
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-5 p-5">
-        <YearMonthCombo
-          year={year}
-          onYearChange={setYear}
-          month={month}
-          onMonthChange={setMonth}
-        />
+        <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onPress={() => handlePrevDay('from', 1)}
+          >
+            <ChevronLeft className="btn-icon" />
+          </Button>
+          <JollyDatePicker
+            autoFocus
+            value={startDate}
+            onChange={(date) => setStartDate(date)}
+            containerProps={{ className: 'w-36 min-w-36' }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onPress={() => handleNextDay('from', 1)}
+          >
+            <ChevronRight className="btn-icon" />
+          </Button>
+          <b className="mx-0.5">-</b>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onPress={() => handlePrevDay('to', 1)}
+          >
+            <ChevronLeft className="btn-icon" />
+          </Button>
+          <JollyDatePicker
+            value={endDate}
+            onChange={(date) => setEndDate(date)}
+            containerProps={{ className: 'w-36 min-w-36' }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onPress={() => handleNextDay('to', 1)}
+          >
+            <ChevronRight className="btn-icon" />
+          </Button>
+        </div>
       </div>
       <div className="relative flex-1 overflow-y-auto scrollbar">
         {nachislenieQuery.isFetching ? <LoadingOverlay /> : null}
@@ -61,6 +122,9 @@ export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
             },
             {
               key: 'month'
+            },
+            {
+              key: 'type'
             },
             {
               key: 'nachislenieSum',

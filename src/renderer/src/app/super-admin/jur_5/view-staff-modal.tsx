@@ -7,7 +7,7 @@ import { Allotment } from 'allotment'
 import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { MainZarplataColumnDefs } from '@/app/jur_5/passport-info/columns'
+import { MainZarplataDetailedColumnDefs } from '@/app/jur_5/passport-info/columns'
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import {
   DialogContent,
@@ -127,7 +127,7 @@ export const ViewStaffModal: FC<ViewStaffModalProps> = ({ budjetId, regionId, ..
                       <div className="flex-1 overflow-y-auto scrollbar">
                         {adminMainZarplataDocsQuery.isFetching ? <LoadingOverlay /> : null}
                         <GenericTable
-                          columnDefs={MainZarplataColumnDefs}
+                          columnDefs={MainZarplataDetailedColumnDefs}
                           data={filteredMainZarplata}
                           className="table-generic-xs"
                         />

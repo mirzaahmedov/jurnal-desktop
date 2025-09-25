@@ -191,18 +191,25 @@ export class MainZarplataService {
 
   static async getNachislenies(
     ctx: QueryFunctionContext<
-      [typeof MainZarplataService.QueryKeys.GetMatPomoch, number, { year?: number; month?: number }]
+      [
+        typeof MainZarplataService.QueryKeys.GetMatPomoch,
+        number,
+        {
+          from: string
+          to: string
+        }
+      ]
     >
   ) {
     const mainZarplataId = ctx.queryKey[1]
-    const { year, month } = ctx.queryKey[2]
+    const { from, to } = ctx.queryKey[2]
     const res = await zarplataApiNew.get<MainZarplataNachislenie[]>(
       `${MainZarplataService.endpoint}/get-nachislenies`,
       {
         params: {
           mainZarplataId,
-          year,
-          month
+          from,
+          to
         }
       }
     )
