@@ -189,7 +189,7 @@ const CollapsibleItem = <T extends object, C extends object>({
             >
               {typeof renderCell === 'function'
                 ? // Todo fis this type
-                  renderCell(row, col, tableProps)
+                  renderCell(row, col, tableProps, rowIndex)
                 : String(row?.[col?.key as keyof T] ?? '')}
             </GenericTableCell>
           )
@@ -296,13 +296,13 @@ const CollapsibleItem = <T extends object, C extends object>({
                       </Button>
                     </CollapsibleTrigger>
                     {typeof renderCell === 'function'
-                      ? renderCell(row, col, tableProps)
+                      ? renderCell(row, col, tableProps, rowIndex)
                       : String(row?.[col?.key as keyof T] ?? '')}
                   </div>
                 ) : (
                   <>
                     {typeof renderCell === 'function'
-                      ? renderCell(row, col, tableProps)
+                      ? renderCell(row, col, tableProps, rowIndex)
                       : String(row?.[col?.key as keyof T] ?? '')}
                   </>
                 )}

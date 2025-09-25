@@ -327,7 +327,14 @@ export const NachislenieEditDialog = ({
                       }}
                       className="mt-0"
                     >
-                      {(item) => <ComboboxItem id={item.mainZarplataId}>{item.fio}</ComboboxItem>}
+                      {(item) => (
+                        <ComboboxItem
+                          id={item.mainZarplataId}
+                          textValue={`${item.kartochka} ${item.fio}`}
+                        >
+                          №{item.kartochka} {item.fio}
+                        </ComboboxItem>
+                      )}
                     </JollyComboBox>
                     <div className="size-10 grid place-items-center">
                       <Search className="btn-icon text-gray-400" />
@@ -347,6 +354,13 @@ export const NachislenieEditDialog = ({
                     <CollapsibleTable
                       data={nachislenieProvodka ?? []}
                       columnDefs={[
+                        {
+                          key: '',
+                          minWidth: (nachislenieProvodka ?? []).length.toString().length * 50,
+                          width: (nachislenieProvodka ?? []).length.toString().length * 50,
+                          maxWidth: (nachislenieProvodka ?? []).length.toString().length * 50,
+                          renderCell: (...args) => args[3] + 1
+                        },
                         {
                           key: 'fio'
                         },

@@ -28,7 +28,8 @@ export const MainZarplataFormSchema = z.object({
   doljnostPrikazDate: z.string().optional().nullable(),
   spravochnikZarplataIstochnikFinanceId: z.number().optional().nullable(),
   categoryName: z.string().optional().nullable(),
-  categoryNum: z.string().optional().nullable()
+  categoryNum: z.string().optional().nullable(),
+  isLigota: z.boolean().catch(false)
 })
 export type MainZarplataFormValues = z.infer<typeof MainZarplataFormSchema>
 
@@ -62,7 +63,7 @@ export const defaultValues: MainZarplataFormValues = {
   spravochnikZarplataGrafikRabotiId: 0,
   // spravochnikSostavId: 0,
   // stavka: '',
-  nachaloSlujbi: ''
+  nachaloSlujbi: '',
   // visNa1Year: 0,
   // month1: 0,
   // day1: 0,
@@ -71,5 +72,6 @@ export const defaultValues: MainZarplataFormValues = {
   // doljnostName: '',
   // doljnostPrikazNum: '',
   // doljnostPrikazDate: ''
-  // spravochnikZarplataIstochnikFinanceId: 0
+  // spravochnikZarplataIstochnikFinanceId: 0,
+  isLigota: false
 }

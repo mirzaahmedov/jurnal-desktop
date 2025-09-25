@@ -4,7 +4,8 @@ import type { ReactNode } from 'react'
 export type CollapsibleCellRenderer<T extends object> = (
   row: T,
   col: CollapsibleColumnDef<T>,
-  tableProps: CommonCollapsibleTableProps<T>
+  tableProps: CommonCollapsibleTableProps<T>,
+  rowIndex: number
 ) => ReactNode
 
 export interface CollapsibleColumnDef<T extends object> extends Omit<ColumnDef<T>, 'renderCell'> {

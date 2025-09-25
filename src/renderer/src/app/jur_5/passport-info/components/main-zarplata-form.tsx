@@ -284,42 +284,59 @@ export const MainZarplataForm = ({
                   </FormElement>
                 )}
               />
-              <div>
-                <FormField
-                  control={form.control}
-                  name="xarbiy"
-                  render={({ field }) => (
-                    <FormElement
-                      label={t('military')}
-                      divProps={{ className: 'flex-row-reverse justify-end' }}
-                      innerProps={{ className: 'flex-none w-auto' }}
-                    >
-                      <Checkbox
-                        ref={field.ref}
-                        checked={field.value}
-                        onCheckedChange={(checked) => field.onChange(checked)}
-                      />
-                    </FormElement>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="ostanovitRaschet"
-                  render={({ field }) => (
-                    <FormElement
-                      label={t('stop_calculation')}
-                      divProps={{ className: 'flex-row-reverse justify-end' }}
-                      innerProps={{ className: 'flex-none w-auto' }}
-                    >
-                      <Checkbox
-                        ref={field.ref}
-                        checked={field.value}
-                        onCheckedChange={(checked) => field.onChange(checked)}
-                      />
-                    </FormElement>
-                  )}
-                />
-              </div>
+            </div>
+            <div className="col-span-full grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5">
+              <FormField
+                control={form.control}
+                name="xarbiy"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('military')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="isLigota"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('ligota')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ostanovitRaschet"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('stop_calculation')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
             </div>
             <FormField
               control={form.control}

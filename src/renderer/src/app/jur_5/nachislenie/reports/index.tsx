@@ -9,6 +9,7 @@ import { DownloadFile } from '@/common/features/file'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 
 import { NachislenieTabs } from '../nachislenie-tabs'
 
@@ -47,6 +48,9 @@ export const NachislenieReports = () => {
     if (field === 'from') setStartDate(newDate)
     else setEndDate(newDate)
   }
+
+  const from = formatLocaleDate(startDate)
+  const to = formatLocaleDate(endDate)
 
   return (
     <div className="p-20">
@@ -115,8 +119,8 @@ export const NachislenieReports = () => {
             url="Excel/inps-otchet"
             params={{
               spBudnameId: budjetId,
-              from: startDate,
-              to: endDate
+              from,
+              to
             }}
             fileName={`inps_${startDate}_${endDate}.xlsx`}
             buttonText={t('inps')}
@@ -127,8 +131,8 @@ export const NachislenieReports = () => {
             url="Excel/podoxod-otchet"
             params={{
               spBudnameId: budjetId,
-              from: startDate,
-              to: endDate
+              from,
+              to
             }}
             fileName={`podoxod_${startDate}_${endDate}.xlsx`}
             buttonText={t('podoxod')}
@@ -139,8 +143,8 @@ export const NachislenieReports = () => {
             url="Excel/plastik-otchet"
             params={{
               spBudnameId: budjetId,
-              from: startDate,
-              to: endDate
+              from,
+              to
             }}
             fileName={`plastik_${startDate}_${endDate}.xlsx`}
             buttonText={t('plastik')}
@@ -151,8 +155,8 @@ export const NachislenieReports = () => {
             url="Excel/jur5-otchet"
             params={{
               spBudnameId: budjetId,
-              from: startDate,
-              to: endDate
+              from,
+              to
             }}
             fileName={`${t('monthly_report')}_${startDate}_${endDate}.xlsx`}
             buttonText={t('monthly_report')}

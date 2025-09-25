@@ -35,7 +35,7 @@ export const WorkTripDays = ({ form, minimumWageQueryData }: WorkTripDaysProps) 
   const daysCount =
     form.watch('from_date') && form.watch('to_date')
       ? getWorkdaysInPeriod(parseDate(form.watch('from_date')), parseDate(form.watch('to_date')))
-          .totalDays
+          .totalDays - 1
       : 0
 
   useEffect(() => {

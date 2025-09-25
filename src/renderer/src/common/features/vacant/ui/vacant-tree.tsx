@@ -247,7 +247,10 @@ const TreeNodeHeader: FC<TreeNodeHeaderProps> = ({
         isIndeterminate={selected === 'indeterminate'}
         isSelected={selected !== 'indeterminate' ? selected : undefined}
       />
-      <h4 className="flex-1 line-clamp-3">{node.name}</h4>
+      <h4 className="flex-1 line-clamp-3">
+        {node.number ? <span className="font-bold text-brand">{node.number}.</span> : null}{' '}
+        {node.name}
+      </h4>
       {children}
     </div>
   )

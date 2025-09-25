@@ -18,6 +18,11 @@ export const RoleAccessFormSchema = z.object({
   jur5: z.boolean(),
   jur7: z.boolean(),
   jur8: z.boolean(),
+  zarplata_1: z.boolean(),
+  zarplata_2: z.boolean(),
+  zarplata_3: z.boolean(),
+  zarplata_4: z.boolean(),
+  zarplata_5: z.boolean(),
   zarplata: z.boolean(),
   spravochnik: z.boolean(),
   region: z.boolean(),
@@ -47,9 +52,46 @@ export const roleAccessOptions: Array<{
     key: 'jur4',
     label: <Trans ns="app">pages.podotchet</Trans>
   },
+
   {
-    key: 'zarplata',
-    label: <Trans ns="app">pages.zarplata</Trans>
+    key: 'zarplata_1',
+    label: (
+      <>
+        <Trans ns="app">pages.zarplata</Trans> &gt; <Trans ns="app">pages.staffing_table</Trans>
+      </>
+    )
+  },
+  {
+    key: 'zarplata_2',
+    label: (
+      <>
+        <Trans ns="app">pages.zarplata</Trans> &gt; <Trans ns="app">pages.calc_parameters</Trans>
+      </>
+    )
+  },
+  {
+    key: 'zarplata_3',
+    label: (
+      <>
+        <Trans ns="app">pages.zarplata</Trans> &gt; <Trans ns="app">pages.passport_details</Trans>
+      </>
+    )
+  },
+  {
+    key: 'zarplata_4',
+    label: (
+      <>
+        <Trans ns="app">pages.zarplata</Trans> &gt; <Trans ns="app">pages.nachislenie</Trans>
+      </>
+    )
+  },
+  {
+    key: 'zarplata_5',
+    label: (
+      <>
+        <Trans ns="app">pages.zarplata</Trans> &gt; <Trans ns="app">pages.payment_type</Trans>
+      </>
+    )
   },
   {
     key: 'jur7',

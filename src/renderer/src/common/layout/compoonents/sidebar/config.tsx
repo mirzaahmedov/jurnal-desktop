@@ -168,56 +168,74 @@ export const getNavElements = (t: TFunction): INavElement[] => {
         }
       : null,
 
-    !is_super_admin && (permissions.zarplata || is_admin)
+    !is_super_admin &&
+    ([
+      permissions.zarplata_1,
+      permissions.zarplata_2,
+      permissions.zarplata_3,
+      permissions.zarplata_4,
+      permissions.zarplata_5
+    ].some(Boolean) ||
+      is_admin)
       ? {
           path: '/jur-5',
           title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,
           icon: Receipt,
-          children: [
-            {
-              path: 'staffing_table',
-              title: t('pages.staffing_table'),
-              icon: SquareCheck
-            },
-            {
-              path: 'calculate-params',
-              title: t('pages.calc_parameters'),
-              icon: Settings
-            },
-            {
-              path: 'passport-info',
-              title: t('pages.passport_details'),
-              icon: IdCard
-            },
-            {
-              path: 'nachislenie',
-              title: t('pages.nachislenie'),
-              icon: Calculator
-            },
-            {
-              path: 'payment-type',
-              title: t('pages.payment_type'),
-              icon: Folder,
-              children: [
-                {
-                  path: 'payments',
-                  title: t('pages.payments'),
-                  icon: ReceiptText
-                },
-                {
-                  path: 'deductions',
-                  title: t('pages.deductions'),
-                  icon: ReceiptText
+          children: omitEmptyArrayElements<INavElement>([
+            permissions.zarplata_1 || is_admin
+              ? {
+                  path: 'staffing_table',
+                  title: t('pages.staffing_table'),
+                  icon: SquareCheck
                 }
-              ]
-            },
+              : null,
+            permissions.zarplata_2 || is_admin
+              ? {
+                  path: 'calculate-params',
+                  title: t('pages.calc_parameters'),
+                  icon: Settings
+                }
+              : null,
+            permissions.zarplata_3 || is_admin
+              ? {
+                  path: 'passport-info',
+                  title: t('pages.passport_details'),
+                  icon: IdCard
+                }
+              : null,
+            permissions.zarplata_4 || is_admin
+              ? {
+                  path: 'nachislenie',
+                  title: t('pages.nachislenie'),
+                  icon: Calculator
+                }
+              : null,
+            permissions.zarplata_5 || is_admin
+              ? {
+                  path: 'payment-type',
+                  title: t('pages.payment_type'),
+                  icon: Folder,
+                  children: [
+                    {
+                      path: 'payments',
+                      title: t('pages.payments'),
+                      icon: ReceiptText
+                    },
+                    {
+                      path: 'deductions',
+                      title: t('pages.deductions'),
+                      icon: ReceiptText
+                    }
+                  ]
+                }
+              : null,
             {
               displayOnly: true,
               path: '',
               title: <ZarplataActions />,
               icon: null
             }
-          ]
+          ])
         }
       : null,
 
