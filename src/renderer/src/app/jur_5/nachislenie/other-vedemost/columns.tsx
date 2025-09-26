@@ -1,11 +1,11 @@
 import type { ColumnDef } from '@/common/components'
-import type { NachislenieOthers } from '@/common/models'
+import type { OtherVedemost } from '@/common/models'
 
 import { t } from 'i18next'
 
 import { SummaCell } from '@/common/components/table/renderers/summa'
 
-export const NachislenieOthersColumnDefs: ColumnDef<NachislenieOthers>[] = [
+export const NachislenieOthersColumnDefs: ColumnDef<OtherVedemost>[] = [
   {
     key: 'docNum',
     header: 'doc_num'

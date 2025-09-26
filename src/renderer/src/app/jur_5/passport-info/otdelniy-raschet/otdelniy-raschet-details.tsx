@@ -39,6 +39,7 @@ import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
@@ -186,6 +187,14 @@ export const OtdelniyRaschetDetails: FC<OtdelniyRaschetDetailsProps> = ({
                             otdelniyRaschet={otdelniyRaschet}
                           />
                           <div className="pdf-hidden px-5 flex justify-end gap-5">
+                            <DownloadFile
+                              isZarplata
+                              url="Excel/otdelniy-raschet-vedemost"
+                              params={{ mainId: otdelniyRaschet.id }}
+                              variant="default"
+                              buttonText={t('vedemost')}
+                              fileName={`vedomost-otdelniy-raschet-${mainZarplata.fio}.xlsx`}
+                            />
                             <Button
                               isPending={isPending}
                               onPress={savePDF}

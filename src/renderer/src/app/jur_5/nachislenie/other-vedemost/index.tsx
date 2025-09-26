@@ -1,4 +1,4 @@
-import type { NachislenieOthers } from '@/common/models'
+import type { OtherVedemost } from '@/common/models'
 
 import { useEffect, useState } from 'react'
 
@@ -13,9 +13,9 @@ import { useLayout } from '@/common/layout'
 
 import { NachislenieTabs } from '../nachislenie-tabs'
 import { NachislenieOthersColumnDefs } from './columns'
-import { PremyaMatPomoshCreateDialog } from './components/premya-create-dialog'
-import { PremyaMatPomoshViewDialog } from './components/premya-view-dialog'
-import { NachislenieOthersService } from './service'
+import { PremyaMatPomoshCreateDialog } from './components/other-vedemost-create'
+import { PremyaMatPomoshViewDialog } from './components/other-vedemost-view'
+import { OtherVedemostService } from './service'
 
 export const PremyaMatPomosh = () => {
   const editToggle = useToggle()
@@ -24,7 +24,7 @@ export const PremyaMatPomosh = () => {
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
-  const [selectedPremya, setSelectedPremya] = useState<NachislenieOthers | undefined>(undefined)
+  const [selectedPremya, setSelectedPremya] = useState<OtherVedemost | undefined>(undefined)
 
   const { t } = useTranslation(['app'])
   const { budjet_id } = useRequisitesStore()
@@ -32,20 +32,20 @@ export const PremyaMatPomosh = () => {
 
   const { data: nachislenieOthers, isFetching: isFetchingNachislenieOthers } = useQuery({
     queryKey: [
-      NachislenieOthersService.QueryKeys.GetAll,
+      OtherVedemostService.QueryKeys.GetAll,
       {
         page: pagination.page,
         limit: pagination.limit,
         budjet_name_id: budjet_id!
       }
     ],
-    queryFn: NachislenieOthersService.getAll
+    queryFn: OtherVedemostService.getAll
   })
   const deleteMutation = useMutation({
-    mutationFn: NachislenieOthersService.delete,
+    mutationFn: OtherVedemostService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [NachislenieOthersService.QueryKeys.GetAll]
+        queryKey: [OtherVedemostService.QueryKeys.GetAll]
       })
     }
   })
@@ -63,12 +63,12 @@ export const PremyaMatPomosh = () => {
     })
   }, [t, setLayout, createToggle.open])
 
-  const handleDelete = (row: NachislenieOthers) => {
+  const handleDelete = (row: OtherVedemost) => {
     confirm({
       onConfirm: () => deleteMutation.mutate(row.id)
     })
   }
-  const handleEdit = (row: NachislenieOthers) => {
+  const handleEdit = (row: OtherVedemost) => {
     setSelectedPremya(row)
     editToggle.open()
   }
@@ -90,7 +90,7 @@ export const PremyaMatPomosh = () => {
       <PremyaMatPomoshViewDialog
         isOpen={editToggle.isOpen}
         onOpenChange={editToggle.setOpen}
-        selectedPremya={selectedPremya}
+        selectedVedemost={selectedPremya}
       />
     </div>
   )

@@ -57,7 +57,7 @@ import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
 
 import { NachislenieOthersFormSchema, defaultValues } from '../config'
-import { NachislenieOthersService } from '../service'
+import { OtherVedemostService } from '../service'
 
 export enum CreateDialogTabOption {
   MainZarplata = 'mainZarplata',
@@ -115,17 +115,17 @@ export const PremyaMatPomoshCreateDialog = (props: PremyaMatPomoshCreateDialogPr
   })
 
   const createMutation = useMutation({
-    mutationFn: NachislenieOthersService.create,
+    mutationFn: OtherVedemostService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [NachislenieOthersService.QueryKeys.GetAll]
+        queryKey: [OtherVedemostService.QueryKeys.GetAll]
       })
       props?.onOpenChange?.(false)
       form.reset()
     }
   })
   const docNumMutation = useMutation({
-    mutationFn: NachislenieOthersService.getMaxDocNum,
+    mutationFn: OtherVedemostService.getMaxDocNum,
     onSuccess: (docNum) => {
       form.setValue('docNum', docNum)
     }

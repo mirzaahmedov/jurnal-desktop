@@ -1,6 +1,6 @@
 import { Nachislenies } from './nachislenie'
 import { NachislenieTabOptions, useNachislenieTab } from './nachislenie-tabs'
-import { PremyaMatPomosh } from './premya-mat-pomosh'
+import { PremyaMatPomosh } from './other-vedemost'
 import { NachislenieReports } from './reports'
 import { TabelsView } from './tabel'
 

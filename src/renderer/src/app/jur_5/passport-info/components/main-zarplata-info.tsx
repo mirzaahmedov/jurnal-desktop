@@ -1,10 +1,10 @@
 import type { HTMLAttributes } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
-import { BookUser } from 'lucide-react'
+import { SquareUser } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Spinner } from '@/common/components'
+import { LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { LabeledValue } from '@/common/components/labeled-value'
 import { Badge } from '@/common/components/ui/badge'
@@ -27,18 +27,15 @@ export const MainZarplataInfo = ({ mainZarplataId, ...props }: MainZarplataInfoP
   })
   const mainZarplata = mainZarplataQuery.data?.data
 
-  return mainZarplataQuery.isLoading ? (
-    <div className="py-10 grid place-items-center">
-      <Spinner />
-    </div>
-  ) : (
+  return (
     <div
       {...props}
       className={cn(
-        'p-5 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200',
+        'relative p-5 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200',
         props.className
       )}
     >
+      {mainZarplataQuery.isLoading ? <LoadingOverlay /> : null}
       <div className="pb-3">
         <div className="flex items-center gap-5">
           <span className="text-lg font-semibold text-gray-800">{mainZarplata?.fio}</span>
@@ -63,7 +60,7 @@ export const MainZarplataInfo = ({ mainZarplataId, ...props }: MainZarplataInfoP
             size="icon"
             className="pdf-hidden"
           >
-            <BookUser className="btn-icon" />
+            <SquareUser className="btn-icon" />
           </Button>
         </div>
       </div>

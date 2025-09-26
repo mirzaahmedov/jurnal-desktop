@@ -300,7 +300,10 @@ export const NachislenieEditDialog = ({
                 <DialogTitle>{t('nachislenie')}</DialogTitle>
                 <Tabs
                   value={tabValue}
-                  onValueChange={(value) => setTabValue(value as TabOptions)}
+                  onValueChange={(value) => {
+                    setTabValue(value as TabOptions)
+                    comboModal.close()
+                  }}
                 >
                   <TabsList>
                     <TabsTrigger value={TabOptions.View}>{t('view')}</TabsTrigger>
