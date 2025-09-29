@@ -10,8 +10,11 @@ import { toast } from 'react-toastify'
 
 import { GenericTable } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
+import { RangeDatePicker } from '@/common/components/range-date-picker'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
 import { DopOplataColumnDefs } from './columns'
@@ -29,9 +32,18 @@ export const DopOplataContainer = ({ mainZarplata }: DopOplataContainerProps) =>
   const queryClient = useQueryClient()
 
   const [selected, setSelected] = useState<DopOplata>()
+  const [startDate, setStartDate] = useState<string>(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState<string>(formatDate(getLastDayOfMonth()))
 
   const dopOplataQuery = useQuery({
-    queryKey: [DopOplataService.QueryKeys.GetByMainId, mainZarplata.id],
+    queryKey: [
+      DopOplataService.QueryKeys.GetByMainId,
+      mainZarplata.id,
+      {
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate)
+      }
+    ],
     queryFn: DopOplataService.getAll
   })
 
@@ -64,7 +76,15 @@ export const DopOplataContainer = ({ mainZarplata }: DopOplataContainerProps) =>
 
   return (
     <ListView>
-      <ListView.Header className="justify-end">
+      <ListView.Header className="justify-between">
+        <RangeDatePicker
+          from={startDate}
+          to={endDate}
+          onValueChange={(from, to) => {
+            setStartDate(from)
+            setEndDate(to)
+          }}
+        />
         <Button onClick={handleDopOplataCreate}>
           <Plus className="btn-icon icon-start" /> {t('add')}
         </Button>

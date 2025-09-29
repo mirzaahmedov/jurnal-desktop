@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { cn } from '@/common/lib/utils'
 
 import { DopOplataForm } from './dop-oplata-form'
 import { DopOplataService } from './service'
@@ -33,7 +34,9 @@ export const DopOplataDialog = ({ mainZarplata, selected, ...props }: DopOplataD
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
-        <DialogContent className="w-full max-w-full h-full max-h-[900px] px-0">
+        <DialogContent
+          className={cn('w-full max-w-4xl px-0', selected && 'max-w-full h-full max-h-[900px]')}
+        >
           <div className="flex flex-col h-full overflow-hidden gap-5">
             <DialogHeader className="px-5">
               <DialogTitle>{t('dop-oplata')}</DialogTitle>

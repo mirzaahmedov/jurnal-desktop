@@ -249,4 +249,26 @@ export class NachislenieService {
     )
     return res.data
   }
+
+  static async createChild(values: {
+    mainZarplataId: number
+    rabDni: number
+    otrabDni: number
+    noch: number
+    prazdnik: number
+    pererabodka: number
+    kazarma: number
+  }) {
+    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-child`, values)
+    return res.data
+  }
+
+  static async deleteChild(childId: number) {
+    const res = await zarplataApiNew.delete(`${NachislenieService.endpoint}/delete-child`, {
+      params: {
+        childId
+      }
+    })
+    return res.data
+  }
 }

@@ -9,10 +9,8 @@ import { toast } from 'react-toastify'
 
 import { TabelService } from '@/app/jur_5/nachislenie/tabel/service'
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { MonthSelect } from '@/common/components/month-select'
 import { Pagination } from '@/common/components/pagination'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
-import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
@@ -24,8 +22,11 @@ import {
 } from '@/common/features/vacant/ui/vacant-tree'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { queryClient } from '@/common/lib/query-client'
 
+import { RangeDatePicker } from '../../common/components/range-date-picker'
 import { NachislenieTabs } from '../nachislenie-tabs'
 import { TabelColumnDefs } from './columns'
 import { TabelCreateDialog } from './components/tabel-create-dialog'
@@ -44,8 +45,8 @@ export const TabelsView = () => {
   const [selectedTabelId, setSelectedTabelId] = useState<number>()
 
   const [docNum, setDocNum] = useState<string>('')
-  const [year, setYear] = useState<number>(new Date().getFullYear())
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
+  const [startDate, setStartDate] = useState<string>(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState<string>(formatDate(getLastDayOfMonth()))
 
   const setLayout = useLayout()
   const editToggle = useToggle()
@@ -59,13 +60,13 @@ export const TabelsView = () => {
     queryKey: [
       TabelService.QueryKeys.MadeVacants,
       {
-        year,
-        month,
-        budjetId: budjetId!
+        budjetId: budjetId!,
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate)
       }
     ],
     queryFn: TabelService.getVacantsMade,
-    enabled: !!budjetId
+    enabled: !!budjetId && !!startDate && !!endDate
   })
 
   const { data: tabels, isFetching: isFetchingTabels } = useQuery({
@@ -76,12 +77,12 @@ export const TabelsView = () => {
         limit: pagination.limit,
         vacantId: selectedVacant?.id,
         docNum: docNum ? docNum : undefined,
-        year: year || undefined,
-        month: month || undefined
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate)
       }
     ],
     queryFn: TabelService.getAll,
-    enabled: !!selectedVacant
+    enabled: !!selectedVacant && !!startDate && !!endDate
   })
   const { mutate: deleteTabel, isPending: isDeleting } = useMutation({
     mutationFn: TabelService.delete,
@@ -162,18 +163,13 @@ export const TabelsView = () => {
             value={docNum}
             onValueChange={setDocNum}
           />
-          <YearSelect
-            selectedKey={year}
-            onSelectionChange={(value) =>
-              setYear(value ? (value as number) : new Date().getFullYear())
-            }
-          />
-          <MonthSelect
-            selectedKey={month}
-            onSelectionChange={(value) =>
-              setMonth(value ? (value as number) : new Date().getMonth() + 1)
-            }
-            className="w-36"
+          <RangeDatePicker
+            from={startDate}
+            to={endDate}
+            onValueChange={(from, to) => {
+              setStartDate(from)
+              setEndDate(to)
+            }}
           />
         </div>
         <div className="flex-1 relative w-full overflow-auto scrollbar pl-px">

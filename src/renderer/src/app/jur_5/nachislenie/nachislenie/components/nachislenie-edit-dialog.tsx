@@ -5,7 +5,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 import { type FC, useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { BookUser, Download, Plus, Search, Sigma } from 'lucide-react'
+import { Download, Plus, Search, Sigma, UserSquare } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -73,6 +73,7 @@ export const NachislenieEditDialog = ({
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
   const { openMainZarplataView } = useZarplataStore()
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
@@ -81,6 +82,7 @@ export const NachislenieEditDialog = ({
   const [, setSearchParams] = useSearchParams()
 
   const comboModal = useToggle()
+  const queryClient = useQueryClient()
 
   const nachislenieMainQuery = useQuery({
     queryKey: [NachislenieService.QueryKeys.GetMainById, nachislenieId!],
@@ -94,6 +96,19 @@ export const NachislenieEditDialog = ({
     enabled: !!nachislenieId
   })
   const nachislenieProvodka = nachislenieQuery?.data ?? []
+
+  const deleteChildMutation = useMutation({
+    mutationFn: NachislenieService.deleteChild,
+    onSuccess: () => {
+      toast.success(t('delete_success'))
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetById, nachislenieId!]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetMainById, nachislenieId!]
+      })
+    }
+  })
 
   const currentIndex =
     nachislenieProvodka.findIndex((i) => i.mainZarplataId === mainZarplataId) ?? 0
@@ -160,6 +175,14 @@ export const NachislenieEditDialog = ({
         }
       }
     )
+  }
+
+  const handleDeleteChild = (row: NachislenieProvodka) => {
+    confirm({
+      onConfirm() {
+        deleteChildMutation.mutate(row.id)
+      }
+    })
   }
 
   const Header = () => {
@@ -398,6 +421,7 @@ export const NachislenieEditDialog = ({
                       classNames={{
                         header: 'z-100'
                       }}
+                      onDelete={handleDeleteChild}
                       getRowId={(row) => row.id}
                       actions={(row) => (
                         <Button
@@ -408,7 +432,7 @@ export const NachislenieEditDialog = ({
                           }}
                           className="-my-5"
                         >
-                          <BookUser className="btn-icon" />
+                          <UserSquare className="btn-icon" />
                         </Button>
                       )}
                       className="table-generic-xs"

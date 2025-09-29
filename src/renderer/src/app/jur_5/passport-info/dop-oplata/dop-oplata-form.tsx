@@ -1,8 +1,7 @@
 import type { MainZarplata } from '@/common/models'
 import type { DopOplata } from '@/common/models/dop-oplata'
-import type { Payment } from '@/common/models/payments'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -10,19 +9,17 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { PaymentColumnDefs } from '@/app/jur_5/payment-types/payments/columns'
-import { PaymentsService } from '@/app/jur_5/payment-types/payments/service'
+import { createPaymentSpravochnik } from '@/app/jur_5/payment-types/payments/service'
 import { GenericTable, LoadingOverlay, NumericInput } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { FormElementUncontrolled } from '@/common/components/form/form-element-uncontrolled'
-import { Debouncer } from '@/common/components/hoc/debouncer'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
-import { Pagination } from '@/common/components/pagination'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
+import { useSpravochnik } from '@/common/features/spravochnik'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
@@ -37,30 +34,19 @@ export interface DopOplataFormProps {
 export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFormProps) => {
   const { t } = useTranslation(['app'])
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [name, setName] = useState('')
-  const [code, setCode] = useState('')
-  const [paymentData, setPaymentData] = useState<Payment | null>(null)
-
   const form = useForm({
     defaultValues,
     resolver: zodResolver(DopOplataFormSchema)
   })
 
-  const paymentsQuery = useQuery({
-    queryKey: [
-      PaymentsService.QueryKeys.GetAll,
-      {
-        page,
-        limit,
-        code,
-        name
+  const paymentSpravochnik = useSpravochnik(
+    createPaymentSpravochnik({
+      value: form.watch('paymentId'),
+      onChange: (id) => {
+        form.setValue('paymentId', id ?? 0)
       }
-    ],
-    queryFn: PaymentsService.getAll,
-    enabled: !selected
-  })
+    })
+  )
 
   const dopOplataGetByIdQuery = useQuery({
     queryKey: [DopOplataService.QueryKeys.GetById, selected?.id ?? 0],
@@ -101,6 +87,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
           ...values,
           from: formatLocaleDate(values.from),
           to: formatLocaleDate(values.to),
+          docDate: values.docDate ? formatLocaleDate(values.docDate) : undefined,
           mainZarplataId: mainZarplata?.id
         }
       })
@@ -110,11 +97,12 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
       ...values,
       from: formatLocaleDate(values.from),
       to: formatLocaleDate(values.to),
+      docDate: values.docDate ? formatLocaleDate(values.docDate) : undefined,
       mainZarplataId: mainZarplata?.id
     })
   })
 
-  const isVacationPayment = paymentData?.code === 32
+  const isVacationPayment = paymentSpravochnik.selected?.code === 32
   const isCreate = !selected
 
   useEffect(() => {
@@ -122,7 +110,10 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
       form.reset({
         ...dopOplataData,
         from: formatDate(parseLocaleDate(dopOplataData.from)),
-        to: formatDate(parseLocaleDate(dopOplataData.to))
+        to: formatDate(parseLocaleDate(dopOplataData.to)),
+        docDate: dopOplataData.docDate
+          ? formatDate(parseLocaleDate(dopOplataData.docDate))
+          : undefined
       })
     } else {
       form.reset({
@@ -145,7 +136,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
           className="h-full flex flex-col overflow-hidden divide-y"
         >
           <div className="flex-1 min-h-0 p-5 flex flex-col divide-y">
-            <div className="flex items-center flex-wrap divide-x border-t">
+            <div className="flex items-start flex-wrap divide-x border-t">
               <div className="flex flex-shrink max-w-[40%] items-center flex-wrap gap-5 p-5 pl-0">
                 <FormField
                   control={form.control}
@@ -190,6 +181,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                   render={({ field }) => (
                     <FormElement
                       label={t('days')}
+                      direction={isCreate ? 'column' : 'row'}
                       hideDescription
                     >
                       <NumericInput
@@ -215,6 +207,7 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                   render={({ field }) => (
                     <FormElement
                       label={t('summa')}
+                      direction={isCreate ? 'column' : 'row'}
                       className="w-full max-w-64"
                       hideDescription
                     >
@@ -230,66 +223,63 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                   )}
                 />
 
-                {!isCreate ? (
-                  <FormElementUncontrolled
-                    label={t('payment')}
-                    divProps={{ className: 'flex-1' }}
-                  >
-                    <Textarea
-                      readOnly
-                      value={dopOplataData?.paymentName ?? ''}
-                    />
-                  </FormElementUncontrolled>
-                ) : null}
+                <FormField
+                  control={form.control}
+                  name="docNum"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('doc_num')}
+                      direction={isCreate ? 'column' : 'row'}
+                      hideDescription
+                    >
+                      <Input
+                        {...field}
+                        readOnly={!isCreate}
+                        value={field.value || ''}
+                        className="w-28"
+                      />
+                    </FormElement>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="docDate"
+                  render={({ field }) => (
+                    <FormElement
+                      label={t('doc_date')}
+                      direction={isCreate ? 'column' : 'row'}
+                      hideDescription
+                    >
+                      <JollyDatePicker
+                        {...field}
+                        readOnly={!isCreate}
+                        value={field.value || ''}
+                        className="w-36"
+                        containerProps={{
+                          className: 'min-w-36 w-full'
+                        }}
+                      />
+                    </FormElement>
+                  )}
+                />
+
+                <FormElementUncontrolled
+                  label={t('payment')}
+                  direction={isCreate ? 'column' : 'row'}
+                  divProps={{ className: 'flex-1 min-w-[400px]' }}
+                >
+                  <Textarea
+                    readOnly
+                    value={paymentSpravochnik.selected?.name ?? dopOplataData?.paymentName ?? ''}
+                    onDoubleClick={paymentSpravochnik.open}
+                    className="max-w-md"
+                  />
+                </FormElementUncontrolled>
               </div>
             </div>
 
-            {isCreate ? (
-              <div className="flex items-center justify-start gap-2.5 py-5">
-                <Debouncer
-                  value={name}
-                  onChange={setName}
-                >
-                  {({ value, onChange }) => (
-                    <Input
-                      value={value}
-                      onChange={(e) => onChange(e.target.value)}
-                      placeholder={t('name')}
-                      className="w-64"
-                    />
-                  )}
-                </Debouncer>
-                <Debouncer
-                  value={code}
-                  onChange={setCode}
-                >
-                  {({ value, onChange }) => (
-                    <Input
-                      value={value}
-                      onChange={(e) => onChange(e.target.value)}
-                      placeholder={t('code')}
-                      className="w-64"
-                    />
-                  )}
-                </Debouncer>
-              </div>
-            ) : null}
-
-            {isCreate ? (
-              <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
-                {paymentsQuery.isFetching ? <LoadingOverlay /> : null}
-                <GenericTable
-                  columnDefs={PaymentColumnDefs({ isEditable: false })}
-                  data={paymentsQuery?.data?.data ?? []}
-                  selectedIds={form.watch('paymentId') ? [form.watch('paymentId')] : []}
-                  onClickRow={(item) => {
-                    setPaymentData(item)
-                    form.setValue('paymentId', item.id)
-                  }}
-                  className="table-generic-xs"
-                />
-              </div>
-            ) : (
+            {isCreate ? null : (
               <div className="flex-1 min-h-0 overflow-y-auto scrollbar">
                 {dopOplataGetByIdQuery.isFetching ? <LoadingOverlay /> : null}
                 <GenericTable
@@ -313,32 +303,18 @@ export const DopOplataForm = ({ mainZarplata, selected, onFinish }: DopOplataFor
                 />
               </div>
             )}
-          </div>
 
-          {isCreate ? (
-            <div className="p-5 pb-0 flex items-center justify-between gap-5">
-              <Pagination
-                page={page}
-                limit={limit}
-                count={paymentsQuery?.data?.meta?.count ?? 0}
-                pageCount={paymentsQuery?.data?.meta?.pageCount ?? 0}
-                onChange={(values) => {
-                  if (values.page) {
-                    setPage(values.page)
-                  }
-                  if (values.limit) {
-                    setLimit(values.limit)
-                  }
-                }}
-              />
-              <Button
-                type="submit"
-                isDisabled={!form.watch('paymentId')}
-              >
-                {t('continue')}
-              </Button>
-            </div>
-          ) : null}
+            {isCreate ? (
+              <div className="p-5 pb-0 flex items-center justify-between gap-5">
+                <Button
+                  type="submit"
+                  isDisabled={!form.watch('paymentId')}
+                >
+                  {t('continue')}
+                </Button>
+              </div>
+            ) : null}
+          </div>
         </form>
       </Form>
     </>

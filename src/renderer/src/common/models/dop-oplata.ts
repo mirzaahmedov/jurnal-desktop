@@ -19,6 +19,8 @@ export interface DopOplataById {
   paymentName: string
   from: string
   to: string
+  docNum: string | null
+  docDate: string | null
   summa: number
   day: number
   additionalDeductions: AdditionalDeduction[]

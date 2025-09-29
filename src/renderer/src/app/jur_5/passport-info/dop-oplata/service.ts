@@ -13,11 +13,22 @@ export class DopOplataService {
   }
 
   static async getAll(
-    ctx: QueryFunctionContext<[typeof DopOplataService.QueryKeys.GetByMainId, number]>
+    ctx: QueryFunctionContext<
+      [
+        typeof DopOplataService.QueryKeys.GetByMainId,
+        number,
+        {
+          from: string
+          to: string
+        }
+      ]
+    >
   ) {
     const mainZarplataId = ctx.queryKey[1]
+    const params = ctx.queryKey[2]
     const res = await zarplataApiNew.get<DopOplata[]>(
-      `${DopOplataService.endpoint}/get-by-mainId/${mainZarplataId}`
+      `${DopOplataService.endpoint}/get-by-mainId/${mainZarplataId}`,
+      { params }
     )
     return res.data
   }

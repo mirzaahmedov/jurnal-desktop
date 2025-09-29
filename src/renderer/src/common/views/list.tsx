@@ -2,7 +2,7 @@ import { type HTMLAttributes, forwardRef } from 'react'
 
 import { LoadingOverlay } from '@/common/components'
 import { Pagination } from '@/common/components/pagination'
-import { RangeDatePicker } from '@/common/components/range-date-picker'
+import { RangeDatePicker } from '@/common/components/saldo-range-date-picker'
 import { cn } from '@/common/lib/utils'
 
 export interface ListViewProps extends HTMLAttributes<HTMLDivElement> {}

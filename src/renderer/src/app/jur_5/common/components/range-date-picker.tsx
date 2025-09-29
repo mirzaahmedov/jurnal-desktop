@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CircleArrowDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
-import { useEventCallback } from '@/common/hooks'
-import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 
 export interface RangeDatePickerProps {
   from: string
@@ -13,10 +12,10 @@ export interface RangeDatePickerProps {
   onValueChange?: (from: string, to: string) => void
 }
 export const RangeDatePicker = ({ from, to, onValueChange }: RangeDatePickerProps) => {
-  const [startDate, setStartDate] = useState(from || formatDate(getFirstDayOfMonth()))
-  const [endDate, setEndDate] = useState(to || formatDate(getLastDayOfMonth()))
+  const { t } = useTranslation()
 
-  const onValueChangeEvent = useEventCallback(onValueChange)
+  const [startDate, setStartDate] = useState(from)
+  const [endDate, setEndDate] = useState(to)
 
   const handleNextDay = (field: 'from' | 'to', amount: number) => {
     const date = new Date(field === 'from' ? startDate! : endDate!)
@@ -34,8 +33,9 @@ export const RangeDatePicker = ({ from, to, onValueChange }: RangeDatePickerProp
   }
 
   useEffect(() => {
-    onValueChangeEvent?.(startDate, endDate)
-  }, [startDate, endDate])
+    setStartDate(from)
+    setEndDate(to)
+  }, [from, to])
 
   return (
     <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
@@ -83,6 +83,17 @@ export const RangeDatePicker = ({ from, to, onValueChange }: RangeDatePickerProp
       >
         <ChevronRight className="btn-icon" />
       </Button>
+      <div className="space-x-1">
+        <Button
+          type="button"
+          onPress={() => {
+            onValueChange?.(startDate, endDate)
+          }}
+        >
+          <CircleArrowDown className="btn-icon icon-start" />
+          {t('load')}
+        </Button>
+      </div>
     </div>
   )
 }

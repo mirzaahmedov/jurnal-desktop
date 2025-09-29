@@ -23,8 +23,8 @@ export class TabelService {
           page: number
           limit: number
           docNum?: string
-          year?: number
-          month?: number
+          from?: string
+          to?: string
           budjetId?: number
           vacantId?: number
           status?: boolean
@@ -32,14 +32,14 @@ export class TabelService {
       ]
     >
   ) {
-    const { page, limit, docNum, year, month, budjetId, status, vacantId } = ctx.queryKey[1]
+    const { page, limit, docNum, from, to, budjetId, status, vacantId } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<ZarplataApiResponse<Tabel[]>>(`${TabelService.endpoint}`, {
       params: {
         PageIndex: page,
         PageSize: limit,
         docNum,
-        year,
-        month,
+        from,
+        to,
         budjet_name_id: budjetId,
         status,
         vacantId
@@ -79,20 +79,20 @@ export class TabelService {
       [
         typeof TabelService.QueryKeys.MadeVacants,
         {
-          year: number
-          month: number
+          from: string
+          to: string
           budjetId: number
         }
       ]
     >
   ) {
-    const { year, month, budjetId } = ctx.queryKey[1]
+    const { from, to, budjetId } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<{ vacantId: number[] }>(
       `${TabelService.endpoint}/made-vacants`,
       {
         params: {
-          year,
-          month,
+          from,
+          to,
           budjet_name_id: budjetId
         }
       }

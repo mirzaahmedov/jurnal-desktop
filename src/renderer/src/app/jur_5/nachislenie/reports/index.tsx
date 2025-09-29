@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { ChevronLeft, ChevronRight, CircleArrowDown } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
@@ -121,113 +121,110 @@ export const NachislenieReports = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-5 border-b">
-        <div className="flex items-center justify-between flex-wrap gap-5">
-          <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onPress={() => handlePrevDay('from', 1)}
-            >
-              <ChevronLeft className="btn-icon" />
-            </Button>
-            <JollyDatePicker
-              autoFocus
-              value={startDate}
-              onChange={(date) => setStartDate(date)}
-              containerProps={{ className: 'w-36 min-w-36' }}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onPress={() => handleNextDay('from', 1)}
-            >
-              <ChevronRight className="btn-icon" />
-            </Button>
-            <b className="mx-0.5">-</b>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onPress={() => handlePrevDay('to', 1)}
-            >
-              <ChevronLeft className="btn-icon" />
-            </Button>
-            <JollyDatePicker
-              value={endDate}
-              onChange={(date) => setEndDate(date)}
-              containerProps={{ className: 'w-36 min-w-36' }}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onPress={() => handleNextDay('to', 1)}
-            >
-              <ChevronRight className="btn-icon" />
-            </Button>
-            <div className="space-x-1">
-              <Button type="submit">
-                <CircleArrowDown className="btn-icon icon-start" />
-                {t('load')}
+      <div className="p-2.5 border-b">
+        <div className="px-5 py-5 bg-slate-100 border border-slate-200 rounded-lg">
+          <div className="flex items-center justify-between flex-wrap gap-5">
+            <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onPress={() => handlePrevDay('from', 1)}
+              >
+                <ChevronLeft className="btn-icon" />
+              </Button>
+              <JollyDatePicker
+                autoFocus
+                value={startDate}
+                onChange={(date) => setStartDate(date)}
+                containerProps={{ className: 'w-36 min-w-36' }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onPress={() => handleNextDay('from', 1)}
+              >
+                <ChevronRight className="btn-icon" />
+              </Button>
+              <b className="mx-0.5">-</b>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onPress={() => handlePrevDay('to', 1)}
+              >
+                <ChevronLeft className="btn-icon" />
+              </Button>
+              <JollyDatePicker
+                value={endDate}
+                onChange={(date) => setEndDate(date)}
+                containerProps={{ className: 'w-36 min-w-36' }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onPress={() => handleNextDay('to', 1)}
+              >
+                <ChevronRight className="btn-icon" />
               </Button>
             </div>
-          </div>
 
-          <div className="flex items-center flex-wrap justify-end gap-2.5">
-            <DownloadFile
-              isZarplata
-              url="Excel/inps-otchet"
-              params={{
-                spBudnameId: budjetId,
-                from,
-                to
-              }}
-              fileName={`inps_${startDate}_${endDate}.xlsx`}
-              buttonText={t('inps')}
-              variant="ghost"
-            />
-            <DownloadFile
-              isZarplata
-              url="Excel/podoxod-otchet"
-              params={{
-                spBudnameId: budjetId,
-                from,
-                to
-              }}
-              fileName={`podoxod_${startDate}_${endDate}.xlsx`}
-              buttonText={t('podoxod')}
-              variant="ghost"
-            />
-            <DownloadFile
-              isZarplata
-              url="Excel/plastik-otchet"
-              params={{
-                spBudnameId: budjetId,
-                from,
-                to
-              }}
-              fileName={`plastik_${startDate}_${endDate}.xlsx`}
-              buttonText={t('plastik')}
-              variant="ghost"
-            />
-            <DownloadFile
-              isZarplata
-              url="Excel/jur5-otchet"
-              params={{
-                spBudnameId: budjetId,
-                from,
-                to
-              }}
-              fileName={`${t('monthly_report')}_${startDate}_${endDate}.xlsx`}
-              buttonText={t('monthly_report')}
-              variant="ghost"
-            />
+            <div className="flex items-center flex-wrap justify-end gap-2.5">
+              <DownloadFile
+                isZarplata
+                url="Excel/inps-otchet"
+                params={{
+                  spBudnameId: budjetId,
+                  from,
+                  to
+                }}
+                fileName={`inps_${startDate}_${endDate}.xlsx`}
+                buttonText={t('inps')}
+                variant="ghost"
+              />
+              <DownloadFile
+                isZarplata
+                url="Excel/podoxod-otchet"
+                params={{
+                  spBudnameId: budjetId,
+                  from,
+                  to
+                }}
+                fileName={`podoxod_${startDate}_${endDate}.xlsx`}
+                buttonText={t('podoxod')}
+                variant="ghost"
+              />
+              <DownloadFile
+                isZarplata
+                url="Excel/plastik-otchet"
+                params={{
+                  spBudnameId: budjetId,
+                  from,
+                  to
+                }}
+                fileName={`plastik_${startDate}_${endDate}.xlsx`}
+                buttonText={t('plastik')}
+                variant="ghost"
+              />
+              <DownloadFile
+                isZarplata
+                url="Excel/jur5-otchet"
+                params={{
+                  spBudnameId: budjetId,
+                  from,
+                  to
+                }}
+                fileName={`${t('monthly_report')}_${startDate}_${endDate}.xlsx`}
+                buttonText={t('monthly_report')}
+                variant="ghost"
+              />
+            </div>
           </div>
         </div>
       </div>
+
       <div className="flex-1">
         <Allotment
           proportionalLayout={false}
