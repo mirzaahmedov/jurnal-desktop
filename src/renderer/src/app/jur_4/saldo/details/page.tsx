@@ -312,17 +312,66 @@ const PodotchetSaldoDetailsPage = () => {
     },
     [isEmptyRowsHidden, form]
   )
-  const columns = useMemo(() => {
-    return getPodochetSaldoProvodkaColumns(isEditable)
-  }, [isEditable])
+  // const columns = useMemo(() => {
+  //   return getPodochetSaldoProvodkaColumns(isEditable)
+  // }, [isEditable])
+
+  const columnDefs = useMemo(
+    () => [
+      {
+        field: 'name',
+        flex: 1,
+        headerName: t('name'),
+        minWidth: 320
+      },
+      {
+        field: 'rayon',
+        flex: 1,
+        headerName: t('rayon'),
+        minWidth: 320
+      },
+      {
+        field: 'prixod',
+        cellRenderer: 'numberEditor',
+        headerName: t('prixod'),
+        flex: 1,
+        minWidth: 200
+      },
+      {
+        field: 'rasxod',
+        cellRenderer: 'numberEditor',
+        headerName: t('rasxod'),
+        flex: 1,
+        minWidth: 200
+      },
+      {
+        field: 'summa',
+        cellRenderer: 'numberEditor',
+        headerName: t('summa'),
+        flex: 1,
+        minWidth: 200
+      }
+    ],
+    [t]
+  )
+
+  const onValueChange = useCallback(
+    (rowIndex: number, field: keyof PodotchetSaldoProvodkaFormValues) => {
+      if (field === 'prixod' || field === 'rasxod') {
+        const prixodValue = form.getValues(`podotchets.${rowIndex}.prixod`) || 0
+        const rasxodValue = form.getValues(`podotchets.${rowIndex}.rasxod`) || 0
+        const summaValue = (prixodValue || 0) - (rasxodValue || 0)
+        form.setValue(`podotchets.${rowIndex}.summa`, summaValue)
+      }
+    },
+    [form]
+  )
 
   useEffect(() => {
     if (error) {
       handleSaldoErrorDates(SaldoNamespace.JUR_4, error)
     }
   }, [error])
-
-  console.log('rendering')
 
   return (
     <DetailsView className="h-full">
@@ -427,49 +476,8 @@ const PodotchetSaldoDetailsPage = () => {
               <EditorTable
                 form={form}
                 arrayField="podotchets"
-                columnDefs={[
-                  {
-                    field: 'name',
-                    flex: 1,
-                    headerName: t('name'),
-                    minWidth: 320
-                  },
-                  {
-                    field: 'rayon',
-                    flex: 1,
-                    headerName: t('rayon'),
-                    minWidth: 320
-                  },
-                  {
-                    field: 'prixod',
-                    cellRenderer: 'numberEditor',
-                    headerName: t('prixod'),
-                    flex: 1,
-                    minWidth: 200
-                  },
-                  {
-                    field: 'rasxod',
-                    cellRenderer: 'numberEditor',
-                    headerName: t('rasxod'),
-                    flex: 1,
-                    minWidth: 200
-                  },
-                  {
-                    field: 'summa',
-                    cellRenderer: 'numberEditor',
-                    headerName: t('summa'),
-                    flex: 1,
-                    minWidth: 200
-                  }
-                ]}
-                onValueEdited={(rowIndex, field) => {
-                  if (field === 'prixod' || field === 'rasxod') {
-                    const prixodValue = form.getValues(`podotchets.${rowIndex}.prixod`) || 0
-                    const rasxodValue = form.getValues(`podotchets.${rowIndex}.rasxod`) || 0
-                    const summaValue = (prixodValue || 0) - (rasxodValue || 0)
-                    form.setValue(`podotchets.${rowIndex}.summa`, summaValue)
-                  }
-                }}
+                columnDefs={columnDefs}
+                onValueEdited={onValueChange}
                 className="h-full"
               />
               {/* <PodotchetSaldoTable
