@@ -287,11 +287,14 @@ const RasxodDetails = ({ id, onSuccess }: RasxodDetailsProps) => {
               />
 
               <OrganizationFields
+                displayGazna
                 tabIndex={4}
                 name={t('to-whom')}
                 spravochnik={orgSpravochnik}
                 form={form as any}
                 error={form.formState.errors.kimdan_id}
+                accountNumberField="organ_account_id"
+                gaznaNumberField="organ_gazna_id"
                 className="bg-gray-50"
               />
             </div>

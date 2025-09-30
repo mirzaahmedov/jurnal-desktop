@@ -12,7 +12,6 @@ import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { formatDate, getFirstDayOfMonth, parseDate } from '@/common/lib/date'
@@ -28,12 +27,11 @@ import { ViewModal } from './view-modal'
 const AdminOrgan159Page = () => {
   const viewToggle = useToggle()
   const setLayout = useLayout()
-  const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
   const [docs, setDocs] = useState<AdminOrgan159Document[]>()
   const [selected, setSelected] = useState<AdminOrgan159 | null>(null)
-  const [to, setTo] = useState(defaultDate)
+  const [to, setTo] = useState(formatDate(new Date()))
 
   const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 

@@ -16,30 +16,42 @@ import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochn
 export interface OrganizationFieldsProps {
   displayGazna?: boolean
   readOnly?: boolean
-  form?: UseFormReturn<{
-    organization_porucheniya_name?: string
-    organization_by_raschet_schet_id: number
-    organization_by_raschet_schet_gazna_id: number
-  }>
+  accountNumberField?: string
+  gaznaNumberField?: string
+  form?: UseFormReturn<any>
+  // form?: UseFormReturn<{
+  //   organization_porucheniya_name?: string
+  //   organization_by_raschet_schet_id: number
+  //   organization_by_raschet_schet_gazna_id: number
+  // }>
 }
 
 export const OrganizationFields: FormSpravochnikFieldsComponent<
   Organization,
   OrganizationFieldsProps
-> = ({ tabIndex, disabled, error, name, spravochnik, displayGazna = false, form, ...props }) => {
+> = ({
+  tabIndex,
+  disabled,
+  error,
+  name,
+  spravochnik,
+  displayGazna = false,
+  form,
+  accountNumberField = 'organization_by_raschet_schet_id',
+  gaznaNumberField = 'organization_by_raschet_schet_gazna_id',
+  ...props
+}) => {
   const { inputRef, ...spravochnikProps } = spravochnik
 
   const { t } = useTranslation()
 
   useEffect(() => {
     if (spravochnikProps.selected) {
-      form?.setValue(
-        'organization_by_raschet_schet_id',
-        spravochnikProps.selected.account_numbers[0]?.id ?? 0,
-        { shouldValidate: true }
-      )
+      form?.setValue(accountNumberField, spravochnikProps.selected.account_numbers[0]?.id ?? 0, {
+        shouldValidate: true
+      })
     }
-  }, [spravochnikProps.selected])
+  }, [spravochnikProps.selected, accountNumberField])
 
   return (
     <SpravochnikFields
@@ -103,7 +115,7 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
         <>
           <FormField
             control={form.control}
-            name="organization_by_raschet_schet_id"
+            name={accountNumberField}
             render={({ field }) => (
               <FormElement
                 label={t('raschet-schet')}
@@ -150,7 +162,7 @@ export const OrganizationFields: FormSpravochnikFieldsComponent<
           {displayGazna ? (
             <FormField
               control={form.control}
-              name="organization_by_raschet_schet_gazna_id"
+              name={gaznaNumberField}
               render={({ field }) => (
                 <FormElement
                   label={t('raschet-schet-gazna')}

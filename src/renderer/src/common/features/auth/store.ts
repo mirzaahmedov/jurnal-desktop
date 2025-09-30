@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 export type AuthenticationStore = {
   isAuthenticated: boolean
-  user?: User & { access_object: RoleAccess }
+  user?: User & { acesses: RoleAccess[] }
   token?: string
   setUser(payload: Pick<AuthenticationStore, 'user' | 'token'> | null): void
   setAuthenticated(isAuthenticated: boolean): void

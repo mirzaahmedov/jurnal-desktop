@@ -16,7 +16,10 @@ export const OrganizationFormSchema = withPreprocessor(
     name: z.string(),
     mfo: z.string(),
     inn: z.string(),
+    default_inn: z.string().optional().nullable(),
     bank_klient: z.string(),
+    address: z.string(),
+    director: z.string(),
     account_numbers: z.array(
       z.object({
         id: z.number().optional(),
@@ -37,8 +40,11 @@ export type OrganizationFormValues = z.infer<typeof OrganizationFormSchema>
 export const defaultValues: OrganizationFormValues = {
   name: '',
   bank_klient: '',
+  default_inn: '',
   inn: '',
   mfo: '',
+  address: '',
+  director: '',
   account_numbers: [
     {
       raschet_schet: ''

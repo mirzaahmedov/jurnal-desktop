@@ -4,6 +4,8 @@ export interface SoliqOrganization {
   mfo: string
   account_number: string
   okonx: string
+  address: string
+  director: string
   meta: {
     company: {
       name: string

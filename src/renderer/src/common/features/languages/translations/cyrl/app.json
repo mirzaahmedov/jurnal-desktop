@@ -93,7 +93,8 @@
     "payment_type": "Тўлов тури",
     "payments": "Тўловлар",
     "deductions": "Ушланмалар",
-    "staffing_table": "Штат жадвали"
+    "staffing_table": "Штат жадвали",
+    "headers": "Сарлавҳалар"
   },
   "app": {
     "settings": "Созламалар",

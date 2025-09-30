@@ -3,6 +3,7 @@ export enum ApiEndpoints {
   main_schet = 'spravochnik/main-schet',
   podotchet_litso = 'spravochnik/podotchet-litso',
   podrazdelenie = 'spravochnik/podrazdelenie',
+  headers = 'spravochnik/header',
   type_operatsii = 'spravochnik/type-operatsii',
   organization = 'spravochnik/organization',
   budjet_name = 'spravochnik/budjet-name',

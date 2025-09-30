@@ -11,6 +11,11 @@ export interface Organization {
   inn: string
   okonx: string
   childs: Organization[]
+  address: string
+  director: string
+  user_id: number
+  fio: string
+  login: string
   sub_childs: OrganizationSubchild[]
 }
 

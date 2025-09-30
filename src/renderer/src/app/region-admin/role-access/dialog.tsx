@@ -18,6 +18,7 @@ import {
 import { Button } from '@/common/components/ui/button'
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField, FormItem, FormLabel } from '@/common/components/ui/form'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { cn } from '@/common/lib/utils'
 
 import { type RoleAccessFormValues, RoleAccessQueryKeys, roleAccessOptions } from './config'
@@ -29,6 +30,7 @@ export interface RoleAccessDialogProps extends Omit<DialogTriggerProps, 'childre
 export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDialogProps) => {
   const queryClient = useQueryClient()
   const form = useForm<RoleAccessFormValues>()
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
 
   RoleAccessService.forRequest((type, args) => {
     if (type === 'getById') {
@@ -54,7 +56,8 @@ export const RoleAccessDialog = ({ roleId, isOpen, onOpenChange }: RoleAccessDia
       RoleAccessQueryKeys.getById,
       roleId,
       {
-        role_id: roleId
+        role_id: roleId,
+        budjet_id: budjetId
       }
     ],
     queryFn: RoleAccessService.getById,

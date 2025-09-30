@@ -93,7 +93,8 @@
     "payment_type": "To'lov turi",
     "payments": "To'lovlar",
     "deductions": "Ushlanmalar",
-    "staffing_table": "Shtat jadvali"
+    "staffing_table": "Shtat jadvali",
+    "headers": "Sarlavhalar"
   },
   "app": {
     "settings": "Sozlamalar",

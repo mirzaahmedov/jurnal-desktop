@@ -153,3 +153,10 @@ b {
 .ag-root-wrapper {
   border-radius: 0 !important;
 }
+.ag-root-wrapper .ag-cell {
+  border-right: 1px solid #e0e0e0; /* vertical divider */
+}
+.ag-root-wrapper .ag-cell:has(input) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

@@ -11,7 +11,6 @@ import {
   SearchFilterDebounced,
   useSearchFilter
 } from '@/common/features/filters/search/search-filter-debounced'
-import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks/use-toggle'
 import { useLayout } from '@/common/layout'
 import { formatDate, getFirstDayOfMonth, parseDate } from '@/common/lib/date'
@@ -26,12 +25,11 @@ import { ViewModal } from './view-modal'
 const AdminPodotchetPage = () => {
   const setLayout = useLayout()
   const docsViewToggle = useToggle()
-  const defaultDate = useSettingsStore((state) => state.default_end_date)
 
   const [search] = useSearchFilter()
   const [selected, setSelected] = useState<AdminZarplataDashboard | null>(null)
 
-  const [to, setTo] = useState(defaultDate)
+  const [to, setTo] = useState(formatDate(new Date()))
 
   const from = formatDate(getFirstDayOfMonth(parseDate(to)))
 

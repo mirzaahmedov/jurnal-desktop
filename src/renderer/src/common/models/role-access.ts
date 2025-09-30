@@ -19,4 +19,5 @@ export interface RoleAccess {
   odinox: boolean
   zarplata: boolean
   role_name: string
+  budjet_id: number
 }

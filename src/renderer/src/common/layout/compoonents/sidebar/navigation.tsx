@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/common/components/ui/accordion'
+import { useRequisitesStore } from '@/common/features/requisites'
 import { type INavElement, getNavElements } from '@/common/layout/compoonents/sidebar/config'
 import { cn } from '@/common/lib/utils'
 
@@ -19,9 +20,10 @@ export interface NavigationStore {
 }
 export const Navigation = ({ isCollapsed }: NavigationStore) => {
   const { t } = useTranslation(['app'])
+  const budjetId = useRequisitesStore((store) => store.budjet_id)
   return (
     <nav>
-      <ul>{getNavElements(t).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
+      <ul>{getNavElements(t, budjetId!).map((elem) => renderNavElement(elem, isCollapsed))}</ul>
     </nav>
   )
 }

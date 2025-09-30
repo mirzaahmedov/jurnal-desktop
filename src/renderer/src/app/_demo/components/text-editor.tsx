@@ -1,6 +1,6 @@
-import type { CustomCellEditorProps } from 'ag-grid-react'
 import type { FC } from 'react'
 
+import { type CustomCellEditorProps } from 'ag-grid-react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { type EditorContext, EditorInput } from './input'

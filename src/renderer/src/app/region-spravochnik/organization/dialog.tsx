@@ -96,10 +96,16 @@ export const OrganizationDialog = ({
       form.reset(defaultValues)
     }
     if (!selected) {
-      form.reset(original ?? defaultValues)
+      form.reset({
+        ...(original ?? defaultValues),
+        default_inn: original?.inn ?? ''
+      })
       return
     }
-    form.reset(selected)
+    form.reset({
+      ...selected,
+      default_inn: selected?.inn ?? ''
+    })
   }, [form, original, selected, open])
 
   return (

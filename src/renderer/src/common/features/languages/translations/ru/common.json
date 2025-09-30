@@ -579,5 +579,6 @@
   "category_num": "Номер категории",
   "category_name": "Название категории",
   "ligota": "Льгота",
-  "poluchatel_fio": "ФИО получателя"
+  "poluchatel_fio": "ФИО получателя",
+  "address": "Адрес"
 }

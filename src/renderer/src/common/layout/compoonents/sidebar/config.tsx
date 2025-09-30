@@ -38,6 +38,7 @@ import {
   Percent,
   Receipt,
   ReceiptText,
+  RemoveFormatting,
   Ruler,
   Settings,
   ShieldBan,
@@ -76,9 +77,10 @@ export interface INavElement {
   children?: INavElement[]
 }
 
-export const getNavElements = (t: TFunction): INavElement[] => {
+export const getNavElements = (t: TFunction, budjetId: number): INavElement[] => {
   const user = useAuthenticationStore.getState().user
-  const permissions = user?.access_object ?? ({} as RoleAccess)
+  const permissions =
+    user?.acesses?.find((access) => access.budjet_id === budjetId) ?? ({} as RoleAccess)
 
   const is_super_admin = user?.role_name === AdminRoles.super_admin
   const is_admin = user?.role_name === AdminRoles.region_admin
@@ -446,6 +448,11 @@ export const getNavElements = (t: TFunction): INavElement[] => {
               path: 'podpis',
               title: t('pages.podpis'),
               icon: Signature
+            },
+            {
+              path: 'headers',
+              title: t('pages.headers'),
+              icon: RemoveFormatting
             }
           ]
         }

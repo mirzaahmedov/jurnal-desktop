@@ -92,7 +92,7 @@ const MaterialWarehouseSaldoPage = () => {
   }>()
 
   const [productData, setProductData] = useState<MaterialSaldoProduct>()
-  const [selectedDate, setSelectedDate] = useState<undefined | Date>(startDate)
+  const [selectedDate, setSelectedDate] = useState<undefined | Date>(endDate)
   const [isModifiable, setModifiable] = useState(false)
   const [search] = useSearchFilter()
 
@@ -223,8 +223,8 @@ const MaterialWarehouseSaldoPage = () => {
     if (date && startDate < date && date < endDate) {
       return
     }
-    form.setValue('date', startDate)
-    setSelectedDate(startDate)
+    form.setValue('date', endDate)
+    setSelectedDate(endDate)
   }, [form, startDate, endDate])
 
   useEffect(() => {

@@ -139,6 +139,7 @@ const VacantPage = lazy(() => import('./region-admin/vacant/page'))
 const NachisleniePage = lazy(() => import('./jur_5/nachislenie/page'))
 
 const MinimumWagePage = lazy(() => import('./super-admin/spravochnik/minimum-wage/page'))
+const HeadersPage = lazy(() => import('./region-spravochnik/headers/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -323,6 +324,10 @@ export const routes: RouteObject[] = [
           {
             path: 'podpis',
             element: <PodpisPage />
+          },
+          {
+            path: 'headers',
+            element: <HeadersPage />
           }
         ]
       },
@@ -335,7 +340,13 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'user',
-            element: <RegionUserPage />
+            element: <BudjetSelectedGuard />,
+            children: [
+              {
+                index: true,
+                element: <RegionUserPage />
+              }
+            ]
           },
           {
             path: 'vacant',

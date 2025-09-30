@@ -64,7 +64,7 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
   })
 
   useEffect(() => {
-    if (form.watch('inn').length === 9) {
+    if (form.watch('inn').length === 9 && form.watch('inn') !== form.getValues('default_inn')) {
       findOrganizationByInnMutation.mutate(form.watch('inn'))
     }
   }, [form.watch('inn')])
@@ -91,6 +91,32 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
                 <FormElement
                   grid="2:4"
                   label={t('name')}
+                >
+                  <Input {...field} />
+                </FormElement>
+              )}
+            />
+
+            <FormField
+              name="address"
+              control={form.control}
+              render={({ field }) => (
+                <FormElement
+                  grid="2:4"
+                  label={t('address')}
+                >
+                  <Input {...field} />
+                </FormElement>
+              )}
+            />
+
+            <FormField
+              name="director"
+              control={form.control}
+              render={({ field }) => (
+                <FormElement
+                  grid="2:4"
+                  label={t('director')}
                 >
                   <Input {...field} />
                 </FormElement>
@@ -297,9 +323,11 @@ export const OrganizationForm = ({ form, formActions, onSubmit }: OrganizationFo
               raschet_schet: foundOrganization.account_number
             }
           ])
+          form.setValue('address', foundOrganization.address)
+          form.setValue('director', foundOrganization.director)
+
           setFoundOrganization(undefined)
           callbackRef.current = () => {
-            console.log('running')
             autoCompleteMethods.current?.select(foundOrganization.mfo)
           }
         }}

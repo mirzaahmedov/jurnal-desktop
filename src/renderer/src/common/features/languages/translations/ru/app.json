@@ -93,7 +93,8 @@
     "payment_type": "Тип платежа",
     "payments": "Платежи",
     "deductions": "Удержания",
-    "staffing_table": "Штатное расписание"
+    "staffing_table": "Штатное расписание",
+    "headers": "Заголовки"
   },
   "app": {
     "settings": "Настройки",

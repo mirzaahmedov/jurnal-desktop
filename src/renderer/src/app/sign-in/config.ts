@@ -13,7 +13,7 @@ export const SigninFormSchema = z.object({
 export type SigninFormValues = z.infer<typeof SigninFormSchema>
 export type SigninResponse = {
   token: string
-  result: User & { access_object: RoleAccess }
+  result: User & { acesses: RoleAccess[] }
   main_schet: MainSchet
 }
 

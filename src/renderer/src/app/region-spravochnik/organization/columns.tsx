@@ -16,6 +16,7 @@ export const OrganizationColumns: ColumnDef<Organization>[] = [
     key: 'name',
     className: 'min-w-[300px]'
   },
+
   {
     key: 'inn',
     className: 'pr-0',
@@ -88,6 +89,14 @@ export const OrganizationColumns: ColumnDef<Organization>[] = [
         )}
       />
     )
+  },
+  {
+    key: 'address',
+    className: 'min-w-[300px]'
+  },
+  {
+    key: 'director',
+    className: 'min-w-[300px]'
   },
   {
     fit: true,
