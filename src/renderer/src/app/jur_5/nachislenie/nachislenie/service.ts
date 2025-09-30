@@ -60,20 +60,20 @@ export class NachislenieService {
       [
         typeof NachislenieService.QueryKeys.MadeVacants,
         {
-          year: number
-          month: number
+          from: string
+          to: string
           budjetId: number
         }
       ]
     >
   ) {
-    const { year, month, budjetId } = ctx.queryKey[1]
+    const { from, to, budjetId } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<{ vacantId: number[] }>(
       `${NachislenieService.endpoint}/made-vacants`,
       {
         params: {
-          year,
-          month,
+          from,
+          to,
           budjet_name_id: budjetId
         }
       }
@@ -88,8 +88,8 @@ export class NachislenieService {
         {
           page: number
           limit: number
-          year?: number
-          month?: number
+          from: string
+          to: string
           doc_num?: string
           budjet_name_id: number
           vacantId: number
@@ -126,7 +126,6 @@ export class NachislenieService {
       kazarma: number
     }
   ) {
-    console.log('running')
     const res = await zarplataApiNew.put<ZarplataApiResponse<Nachislenie[]>>(
       `${NachislenieService.endpoint}/update-child/${childId}`,
       values
@@ -250,16 +249,13 @@ export class NachislenieService {
     return res.data
   }
 
-  static async createChild(values: {
-    mainZarplataId: number
-    rabDni: number
-    otrabDni: number
-    noch: number
-    prazdnik: number
-    pererabodka: number
-    kazarma: number
-  }) {
-    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-child`, values)
+  static async createChild(params: { values: NachislenieCreateChildPayload; mainId: number }) {
+    const { values, mainId } = params
+    const res = await zarplataApiNew.post(`${NachislenieService.endpoint}/creat-child`, values, {
+      params: {
+        mainId
+      }
+    })
     return res.data
   }
 
@@ -271,4 +267,14 @@ export class NachislenieService {
     })
     return res.data
   }
+}
+
+export interface NachislenieCreateChildPayload {
+  mainZarplataId: number
+  rabDni: number
+  otrabDni: number
+  noch: number
+  prazdnik: number
+  pererabodka: number
+  kazarma: number
 }

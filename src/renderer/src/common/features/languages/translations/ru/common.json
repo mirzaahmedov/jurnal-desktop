@@ -578,5 +578,6 @@
   "material_product_history": "История движения материалов",
   "category_num": "Номер категории",
   "category_name": "Название категории",
-  "ligota": "Льгота"
+  "ligota": "Льгота",
+  "poluchatel_fio": "ФИО получателя"
 }

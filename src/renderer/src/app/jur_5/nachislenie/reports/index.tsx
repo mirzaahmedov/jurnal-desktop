@@ -1,14 +1,14 @@
 import type { Nachislenie } from '@/common/models'
+import type { DialogTriggerProps } from 'react-aria-components'
 
-import { useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { WalletCards } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -18,11 +18,13 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Pagination } from '@/common/components/pagination'
+import { RangeDatePicker } from '@/common/components/range-date-picker'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { IDCell } from '@/common/components/table/renderers/id'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Badge } from '@/common/components/ui/badge'
-import { YearMonthCombo } from '@/common/components/year-month-combo'
 import { DownloadFile } from '@/common/features/file'
+import { AlimentDeductionService } from '@/common/features/payroll-deduction/aliment-deductions/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
 import {
@@ -30,9 +32,9 @@ import {
   type VacantTreeNode,
   VacantTreeSearch
 } from '@/common/features/vacant/ui/vacant-tree'
-import { usePagination } from '@/common/hooks'
+import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
-import { formatDate } from '@/common/lib/date'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 
 import { NachislenieTabs } from '../nachislenie-tabs'
@@ -43,8 +45,8 @@ export const NachislenieReports = () => {
   const budjetId = useRequisitesStore((store) => store.budjet_id)
   const setLayout = useLayout()
 
-  const [startDate, setStartDate] = useState(formatDate(new Date()))
-  const [endDate, setEndDate] = useState(formatDate(new Date()))
+  const [startDate, setStartDate] = useState(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState(formatDate(getLastDayOfMonth()))
 
   const { t } = useTranslation(['app'])
 
@@ -60,21 +62,6 @@ export const NachislenieReports = () => {
     })
   }, [t, setLayout])
 
-  const handleNextDay = (field: 'from' | 'to', amount: number) => {
-    const date = new Date(field === 'from' ? startDate! : endDate!)
-    date.setDate(date.getDate() + amount)
-    const newDate = date.toISOString().split('T')[0]
-    if (field === 'from') setStartDate(newDate)
-    else setEndDate(newDate)
-  }
-  const handlePrevDay = (field: 'from' | 'to', amount: number) => {
-    const date = new Date(field === 'from' ? startDate! : endDate!)
-    date.setDate(date.getDate() - amount)
-    const newDate = date.toISOString().split('T')[0]
-    if (field === 'from') setStartDate(newDate)
-    else setEndDate(newDate)
-  }
-
   const from = formatLocaleDate(startDate)
   const to = formatLocaleDate(endDate)
 
@@ -84,17 +71,16 @@ export const NachislenieReports = () => {
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [selectedNachislenies, setSelectedNachislenies] = useState<Nachislenie[]>([])
   const [docNum, setDocNum] = useState<string>('')
-  const [year, setYear] = useState<number>(new Date().getFullYear())
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
 
   const pagination = usePagination()
+  const alimonyToggle = useToggle()
 
   const nachislenieMadeQuery = useQuery({
     queryKey: [
       NachislenieService.QueryKeys.MadeVacants,
       {
-        year: year,
-        month: month,
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate),
         budjetId: budjet_id!
       }
     ],
@@ -110,8 +96,8 @@ export const NachislenieReports = () => {
         limit: pagination.limit,
         budjet_name_id: budjet_id!,
         doc_num: docNum || undefined,
-        year: year || undefined,
-        month: month || undefined,
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate),
         vacantId: selectedVacant?.id ?? 0
       }
     ],
@@ -122,56 +108,26 @@ export const NachislenieReports = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="p-2.5 border-b">
-        <div className="px-5 py-5 bg-slate-100 border border-slate-200 rounded-lg">
+        <div className="px-5 py-5 bg-neutral-100 border border-slate-200 rounded-lg">
           <div className="flex items-center justify-between flex-wrap gap-5">
-            <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onPress={() => handlePrevDay('from', 1)}
-              >
-                <ChevronLeft className="btn-icon" />
-              </Button>
-              <JollyDatePicker
-                autoFocus
-                value={startDate}
-                onChange={(date) => setStartDate(date)}
-                containerProps={{ className: 'w-36 min-w-36' }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onPress={() => handleNextDay('from', 1)}
-              >
-                <ChevronRight className="btn-icon" />
-              </Button>
-              <b className="mx-0.5">-</b>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onPress={() => handlePrevDay('to', 1)}
-              >
-                <ChevronLeft className="btn-icon" />
-              </Button>
-              <JollyDatePicker
-                value={endDate}
-                onChange={(date) => setEndDate(date)}
-                containerProps={{ className: 'w-36 min-w-36' }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onPress={() => handleNextDay('to', 1)}
-              >
-                <ChevronRight className="btn-icon" />
-              </Button>
-            </div>
+            <RangeDatePicker
+              from={startDate}
+              to={endDate}
+              onValueChange={(from, to) => {
+                setStartDate(from)
+                setEndDate(to)
+              }}
+            />
 
             <div className="flex items-center flex-wrap justify-end gap-2.5">
+              <Button
+                onPress={() => alimonyToggle.open()}
+                variant="ghost"
+                IconStart={WalletCards}
+                className="ml-auto"
+              >
+                {t('aliment')}
+              </Button>
               <DownloadFile
                 isZarplata
                 url="Excel/inps-otchet"
@@ -265,12 +221,6 @@ export const NachislenieReports = () => {
                   value={docNum}
                   onValueChange={setDocNum}
                 />
-                <YearMonthCombo
-                  year={year}
-                  onYearChange={setYear}
-                  month={month}
-                  onMonthChange={setMonth}
-                />
 
                 <div className="ml-auto flex items-center gap-2">
                   <DialogTrigger>
@@ -346,6 +296,95 @@ export const NachislenieReports = () => {
           </Allotment.Pane>
         </Allotment>
       </div>
+
+      <AlimonyModal
+        from={from}
+        to={to}
+        budjetId={budjet_id!}
+        isOpen={alimonyToggle.isOpen}
+        onOpenChange={alimonyToggle.setOpen}
+      />
     </div>
+  )
+}
+
+interface AlimonyModalProps extends Omit<DialogTriggerProps, 'children'> {
+  from: string
+  to: string
+  budjetId: number
+}
+const AlimonyModal: FC<AlimonyModalProps> = ({ from, to, budjetId, ...props }) => {
+  const { t } = useTranslation(['app'])
+
+  const alimentsQuery = useQuery({
+    queryKey: [
+      AlimentDeductionService.QueryKeys.GetAliments,
+      {
+        from,
+        to,
+        spBudnameId: budjetId
+      }
+    ],
+    queryFn: AlimentDeductionService.getAliments
+  })
+
+  return (
+    <DialogTrigger {...props}>
+      <DialogOverlay>
+        <DialogContent className="w-full max-w-full h-full max-h-[800px]">
+          <div className="flex flex-col gap-5">
+            <DialogHeader>
+              <DialogTitle>{t('aliment')}</DialogTitle>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto scrollbar">
+              {alimentsQuery.isPending ? <LoadingOverlay /> : null}
+              <GenericTable
+                data={alimentsQuery.data ?? []}
+                columnDefs={[
+                  {
+                    key: 'id',
+                    header: ' ',
+                    renderCell: IDCell
+                  },
+                  {
+                    key: 'cardNumber',
+                    header: t('card_number')
+                  },
+                  {
+                    key: 'docNum',
+                    header: t('doc_num')
+                  },
+                  {
+                    key: 'docDate',
+                    header: t('doc_date'),
+                    renderCell: (row) => formatLocaleDate(row.docDate)
+                  },
+                  {
+                    key: 'deductionName',
+                    header: t('deduction')
+                  },
+                  {
+                    key: 'fio',
+                    header: t('fio')
+                  },
+                  {
+                    key: 'poluchatelFio',
+                    header: t('poluchatel_fio')
+                  },
+                  {
+                    key: 'summa',
+                    renderCell: SummaCell
+                  },
+                  {
+                    key: 'percentage'
+                  }
+                ]}
+                className="table-generic-xs"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

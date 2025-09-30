@@ -1,16 +1,18 @@
-import type { VacantTreeNode } from '@/common/features/vacant/ui/vacant-tree'
-import type { NachislenieProvodka } from '@/common/models'
+import type { MainZarplata, NachislenieProvodka } from '@/common/models'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Allotment } from 'allotment'
 import { Download, Plus, Search, Sigma, UserSquare } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
+import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { MainZarplataInfo } from '@/app/jur_5/passport-info/components'
 import {
   FooterCell,
@@ -27,6 +29,7 @@ import { Button } from '@/common/components/jolly/button'
 import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -41,6 +44,12 @@ import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { useZarplataStore } from '@/common/features/zarplata/store'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
@@ -51,7 +60,7 @@ import {
 } from '@/common/models/nachislenie'
 
 import { defaultValues } from '../config'
-import { NachislenieService } from '../service'
+import { type NachislenieCreateChildPayload, NachislenieService } from '../service'
 import { NachisleniePaymentDialog } from './nachislenie-payments-dialog'
 
 enum TabOptions {
@@ -62,14 +71,12 @@ enum TabOptions {
 export interface NachislenieEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
   nachislenieId: number | undefined
   vacant: VacantTreeNode | undefined
-  onYearChange?: (year: number) => void
-  onMonthChange?: (month: number) => void
+  onDateChange?: (date: Date) => void
 }
 export const NachislenieEditDialog = ({
   nachislenieId,
   vacant,
-  onYearChange,
-  onMonthChange,
+  onDateChange,
   ...props
 }: NachislenieEditDialogProps) => {
   const { t } = useTranslation(['app'])
@@ -82,6 +89,7 @@ export const NachislenieEditDialog = ({
   const [, setSearchParams] = useSearchParams()
 
   const comboModal = useToggle()
+  const createChildModal = useToggle()
   const queryClient = useQueryClient()
 
   const nachislenieMainQuery = useQuery({
@@ -147,6 +155,11 @@ export const NachislenieEditDialog = ({
       setMainZarplataId(nachislenieProvodka[0].mainZarplataId)
     }
   }, [nachislenieProvodka, mainZarplataId])
+  useEffect(() => {
+    if (!props.isOpen) {
+      setTabValue(TabOptions.View)
+    }
+  }, [props?.isOpen])
 
   const handleSearchMainZarplata = (id: number | null) => {
     if (id) {
@@ -170,8 +183,7 @@ export const NachislenieEditDialog = ({
           setSearchParams({
             nachislenieId: res.nachislenieMainId.toString()
           })
-          onYearChange?.(year)
-          onMonthChange?.(month)
+          onDateChange?.(new Date(year, month - 1, 1))
         }
       }
     )
@@ -367,6 +379,15 @@ export const NachislenieEditDialog = ({
                     </div>
                   </div>
                 )}
+                {tabValue === TabOptions.View && (
+                  <Button
+                    IconStart={Plus}
+                    className="ml-auto"
+                    onPress={() => createChildModal.open()}
+                  >
+                    {t('add')}
+                  </Button>
+                )}
               </DialogHeader>
 
               {tabValue === TabOptions.View && (
@@ -551,6 +572,12 @@ export const NachislenieEditDialog = ({
           </DialogContent>
         </DialogOverlay>
       </DialogTrigger>
+
+      <NachislenieCreateDialog
+        mainId={nachislenieId!}
+        isOpen={createChildModal.isOpen}
+        onOpenChange={createChildModal.setOpen}
+      />
     </>
   )
 }
@@ -985,5 +1012,232 @@ const NachislenieUpdateForm: FC<NachislenieUpdateFormProps> = ({
         </>
       ) : null}
     </>
+  )
+}
+
+export interface NachislenieCreateDialogProps extends Omit<DialogTriggerProps, 'children'> {
+  mainId?: number
+}
+const NachislenieCreateDialog: FC<NachislenieCreateDialogProps> = ({ mainId, ...props }) => {
+  const { t } = useTranslation(['app'])
+  const { search, setSearch, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
+
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
+  const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata | null>(null)
+
+  const mainZarplataQuery = useMainZarplataList({ vacantId: selectedVacant?.id ?? undefined })
+  const queryClient = useQueryClient()
+  const form = useForm<NachislenieCreateChildPayload>({
+    defaultValues: {
+      mainZarplataId: 0,
+      rabDni: 0,
+      otrabDni: 0,
+      noch: 0,
+      prazdnik: 0,
+      pererabodka: 0,
+      kazarma: 0
+    }
+  })
+
+  const createChildMutation = useMutation({
+    mutationFn: NachislenieService.createChild,
+    onSuccess: () => {
+      toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [NachislenieService.QueryKeys.GetById, mainId]
+      })
+      props?.onOpenChange?.(false)
+    },
+    onError: () => {
+      toast.error(t('create_failed'))
+    }
+  })
+
+  const handleSubmit = form.handleSubmit((values) => {
+    if (!selectedMainZarplata) {
+      toast.error(t('select_main_zarplata'))
+      return
+    }
+    createChildMutation.mutate({
+      mainId: mainId ?? 0,
+      values: {
+        mainZarplataId: selectedMainZarplata.id,
+        rabDni: values.rabDni ?? 0,
+        otrabDni: values.otrabDni ?? 0,
+        noch: values.noch ?? 0,
+        prazdnik: values.prazdnik ?? 0,
+        pererabodka: values.pererabodka ?? 0,
+        kazarma: values.kazarma ?? 0
+      }
+    })
+  })
+
+  useEffect(() => {
+    if (!props.isOpen) {
+      form.reset()
+    }
+  }, [form, props.isOpen])
+
+  return (
+    <DialogTrigger {...props}>
+      <DialogOverlay>
+        <DialogContent className="w-full max-w-full h-full max-h-[800px] p-0">
+          <div className="flex flex-col">
+            <DialogHeader className="p-5">
+              <DialogTitle>
+                {t('create-something', { something: t('nachislenie').toLowerCase() })}
+              </DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form
+                onSubmit={handleSubmit}
+                className="flex-1 flex flex-col px-5"
+              >
+                <div className="w-full max-w-6xl grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-x-5 gap-y-2.5 ">
+                  <FormField
+                    control={form.control}
+                    name="rabDni"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('workdays')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="otrabDni"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('worked_days')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="noch"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('night_shift')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="prazdnik"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('holiday')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="pererabodka"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('overtime')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="kazarma"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('kazarma')}
+                        direction="column"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values) => field.onChange(values.floatValue ?? 0)}
+                        />
+                      </FormElement>
+                    )}
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <Allotment className="h-full">
+                    <Allotment.Pane
+                      preferredSize={300}
+                      maxSize={600}
+                      minSize={300}
+                      className="w-full bg-gray-50"
+                    >
+                      <div className="relative h-full flex flex-col">
+                        {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+                        <VacantTreeSearch
+                          search={search}
+                          onValueChange={setSearch}
+                          treeNodes={filteredTreeNodes}
+                        />
+                        <div className="flex-1 overflow-auto scrollbar">
+                          <VacantTree
+                            nodes={filteredTreeNodes}
+                            selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                            onSelectNode={setSelectedVacant}
+                          />
+                        </div>
+                      </div>
+                    </Allotment.Pane>
+                    <Allotment.Pane>
+                      <div className="relative w-full h-full overflow-auto scrollbar pl-px">
+                        {mainZarplataQuery.isFetching && <LoadingOverlay />}
+                        <MainZarplataTable
+                          data={mainZarplataQuery.data ?? []}
+                          selectedIds={selectedMainZarplata ? [selectedMainZarplata.id] : []}
+                          onClickRow={(row) => {
+                            setSelectedMainZarplata(row)
+                          }}
+                        />
+                      </div>
+                    </Allotment.Pane>
+                  </Allotment>
+                </div>
+                <DialogFooter className="p-5">
+                  <Button type="submit">{t('save')}</Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

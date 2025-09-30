@@ -200,4 +200,26 @@ export class OtherVedemostService {
     )
     return res.data
   }
+
+  static async createChild(params: { values: OtherVedemostCreateChildPayload; mainId: number }) {
+    const { values, mainId } = params
+    const res = await zarplataApiNew.post(`${OtherVedemostService.endpoint}/create-child`, values, {
+      params: {
+        mainOthersId: mainId
+      }
+    })
+    return res.data
+  }
+
+  static async deleteChild(childId: number) {
+    const res = await zarplataApiNew.delete(`${OtherVedemostService.endpoint}/delete-child`, {
+      params: {
+        childId
+      }
+    })
+    return res.data
+  }
+}
+export interface OtherVedemostCreateChildPayload {
+  mainZarplataId: number
 }

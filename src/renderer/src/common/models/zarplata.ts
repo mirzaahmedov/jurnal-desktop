@@ -36,3 +36,17 @@ export interface AdminZarplataMainSchet {
   schet: string
   uderjanieSumma: number
 }
+
+export interface IAliment {
+  mainZarplataId: number
+  fio: string
+  deductionId: number
+  deductionName: string
+  poluchatelFio: string
+  cardNumber: string
+  summa: number
+  percentage: number
+  type: string
+  docDate: string
+  docNum: number
+}

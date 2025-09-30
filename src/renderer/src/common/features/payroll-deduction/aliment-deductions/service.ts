@@ -1,4 +1,5 @@
 import type { AlimentDeductionFormValues } from './config'
+import type { IAliment } from '@/common/models'
 import type { AlimentDeduction } from '@/common/models/payroll-deduction'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
@@ -9,7 +10,8 @@ export class AlimentDeductionService {
 
   static QueryKeys = {
     GetAll: 'AlimentDeduction/all',
-    GetById: 'AlimentDeduction/:id'
+    GetById: 'AlimentDeduction/:id',
+    GetAliments: 'AlimentDeduction/aliments'
   }
 
   static async getAll(
@@ -44,6 +46,32 @@ export class AlimentDeductionService {
 
   static async delete(id: number) {
     const res = await zarplataApiNew.delete(`${AlimentDeductionService.endpoint}/${id}`)
+    return res.data
+  }
+
+  static async getAliments(
+    ctx: QueryFunctionContext<
+      [
+        typeof AlimentDeductionService.QueryKeys.GetAliments,
+        {
+          from: string
+          to: string
+          spBudnameId: number
+        }
+      ]
+    >
+  ) {
+    const { from, to, spBudnameId } = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<IAliment[]>(
+      `${AlimentDeductionService.endpoint}/get-aliment`,
+      {
+        params: {
+          from,
+          to,
+          spBudnameId
+        }
+      }
+    )
     return res.data
   }
 }

@@ -13,7 +13,7 @@ import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { useToggle } from '@/common/hooks'
-import { formatDate } from '@/common/lib/date'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
@@ -29,8 +29,8 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
   const { t } = useTranslation()
   const { confirm } = useConfirm()
 
-  const [startDate, setStartDate] = useState(formatDate(new Date()))
-  const [endDate, setEndDate] = useState(formatDate(new Date()))
+  const [startDate, setStartDate] = useState(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState(formatDate(getLastDayOfMonth()))
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const dialogToggle = useToggle()

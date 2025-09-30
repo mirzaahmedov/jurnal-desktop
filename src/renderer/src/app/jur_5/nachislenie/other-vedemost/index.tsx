@@ -14,7 +14,7 @@ import { useLayout } from '@/common/layout'
 import { NachislenieTabs } from '../nachislenie-tabs'
 import { NachislenieOthersColumnDefs } from './columns'
 import { PremyaMatPomoshCreateDialog } from './components/other-vedemost-create'
-import { PremyaMatPomoshViewDialog } from './components/other-vedemost-view'
+import { OtherVedemostViewDialog } from './components/other-vedemost-view'
 import { OtherVedemostService } from './service'
 
 export const PremyaMatPomosh = () => {
@@ -87,7 +87,7 @@ export const PremyaMatPomosh = () => {
         isOpen={createToggle.isOpen}
         onOpenChange={createToggle.setOpen}
       />
-      <PremyaMatPomoshViewDialog
+      <OtherVedemostViewDialog
         isOpen={editToggle.isOpen}
         onOpenChange={editToggle.setOpen}
         selectedVedemost={selectedPremya}

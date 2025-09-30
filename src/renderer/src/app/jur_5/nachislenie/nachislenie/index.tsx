@@ -10,8 +10,8 @@ import { toast } from 'react-toastify'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Pagination } from '@/common/components/pagination'
+import { RangeDatePicker } from '@/common/components/range-date-picker'
 import { SearchInputDebounced } from '@/common/components/search-input-debounced'
-import { YearMonthCombo } from '@/common/components/year-month-combo'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -22,6 +22,8 @@ import {
 } from '@/common/features/vacant/ui/vacant-tree'
 import { usePagination, useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
+import { formatLocaleDate } from '@/common/lib/format'
 import { queryClient } from '@/common/lib/query-client'
 
 import { NachislenieTabs } from '../nachislenie-tabs'
@@ -39,8 +41,8 @@ export const Nachislenies = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode>()
   const [docNum, setDocNum] = useState<string>('')
-  const [year, setYear] = useState<number>(new Date().getFullYear())
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
+  const [startDate, setStartDate] = useState(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState(formatDate(getLastDayOfMonth()))
 
   const setLayout = useLayout()
   const pagination = usePagination()
@@ -54,8 +56,8 @@ export const Nachislenies = () => {
     queryKey: [
       NachislenieService.QueryKeys.MadeVacants,
       {
-        year: year,
-        month: month,
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate),
         budjetId: budjet_id!
       }
     ],
@@ -71,8 +73,8 @@ export const Nachislenies = () => {
         limit: pagination.limit,
         budjet_name_id: budjet_id!,
         doc_num: docNum || undefined,
-        year: year || undefined,
-        month: month || undefined,
+        from: formatLocaleDate(startDate),
+        to: formatLocaleDate(endDate),
         vacantId: selectedVacant?.id ?? 0
       }
     ],
@@ -161,11 +163,13 @@ export const Nachislenies = () => {
               value={docNum}
               onValueChange={setDocNum}
             />
-            <YearMonthCombo
-              year={year}
-              onYearChange={setYear}
-              month={month}
-              onMonthChange={setMonth}
+            <RangeDatePicker
+              from={startDate}
+              to={endDate}
+              onValueChange={(from, to) => {
+                setStartDate(from)
+                setEndDate(to)
+              }}
             />
           </div>
           <div className="flex-1 relative w-full overflow-auto scrollbar">
@@ -205,8 +209,10 @@ export const Nachislenies = () => {
               }}
               vacant={selectedVacant}
               nachislenieId={nachislenieId}
-              onYearChange={(year) => setYear(year)}
-              onMonthChange={(month) => setMonth(month)}
+              onDateChange={(date) => {
+                setStartDate(formatDate(getFirstDayOfMonth(date)))
+                setEndDate(formatDate(getLastDayOfMonth(date)))
+              }}
             />
           </>
         ) : null}

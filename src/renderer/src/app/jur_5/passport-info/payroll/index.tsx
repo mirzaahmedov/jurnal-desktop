@@ -10,7 +10,7 @@ import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
-import { formatDate } from '@/common/lib/date'
+import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 
 export interface PayrollProps {
@@ -19,8 +19,8 @@ export interface PayrollProps {
 export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
   const { t } = useTranslation()
 
-  const [startDate, setStartDate] = useState(formatDate(new Date()))
-  const [endDate, setEndDate] = useState(formatDate(new Date()))
+  const [startDate, setStartDate] = useState(formatDate(getFirstDayOfMonth()))
+  const [endDate, setEndDate] = useState(formatDate(getLastDayOfMonth()))
 
   const from = formatLocaleDate(startDate)
   const to = formatLocaleDate(endDate)

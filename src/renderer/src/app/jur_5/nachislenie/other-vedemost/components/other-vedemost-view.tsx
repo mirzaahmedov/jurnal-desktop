@@ -1,16 +1,19 @@
-import type { OtherVedemost, OtherVedemostProvodka } from '@/common/models'
+import type { MainZarplata, OtherVedemost, OtherVedemostProvodka } from '@/common/models'
 import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Allotment } from 'allotment'
 import { Download, Edit, Plus, Search, Sigma } from 'lucide-react'
 import { type UseFormReturn, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { type ColumnDef, GenericTable, NumericInput } from '@/common/components'
+import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
+import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
+import { type ColumnDef, GenericTable, LoadingOverlay, NumericInput } from '@/common/components'
 import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { ContentStepper } from '@/common/components/content-stepper'
 import { FormElement } from '@/common/components/form'
@@ -20,6 +23,7 @@ import { Button } from '@/common/components/jolly/button'
 import { ComboboxItem, JollyComboBox } from '@/common/components/jolly/combobox'
 import {
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -35,6 +39,12 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
+import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
+import {
+  VacantTree,
+  type VacantTreeNode,
+  VacantTreeSearch
+} from '@/common/features/vacant/ui/vacant-tree'
 import { useToggle } from '@/common/hooks'
 import { formatDate, parseLocaleDate } from '@/common/lib/date'
 
@@ -47,23 +57,45 @@ enum TabOptions {
   Update = 'update'
 }
 
-export interface PremyaMatPomoshViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface OtherVedemostViewDialogProps extends Omit<DialogTriggerProps, 'children'> {
   selectedVedemost: OtherVedemost | undefined
 }
-export const PremyaMatPomoshViewDialog = ({
+export const OtherVedemostViewDialog = ({
   selectedVedemost,
   ...props
-}: PremyaMatPomoshViewDialogProps) => {
+}: OtherVedemostViewDialogProps) => {
   const { t } = useTranslation(['app'])
+  const { confirm } = useConfirm()
 
   const [tabValue, setTabValue] = useState<TabOptions>(TabOptions.View)
   const [comboValue, setComboValue] = useState(null)
   const [otherVedemostId, setOtherVedemostId] = useState<number | null>(null)
 
   const comboToggle = useToggle()
+  const createChildToggle = useToggle()
 
+  const queryClient = useQueryClient()
   const form = useForm({
     defaultValues
+  })
+
+  const deleteChildMutation = useMutation({
+    mutationFn: OtherVedemostService.deleteChild,
+    onSuccess: () => {
+      toast.success(t('delete_success'))
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetChildren, selectedVedemost?.id ?? 0]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetPayments, selectedVedemost?.id ?? 0]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetById, selectedVedemost?.id ?? 0]
+      })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
+    }
   })
 
   const otherVedemostProvodkaQuery = useQuery({
@@ -89,6 +121,17 @@ export const PremyaMatPomoshViewDialog = ({
     }
     setComboValue(null)
     comboToggle.close()
+  }
+
+  const handleDeleteChild = (row: OtherVedemostProvodka) => {
+    confirm({
+      onConfirm: () => {
+        deleteChildMutation.mutate(row.id)
+        if (otherVedemostProvodka.length === 1) {
+          setOtherVedemostId(null)
+        }
+      }
+    })
   }
 
   useEffect(() => {
@@ -163,6 +206,17 @@ export const PremyaMatPomoshViewDialog = ({
                 }
               />
             </FormElement>
+
+            {tabValue === TabOptions.View ? (
+              <Button
+                type="button"
+                IconStart={Plus}
+                onPress={() => createChildToggle.open()}
+                className="ml-auto"
+              >
+                {t('add')}
+              </Button>
+            ) : null}
 
             <div className="bg-sky-50 border border-sky-200 rounded-lg px-5 py-2 flex items-center gap-5 w-full mr-5">
               <FormElement
@@ -245,153 +299,161 @@ export const PremyaMatPomoshViewDialog = ({
   }
 
   return (
-    <DialogTrigger {...props}>
-      <DialogOverlay>
-        <DialogContent className="w-full max-w-full h-full p-0">
-          <div className="overflow-hidden h-full flex flex-col overflow-y-auto scrollbar">
-            <DialogHeader className="p-5 flex flex-row items-center gap-5">
-              <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
+    <>
+      <DialogTrigger {...props}>
+        <DialogOverlay>
+          <DialogContent className="w-full max-w-full h-full p-0">
+            <div className="overflow-hidden h-full flex flex-col overflow-y-auto scrollbar">
+              <DialogHeader className="p-5 flex flex-row items-center gap-5">
+                <DialogTitle>{t('premya_mat_pomosh')}</DialogTitle>
 
-              <Tabs
-                value={tabValue}
-                onValueChange={(value) => {
-                  setTabValue(value as TabOptions)
-                  comboToggle.close()
-                }}
-              >
-                <TabsList>
-                  <TabsTrigger value={TabOptions.View}>{t('view')}</TabsTrigger>
-                  <TabsTrigger value={TabOptions.Update}>{t('update')}</TabsTrigger>
-                </TabsList>
-              </Tabs>
+                <Tabs
+                  value={tabValue}
+                  onValueChange={(value) => {
+                    setTabValue(value as TabOptions)
+                    comboToggle.close()
+                  }}
+                >
+                  <TabsList>
+                    <TabsTrigger value={TabOptions.View}>{t('view')}</TabsTrigger>
+                    <TabsTrigger value={TabOptions.Update}>{t('update')}</TabsTrigger>
+                  </TabsList>
+                </Tabs>
 
-              {tabValue === TabOptions.Update && (
-                <div className="flex items-center bg-gray-100 rounded-md">
-                  <JollyComboBox
-                    hideLabel
-                    defaultItems={otherVedemostProvodka}
-                    selectedKey={comboValue}
-                    menuTrigger="focus"
-                    inputProps={{
-                      onClick: () => comboToggle.open()
-                    }}
-                    onOpenChange={comboToggle.setOpen}
-                    onSelectionChange={(value) =>
-                      handleSearchVedemost(value ? Number(value) : null)
-                    }
-                    popoverProps={{
-                      isOpen: comboToggle.isOpen
-                    }}
-                    className="mt-0"
-                  >
-                    {(item) => (
-                      <ComboboxItem
-                        id={item.id}
-                        textValue={`${item.kartochka} ${item.fio}`}
-                      >
-                        №{item.kartochka} {item.fio}
-                      </ComboboxItem>
-                    )}
-                  </JollyComboBox>
-                  <div className="size-10 grid place-items-center">
-                    <Search className="btn-icon text-gray-400" />
-                  </div>
-                </div>
-              )}
-            </DialogHeader>
-
-            {tabValue === TabOptions.View ? (
-              <>
-                <Header />
-                <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5 pt-0">
-                  <div className="h-full min-h-[400px] overflow-auto scrollbar">
-                    <CollapsibleTable
-                      data={otherVedemostProvodkaQuery?.data ?? []}
-                      getRowId={(row) => row.id}
-                      columnDefs={
-                        [
-                          {
-                            key: 'fio'
-                          },
-                          {
-                            key: 'doljnostName',
-                            header: 'doljnost'
-                          },
-                          {
-                            key: 'kartochka',
-                            header: 'kartochka'
-                          },
-                          {
-                            key: 'summa',
-                            renderCell: (row) => <SummaCell summa={row.summa} />
-                          }
-                        ] satisfies ColumnDef<OtherVedemostProvodka>[]
+                {tabValue === TabOptions.Update && (
+                  <div className="flex items-center bg-gray-100 rounded-md">
+                    <JollyComboBox
+                      hideLabel
+                      defaultItems={otherVedemostProvodka}
+                      selectedKey={comboValue}
+                      menuTrigger="focus"
+                      inputProps={{
+                        onClick: () => comboToggle.open()
+                      }}
+                      onOpenChange={comboToggle.setOpen}
+                      onSelectionChange={(value) =>
+                        handleSearchVedemost(value ? Number(value) : null)
                       }
-                      className="table-generic-xs"
+                      popoverProps={{
+                        isOpen: comboToggle.isOpen
+                      }}
+                      className="mt-0"
                     >
-                      {({ row }) => (
-                        <div className="p-2.5">
-                          <GenericTable
-                            columnDefs={[
-                              {
-                                key: 'name'
-                              },
-                              {
-                                key: 'percentage',
-                                header: 'foiz'
-                              },
-                              {
-                                key: 'summa',
-                                renderCell: (row) => <SummaCell summa={row.summa} />,
-                                numeric: true
-                              }
-                            ]}
-                            data={row.deductions ?? []}
-                          />
-                        </div>
+                      {(item) => (
+                        <ComboboxItem
+                          id={item.id}
+                          textValue={`${item.kartochka} ${item.fio}`}
+                        >
+                          №{item.kartochka} {item.fio}
+                        </ComboboxItem>
                       )}
-                    </CollapsibleTable>
+                    </JollyComboBox>
+                    <div className="size-10 grid place-items-center">
+                      <Search className="btn-icon text-gray-400" />
+                    </div>
                   </div>
-                  <div className="h-full min-h-[400px] overflow-auto scrollbar">
-                    <GenericTable
-                      data={paymentsQuery?.data ?? []}
-                      columnDefs={[
-                        {
-                          key: 'paymentName',
-                          header: 'name'
+                )}
+              </DialogHeader>
+
+              {tabValue === TabOptions.View ? (
+                <>
+                  <Header />
+                  <div className="flex-1 min-h-0 grid grid-cols-[repeat(auto-fit,minmax(550px,1fr))] gap-5 p-5 pt-0">
+                    <div className="h-full min-h-[400px] overflow-auto scrollbar">
+                      <CollapsibleTable
+                        data={otherVedemostProvodkaQuery?.data ?? []}
+                        getRowId={(row) => row.id}
+                        onDelete={handleDeleteChild}
+                        columnDefs={
+                          [
+                            {
+                              key: 'fio'
+                            },
+                            {
+                              key: 'doljnostName',
+                              header: 'doljnost'
+                            },
+                            {
+                              key: 'kartochka',
+                              header: 'kartochka'
+                            },
+                            {
+                              key: 'summa',
+                              renderCell: (row) => <SummaCell summa={row.summa} />
+                            }
+                          ] satisfies ColumnDef<OtherVedemostProvodka>[]
                         }
-                      ]}
-                      className="table-generic-xs"
+                        className="table-generic-xs"
+                      >
+                        {({ row }) => (
+                          <div className="p-2.5">
+                            <GenericTable
+                              columnDefs={[
+                                {
+                                  key: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />,
+                                  numeric: true
+                                }
+                              ]}
+                              data={row.deductions ?? []}
+                            />
+                          </div>
+                        )}
+                      </CollapsibleTable>
+                    </div>
+                    <div className="h-full min-h-[400px] overflow-auto scrollbar">
+                      <GenericTable
+                        data={paymentsQuery?.data ?? []}
+                        columnDefs={[
+                          {
+                            key: 'paymentName',
+                            header: 'name'
+                          }
+                        ]}
+                        className="table-generic-xs"
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              {tabValue === TabOptions.Update ? (
+                <>
+                  <Header />
+                  <div className="flex-1">
+                    <OtherVedemostUpdateForm
+                      otherVedemostProvodka={otherVedemostProvodka}
+                      currentIndex={currentIndex}
+                      onNavigateItem={(index) => {
+                        setOtherVedemostId(otherVedemostProvodka?.[index]?.id ?? null)
+                      }}
+                      otherVedemostMainId={selectedVedemost?.id ?? 0}
+                      downloadPDF={() => {}}
+                      isDownloading={false}
                     />
                   </div>
-                </div>
-              </>
-            ) : null}
-            {tabValue === TabOptions.Update ? (
-              <>
-                <Header />
-                <div className="flex-1">
-                  <OtherVedemostUpdateForm
-                    otherVedemostProvodka={otherVedemostProvodka}
-                    currentIndex={currentIndex}
-                    onNavigateItem={(index) => {
-                      setOtherVedemostId(otherVedemostProvodka?.[index]?.id ?? null)
-                    }}
-                    otherVedemostMainId={selectedVedemost?.id ?? 0}
-                    downloadPDF={() => {}}
-                    isDownloading={false}
-                  />
-                </div>
-              </>
-            ) : null}
-          </div>
-        </DialogContent>
-      </DialogOverlay>
-    </DialogTrigger>
+                </>
+              ) : null}
+            </div>
+          </DialogContent>
+        </DialogOverlay>
+      </DialogTrigger>
+      <OtherVedemostCreateDialog
+        mainId={selectedVedemost?.id ?? 0}
+        isOpen={createChildToggle.isOpen}
+        onOpenChange={createChildToggle.setOpen}
+      />
+    </>
   )
 }
 
-export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'children'> {
+export interface OtherVedemostUpdateFormProps extends Omit<DialogTriggerProps, 'children'> {
   currentIndex: number
   onNavigateItem: (index: number) => void
   otherVedemostMainId: number
@@ -399,7 +461,7 @@ export interface NachislenieUpdateFormProps extends Omit<DialogTriggerProps, 'ch
   isDownloading: boolean
   downloadPDF: () => void
 }
-const OtherVedemostUpdateForm: FC<NachislenieUpdateFormProps> = ({
+const OtherVedemostUpdateForm: FC<OtherVedemostUpdateFormProps> = ({
   currentIndex,
   onNavigateItem,
   otherVedemostMainId,
@@ -718,5 +780,115 @@ const OtherVedemostUpdateForm: FC<NachislenieUpdateFormProps> = ({
         </>
       ) : null}
     </>
+  )
+}
+
+export interface OtherVedemostCreateDialog extends Omit<DialogTriggerProps, 'children'> {
+  mainId?: number
+}
+const OtherVedemostCreateDialog: FC<OtherVedemostCreateDialog> = ({ mainId, ...props }) => {
+  const { t } = useTranslation(['app'])
+  const { search, setSearch, filteredTreeNodes, vacantsQuery } = useVacantTreeNodes()
+
+  const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
+  const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata | null>(null)
+
+  const mainZarplataQuery = useMainZarplataList({ vacantId: selectedVacant?.id ?? undefined })
+  const queryClient = useQueryClient()
+
+  const createChildMutation = useMutation({
+    mutationFn: OtherVedemostService.createChild,
+    onSuccess: () => {
+      toast.success(t('create_success'))
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetChildren, mainId ?? 0]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetPayments, mainId ?? 0]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [OtherVedemostService.QueryKeys.GetById, mainId ?? 0]
+      })
+      props?.onOpenChange?.(false)
+    },
+    onError: () => {
+      toast.error(t('create_failed'))
+    }
+  })
+
+  const handleSubmit = () => {
+    if (!selectedMainZarplata) {
+      toast.error(t('select_main_zarplata'))
+      return
+    }
+    createChildMutation.mutate({
+      mainId: mainId ?? 0,
+      values: {
+        mainZarplataId: selectedMainZarplata.id
+      }
+    })
+  }
+
+  return (
+    <DialogTrigger {...props}>
+      <DialogOverlay>
+        <DialogContent className="w-full max-w-full h-full max-h-[800px] p-0">
+          <div className="flex flex-col">
+            <DialogHeader className="p-5">
+              <DialogTitle>
+                {t('create-something', { something: t('nachislenie').toLowerCase() })}
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="flex-1">
+              <Allotment className="h-full">
+                <Allotment.Pane
+                  preferredSize={300}
+                  maxSize={600}
+                  minSize={300}
+                  className="w-full bg-gray-50"
+                >
+                  <div className="relative h-full flex flex-col">
+                    {vacantsQuery.isFetching ? <LoadingOverlay /> : null}
+                    <VacantTreeSearch
+                      search={search}
+                      onValueChange={setSearch}
+                      treeNodes={filteredTreeNodes}
+                    />
+                    <div className="flex-1 overflow-auto scrollbar">
+                      <VacantTree
+                        nodes={filteredTreeNodes}
+                        selectedIds={selectedVacant ? [selectedVacant.id] : []}
+                        onSelectNode={setSelectedVacant}
+                      />
+                    </div>
+                  </div>
+                </Allotment.Pane>
+                <Allotment.Pane>
+                  <div className="relative w-full h-full overflow-auto scrollbar pl-px">
+                    {mainZarplataQuery.isFetching && <LoadingOverlay />}
+                    <MainZarplataTable
+                      data={mainZarplataQuery.data ?? []}
+                      selectedIds={selectedMainZarplata ? [selectedMainZarplata.id] : []}
+                      onClickRow={(row) => {
+                        setSelectedMainZarplata(row)
+                      }}
+                    />
+                  </div>
+                </Allotment.Pane>
+              </Allotment>
+            </div>
+            <DialogFooter className="p-5">
+              <Button
+                type="button"
+                onPress={handleSubmit}
+              >
+                {t('save')}
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
   )
 }

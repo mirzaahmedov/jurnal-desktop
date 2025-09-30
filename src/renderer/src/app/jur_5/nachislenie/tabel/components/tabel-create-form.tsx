@@ -201,8 +201,6 @@ export const TabelCreateForm = ({
     form.setValue('rayon', rayon)
   }, [form, rayon])
 
-  console.log({ values: form.watch('tabelChildren') })
-
   return (
     <Form {...form}>
       <form
