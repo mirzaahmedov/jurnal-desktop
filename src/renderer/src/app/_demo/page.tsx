@@ -160,29 +160,31 @@ export const textEditor = createEditor(
 )
 
 export const numberEditor = createEditor(
-  ({ form, originalIndex, colDef, disabled, readonly, className, context }) => (
-    <Controller
-      name={`items.${originalIndex}.${colDef.field}`}
-      control={form.control}
-      render={({ field }) => (
-        <NumericInput
-          {...field}
-          customInput={undefined}
-          value={field.value ?? 0}
-          onChange={undefined}
-          onValueChange={(values, event) => {
-            if (event.source === 'event') {
-              context?.onValueEdited?.(originalIndex, colDef.field)
-            }
-            field.onChange(values.value ?? 0)
-          }}
-          className={cn(inputVariants(), className)}
-          disabled={disabled}
-          readOnly={readonly}
-        />
-      )}
-    />
-  )
+  ({ form, originalIndex, colDef, disabled, readonly, className, context }) => {
+    return (
+      <Controller
+        name={`items.${originalIndex}.${colDef.field}`}
+        control={form.control}
+        render={({ field }) => (
+          <NumericInput
+            {...field}
+            customInput={undefined}
+            value={field.value ?? 0}
+            onChange={undefined}
+            onValueChange={(values, event) => {
+              if (event.source === 'event') {
+                context?.onValueEdited?.(originalIndex, colDef.field)
+              }
+              field.onChange(values.value ?? 0)
+            }}
+            className={cn(inputVariants(), className)}
+            disabled={disabled}
+            readOnly={readonly}
+          />
+        )}
+      />
+    )
+  }
 )
 
 export default DemoPage

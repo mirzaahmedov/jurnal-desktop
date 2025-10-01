@@ -73,7 +73,10 @@ const CalculateParamsPage = () => {
         }
       ],
       title: t('pages.calc_parameters'),
-      onCreate: dialogToggle.open
+      onCreate: () => {
+        dialogToggle.open()
+        setSelected(undefined)
+      }
     })
   }, [setLayout, t, dialogToggle.open])
 
