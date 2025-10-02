@@ -141,6 +141,9 @@ const NachisleniePage = lazy(() => import('./jur_5/nachislenie/page'))
 const MinimumWagePage = lazy(() => import('./super-admin/spravochnik/minimum-wage/page'))
 const HeadersPage = lazy(() => import('./region-spravochnik/headers/page'))
 
+const PodotchetDemoPage = lazy(() => import('./jur_4/demo/page'))
+const PodotchetDemoDetailsPage = lazy(() => import('./jur_4/demo/details/page'))
+
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
   return user?.role_name === 'super-admin' ? (
@@ -531,6 +534,14 @@ export const routes: RouteObject[] = [
           {
             path: 'saldo/:id',
             element: <PodotchetSaldoDetailsPage />
+          },
+          {
+            path: 'demo',
+            element: <PodotchetDemoPage />
+          },
+          {
+            path: 'demo/:id',
+            element: <PodotchetDemoDetailsPage />
           }
         ]
       },

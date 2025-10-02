@@ -304,7 +304,7 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
           path: '/accountable',
           title: `8-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_8').toLowerCase()}`,
           icon: UserSquare,
-          children: [
+          children: omitEmptyArrayElements<INavElement>([
             {
               path: 'monitor',
               title: t('pages.monitoring'),
@@ -324,8 +324,13 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
               path: 'saldo',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
+            },
+            {
+              path: 'demo',
+              title: 'Demo',
+              icon: ShieldBan
             }
-          ]
+          ])
         }
       : null,
 

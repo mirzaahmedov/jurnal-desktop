@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react'
+import { type FC, MutableRefObject, RefObject, useMemo, useRef } from 'react'
 
 import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community'
 import { AgGridReact, type AgGridReactProps, type CustomCellEditorProps } from 'ag-grid-react'
@@ -127,13 +127,18 @@ export interface EditorProps extends CustomCellEditorProps {
   className?: string
   readonly?: boolean
   disabled?: boolean
+  inputRef: MutableRefObject<HTMLInputElement | undefined>
 }
 export const createEditor = (comp: FC<EditorProps>): FC<CustomCellEditorProps> => {
   return (props) => {
     const form = props.context?.form
     const originalIndex = props.data?.__originalIndex
+
+    const inputRef = useRef<HTMLInputElement>()
+
     return comp({
       ...props,
+      inputRef,
       form,
       originalIndex
     })
@@ -143,7 +148,7 @@ export const createEditor = (comp: FC<EditorProps>): FC<CustomCellEditorProps> =
 export const inputVariants = cva('bg-transparent w-full h-full px-4 focus:outline-none')
 
 export const textEditor = createEditor(
-  ({ form, originalIndex, colDef, disabled, readonly, className }) => (
+  ({ form, inputRef, originalIndex, colDef, disabled, readonly, className }) => (
     <Controller
       name={`items.${originalIndex}.${colDef.field}`}
       control={form.control}
@@ -153,6 +158,9 @@ export const textEditor = createEditor(
           className={cn(inputVariants(), className)}
           disabled={disabled}
           readOnly={readonly}
+          ref={(e) => {
+            field.ref(e)
+          }}
         />
       )}
     />
