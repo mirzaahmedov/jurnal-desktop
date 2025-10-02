@@ -5,6 +5,9 @@
     "composite": true,
     "types": ["electron-vite/node"],
     "baseUrl": ".",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnusedLabels": true,
     "paths": {
       "@resources/*": [
         "resources/*"

@@ -37,7 +37,7 @@ import { normalizeEmptyFields } from '@/common/lib/validation'
 import { DetailsView } from '@/common/views'
 import { DocumentFields, OpisanieFields, PodotchetFields, SummaFields } from '@/common/widget/form'
 
-import { usePodotchetSaldo } from '../../saldo/use-saldo'
+import { usePodotchetSaldo } from '../../saldo_legacy/use-saldo'
 import { AvansFormSchema, AvansProvodkaFormSchema, AvansQueryKeys, defaultValues } from '../config'
 import { AvansService } from '../service'
 import { podvodkaColumns } from './podvodki'

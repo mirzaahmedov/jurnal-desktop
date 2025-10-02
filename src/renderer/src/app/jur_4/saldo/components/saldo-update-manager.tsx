@@ -1,10 +1,14 @@
-import { type SVGAttributes, useEffect, useRef } from 'react'
+import type { PodotchetSaldoProvodka } from '@/common/models'
+import type { ColDef } from 'ag-grid-community'
+
+import { type SVGAttributes, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { EditorTable } from '@/app/_demo/components/editor-table'
 import { AvansService } from '@/app/jur_4/avans/service'
 import { PodotchetMonitorQueryKeys } from '@/app/jur_4/monitor/config'
 import { WorkTripService } from '@/app/jur_4/work-trip/service'
@@ -23,13 +27,9 @@ import { MonthPicker } from '@/common/components/month-picker'
 import { useToggle } from '@/common/hooks'
 
 import { PodotchetSaldoQueryKeys, defaultValues } from '../config'
-import { PodotchetSaldoTable } from '../details/podotchet-saldo-table'
-import { getPodochetSaldoProvodkaColumns } from '../details/provodki'
 import { calculateTotal } from '../details/utils'
 import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
-
-const columnDefs = getPodochetSaldoProvodkaColumns(false)
 
 export const PodotchetSaldoUpdateManager = () => {
   const scrollElementRef = useRef<HTMLDivElement>(null)
@@ -37,8 +37,19 @@ export const PodotchetSaldoUpdateManager = () => {
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
-  const { t } = useTranslation()
+  const [totalRow, setTotalRow] = useState<PodotchetSaldoProvodka[]>([
+    {
+      id: 0,
+      podotchet_id: 0,
+      name: '',
+      rayon: '',
+      prixod: 0,
+      rasxod: 0,
+      summa: 0
+    }
+  ])
 
+  const { t } = useTranslation()
   const { queuedMonths, dequeueMonth, clearQueue } = usePodotchetSaldo()
 
   const form = useForm({
@@ -70,11 +81,17 @@ export const PodotchetSaldoUpdateManager = () => {
       const month = values?.month
       if (childs.length) {
         const total = calculateTotal(childs)
-        childs.push({
-          name: t('total'),
-          prixod: total.prixod,
-          rasxod: total.rasxod
-        } as any)
+        setTotalRow([
+          {
+            id: 0,
+            podotchet_id: 0,
+            name: t('total'),
+            rayon: '',
+            prixod: total.prixod,
+            rasxod: total.rasxod,
+            summa: total.prixod - total.rasxod
+          }
+        ])
       }
       form.setValue('year', year)
       form.setValue('month', month)
@@ -89,7 +106,9 @@ export const PodotchetSaldoUpdateManager = () => {
   const { mutate: updateSaldo, isPending: isUpdating } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.update],
     mutationFn: PodotchetSaldoService.update,
-    onSuccess(_, values) {
+    onSuccess(res, values) {
+      console.log('values', values)
+      console.log('res', res)
       dequeueMonth(values as any)
       invalidateQueries()
     }
@@ -131,6 +150,78 @@ export const PodotchetSaldoUpdateManager = () => {
       podotchets: rows
     })
   }
+
+  const columnDefs = useMemo<ColDef<PodotchetSaldoProvodka>[]>(
+    () => [
+      {
+        field: 'name',
+        flex: 1,
+        headerName: t('name'),
+        minWidth: 320,
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'rayon',
+        flex: 1,
+        headerName: t('rayon'),
+        minWidth: 320
+      },
+      {
+        field: 'prixod',
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell',
+              params: { className: 'font-bold' }
+            }
+          }
+          return {
+            component: 'numberCell'
+          }
+        },
+        headerName: t('prixod'),
+        flex: 1,
+        minWidth: 200
+      },
+      {
+        field: 'rasxod',
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell',
+              params: { className: 'font-bold' }
+            }
+          }
+          return {
+            component: 'numberCell'
+          }
+        },
+        headerName: t('rasxod'),
+        flex: 1,
+        minWidth: 200
+      },
+      {
+        field: 'summa',
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell',
+              params: { className: 'font-bold' }
+            }
+          }
+          return {
+            component: 'numberCell'
+          }
+        },
+        headerName: t('summa'),
+        flex: 1,
+        minWidth: 200
+      }
+    ],
+    [t]
+  )
 
   return (
     <DialogTrigger
@@ -187,10 +278,12 @@ export const PodotchetSaldoUpdateManager = () => {
                   </div>
                 </div>
               ) : (
-                <PodotchetSaldoTable
-                  columnDefs={columnDefs}
+                <EditorTable
                   form={form}
-                  name="podotchets"
+                  arrayField="podotchets"
+                  columnDefs={columnDefs}
+                  pinnedBottomRowData={totalRow}
+                  className="h-full"
                 />
               )}
             </div>

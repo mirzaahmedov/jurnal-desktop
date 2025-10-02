@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { EditorTable } from '@/app/_demo/page'
 import { AvansService } from '@/app/jur_4/avans/service'
 import { WorkTripService } from '@/app/jur_4/work-trip/service'
 import { PodotchetDialog } from '@/app/region-spravochnik/podotchet/dialog'
@@ -40,10 +39,11 @@ import {
 } from '../config'
 import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
+import { PodotchetSaldoTable } from './podotchet-saldo-table'
 import { getPodochetSaldoProvodkaColumns } from './provodki'
 import { calculateTotal } from './utils'
 
-const PodotchetDemoDetailsPage = () => {
+const PodotchetSaldoDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
 
@@ -279,32 +279,32 @@ const PodotchetDemoDetailsPage = () => {
     return !row.prixod && !row.rasxod
   }
 
-  // const rows = useWatch({
-  //   control: form.control,
-  //   name: 'podotchets'
-  // })
-  // useEffect(() => {
-  //   if (!isEditable || rows.length === 0) {
-  //     return
-  //   }
+  const rows = useWatch({
+    control: form.control,
+    name: 'podotchets'
+  })
+  useEffect(() => {
+    if (!isEditable || rows.length === 0) {
+      return
+    }
 
-  //   const total = calculateTotal(rows, true)
-  //   const totalRow = rows[rows.length - 1]
-  //   const name = t('total')
+    const total = calculateTotal(rows, true)
+    const totalRow = rows[rows.length - 1]
+    const name = t('total')
 
-  //   if (Number(totalRow?.prixod) !== Number(total.prixod)) {
-  //     form.setValue(`podotchets.${rows.length - 1}.prixod`, total.prixod)
-  //   }
-  //   if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
-  //     form.setValue(`podotchets.${rows.length - 1}.rasxod`, total.rasxod)
-  //   }
-  //   if (Number(totalRow?.summa) !== Number(total.prixod - total.rasxod)) {
-  //     form.setValue(`podotchets.${rows.length - 1}.summa`, total.prixod - total.rasxod)
-  //   }
-  //   if (totalRow?.name !== name) {
-  //     form.setValue(`podotchets.${rows.length - 1}.name`, name)
-  //   }
-  // }, [rows, form, isEditable, t])
+    if (Number(totalRow?.prixod) !== Number(total.prixod)) {
+      form.setValue(`podotchets.${rows.length - 1}.prixod`, total.prixod)
+    }
+    if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
+      form.setValue(`podotchets.${rows.length - 1}.rasxod`, total.rasxod)
+    }
+    if (Number(totalRow?.summa) !== Number(total.prixod - total.rasxod)) {
+      form.setValue(`podotchets.${rows.length - 1}.summa`, total.prixod - total.rasxod)
+    }
+    if (totalRow?.name !== name) {
+      form.setValue(`podotchets.${rows.length - 1}.name`, name)
+    }
+  }, [rows, form, isEditable, t])
 
   const isRowVisible = useCallback<(args: { index: number }) => boolean>(
     ({ index }) => {
@@ -312,60 +312,9 @@ const PodotchetDemoDetailsPage = () => {
     },
     [isEmptyRowsHidden, form]
   )
-  // const columns = useMemo(() => {
-  //   return getPodochetSaldoProvodkaColumns(isEditable)
-  // }, [isEditable])
-
-  const columnDefs = useMemo(
-    () => [
-      {
-        field: 'name',
-        flex: 1,
-        headerName: t('name'),
-        minWidth: 320
-      },
-      {
-        field: 'rayon',
-        flex: 1,
-        headerName: t('rayon'),
-        minWidth: 320
-      },
-      {
-        field: 'prixod',
-        cellRenderer: 'numberEditor',
-        headerName: t('prixod'),
-        flex: 1,
-        minWidth: 200
-      },
-      {
-        field: 'rasxod',
-        cellRenderer: 'numberEditor',
-        headerName: t('rasxod'),
-        flex: 1,
-        minWidth: 200
-      },
-      {
-        field: 'summa',
-        cellRenderer: 'numberEditor',
-        headerName: t('summa'),
-        flex: 1,
-        minWidth: 200
-      }
-    ],
-    [t]
-  )
-
-  const onValueChange = useCallback(
-    (rowIndex: number, field: keyof PodotchetSaldoProvodkaFormValues) => {
-      if (field === 'prixod' || field === 'rasxod') {
-        const prixodValue = form.getValues(`podotchets.${rowIndex}.prixod`) || 0
-        const rasxodValue = form.getValues(`podotchets.${rowIndex}.rasxod`) || 0
-        const summaValue = (prixodValue || 0) - (rasxodValue || 0)
-        form.setValue(`podotchets.${rowIndex}.summa`, summaValue)
-      }
-    },
-    [form]
-  )
+  const columns = useMemo(() => {
+    return getPodochetSaldoProvodkaColumns(isEditable)
+  }, [isEditable])
 
   useEffect(() => {
     if (error) {
@@ -394,12 +343,7 @@ const PodotchetDemoDetailsPage = () => {
                 >
                   {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
                   <Badge className="ml-2.5 text-xs">
-                    {
-                      form
-                        .watch('podotchets')
-                        .slice(0, form.watch('podotchets').length - 1)
-                        .filter(isRowEmpty).length
-                    }
+                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
                   </Badge>
                 </Button>
 
@@ -473,20 +417,13 @@ const PodotchetDemoDetailsPage = () => {
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
-              <EditorTable
-                form={form}
-                arrayField="podotchets"
-                columnDefs={columnDefs}
-                onValueEdited={onValueChange}
-                className="h-full"
-              />
-              {/* <PodotchetSaldoTable
+              <PodotchetSaldoTable
                 columnDefs={columns}
                 methods={tableMethods}
                 form={form}
                 name="podotchets"
                 isRowVisible={isRowVisible}
-              /> */}
+              />
             </div>
           </div>
 
@@ -510,4 +447,4 @@ const PodotchetDemoDetailsPage = () => {
   )
 }
 
-export default PodotchetDemoDetailsPage
+export default PodotchetSaldoDetailsPage

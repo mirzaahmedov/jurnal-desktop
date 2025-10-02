@@ -28,7 +28,7 @@ import { PodotchetSaldoFilters, useYearFilter } from './filters'
 import { PodotchetSaldoService } from './service'
 import { usePodotchetSaldo } from './use-saldo'
 
-const PodotchetDemoPage = () => {
+const PodotchetSaldoPage = () => {
   const setLayout = useLayout()
 
   const navigate = useNavigate()
@@ -164,4 +164,4 @@ const PodotchetDemoPage = () => {
   )
 }
 
-export default PodotchetDemoPage
+export default PodotchetSaldoPage

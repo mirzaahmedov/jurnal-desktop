@@ -35,8 +35,8 @@ const PositionPage = lazy(() => import('./super-admin/spravochnik/position/page'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
-const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
-const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
+// const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo_legacy/page'))
+// const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo_legacy/details/page'))
 
 const AdminPrixodSchetPage = lazy(() => import('./super-admin/prixod-schet/page'))
 
@@ -141,8 +141,8 @@ const NachisleniePage = lazy(() => import('./jur_5/nachislenie/page'))
 const MinimumWagePage = lazy(() => import('./super-admin/spravochnik/minimum-wage/page'))
 const HeadersPage = lazy(() => import('./region-spravochnik/headers/page'))
 
-const PodotchetDemoPage = lazy(() => import('./jur_4/demo/page'))
-const PodotchetDemoDetailsPage = lazy(() => import('./jur_4/demo/details/page'))
+const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
+const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -534,15 +534,15 @@ export const routes: RouteObject[] = [
           {
             path: 'saldo/:id',
             element: <PodotchetSaldoDetailsPage />
-          },
-          {
-            path: 'demo',
-            element: <PodotchetDemoPage />
-          },
-          {
-            path: 'demo/:id',
-            element: <PodotchetDemoDetailsPage />
           }
+          // {
+          //   path: 'demo',
+          //   element: <PodotchetDemoPage />
+          // },
+          // {
+          //   path: 'demo/:id',
+          //   element: <PodotchetDemoDetailsPage />
+          // }
         ]
       },
       {

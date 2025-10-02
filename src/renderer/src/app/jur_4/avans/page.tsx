@@ -30,7 +30,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { usePodotchetSaldo } from '../saldo/use-saldo'
+import { usePodotchetSaldo } from '../saldo_legacy/use-saldo'
 import { avansColumns } from './columns'
 import { AvansQueryKeys } from './config'
 import { AvansService } from './service'

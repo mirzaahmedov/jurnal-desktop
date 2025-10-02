@@ -28,7 +28,7 @@ export interface PodotchetSaldoProvodka {
   prixod: number
   rasxod: number
   summa?: number
-  isdeleted: boolean
+  isdeleted?: boolean
   name: string
   rayon: string
 }

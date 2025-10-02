@@ -36,7 +36,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { usePodotchetSaldo } from '../saldo/use-saldo'
+import { usePodotchetSaldo } from '../saldo_legacy/use-saldo'
 import { PodotchetMonitorColumns } from './columns'
 import { PodotchetMonitorQueryKeys } from './config'
 import { DailyReportDialog } from './daily-report-dialog'

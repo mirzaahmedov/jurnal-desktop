@@ -324,12 +324,12 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
               path: 'saldo',
               title: t('pages.saldo'),
               icon: CircleFadingPlus
-            },
-            {
-              path: 'demo',
-              title: 'Demo',
-              icon: ShieldBan
             }
+            // {
+            //   path: 'demo',
+            //   title: 'Demo',
+            //   icon: ShieldBan
+            // }
           ])
         }
       : null,

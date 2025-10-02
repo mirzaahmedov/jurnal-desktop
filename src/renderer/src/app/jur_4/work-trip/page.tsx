@@ -22,7 +22,7 @@ import { useDates, usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { ListView } from '@/common/views'
 
-import { usePodotchetSaldo } from '../saldo/use-saldo'
+import { usePodotchetSaldo } from '../saldo_legacy/use-saldo'
 import { WorkTripColumnDefs } from './columns'
 import { WorkTripQueryKeys } from './config'
 import { WorkTripService } from './service'
