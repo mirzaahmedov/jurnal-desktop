@@ -57,7 +57,6 @@ export const PodotchetSaldoUpdateManager = () => {
   })
 
   const invalidateQueries = () => {
-    clearQueue()
     queryClient.invalidateQueries({
       queryKey: [PodotchetSaldoQueryKeys.getAll]
     })
@@ -106,9 +105,7 @@ export const PodotchetSaldoUpdateManager = () => {
   const { mutate: updateSaldo, isPending: isUpdating } = useMutation({
     mutationKey: [PodotchetSaldoQueryKeys.update],
     mutationFn: PodotchetSaldoService.update,
-    onSuccess(res, values) {
-      console.log('values', values)
-      console.log('res', res)
+    onSuccess(_, values) {
       dequeueMonth(values as any)
       invalidateQueries()
     }
@@ -232,6 +229,7 @@ export const PodotchetSaldoUpdateManager = () => {
             ...defaultValues,
             podotchets: []
           })
+          clearQueue()
           invalidateQueries()
         }
         dialogToggle.setOpen(open)

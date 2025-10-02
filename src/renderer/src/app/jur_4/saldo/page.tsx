@@ -121,6 +121,8 @@ const PodotchetSaldoPage = () => {
     })
   }
 
+  console.log({ queuedMonths })
+
   useEffect(() => {
     setLayout({
       title: t('pages.saldo'),
