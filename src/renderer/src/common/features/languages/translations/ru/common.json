@@ -167,7 +167,7 @@
   "1-kvartal": "1 квартал",
   "2-kvartal": "2 квартал",
   "3-kvartal": "3 квартал",
-  "4-kvartал": "4 квартал",
+  "4-kvartal": "4 квартал",
   "spravochnik": "Справочник",
   "mo-1": "№1 - МО (Касса)",
   "mo-2": "№2 - МО (Банк)",
@@ -580,5 +580,10 @@
   "category_name": "Название категории",
   "ligota": "Льгота",
   "poluchatel_fio": "ФИО получателя",
-  "address": "Адрес"
+  "address": "Адрес",
+  "svod_otchet": "Сводный отчет",
+  "time_elapsed_until_today": "Срок службы до сегодняшнего дня",
+  "time_elapsed_until_start_of_year": "Срок службы до начала года",
+  "dont_give_premya": "Не давать премию",
+  "by_schets": "Отчет (по счетам)"
 }

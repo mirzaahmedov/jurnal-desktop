@@ -216,6 +216,14 @@ export const MainZarplataForm = ({
     }
   }, [pnfl, dateBirth])
 
+  const startOfYear = new Date()
+  startOfYear.setMonth(0)
+  startOfYear.setDate(1)
+  const timeElapsedUntilStartOfYear = getDateDifference(
+    parseDate(form.watch('nachaloSlujbi')),
+    startOfYear
+  )
+
   return (
     <Form {...form}>
       <form
@@ -250,6 +258,13 @@ export const MainZarplataForm = ({
                 years={form.watch('visNa1Year') ?? 0}
                 months={form.watch('month1') ?? 0}
                 days={form.watch('day1') ?? 0}
+                label={t('time_elapsed_until_today')}
+              />
+              <TimeElapsed
+                years={timeElapsedUntilStartOfYear.years}
+                months={timeElapsedUntilStartOfYear.months}
+                days={timeElapsedUntilStartOfYear.days}
+                label={t('time_elapsed_until_start_of_year')}
               />
               <div className="flex flex-col gap-2 py-1">
                 {onCalculate ? (
@@ -285,7 +300,7 @@ export const MainZarplataForm = ({
                 )}
               />
             </div>
-            <div className="col-span-full grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5">
+            <div className="col-span-full flex items-center flex-wrap gap-10">
               <FormField
                 control={form.control}
                 name="xarbiy"
@@ -303,6 +318,25 @@ export const MainZarplataForm = ({
                   </FormElement>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="isPremya"
+                render={({ field }) => (
+                  <FormElement
+                    label={t('dont_give_premya')}
+                    divProps={{ className: 'flex-row-reverse justify-end' }}
+                    innerProps={{ className: 'flex-none w-auto' }}
+                  >
+                    <Checkbox
+                      ref={field.ref}
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked)}
+                    />
+                  </FormElement>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="isLigota"
@@ -539,35 +573,42 @@ export const MainZarplataForm = ({
 }
 
 interface TimeElapsedProps {
+  label: string
   years: number
   months: number
   days: number
 }
-const TimeElapsed = ({ years, months, days }: TimeElapsedProps) => {
+const TimeElapsed = ({ label, years, months, days }: TimeElapsedProps) => {
   const { t } = useTranslation()
   const FlipCard = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center mx-2">
-      <div className="bg-black text-white text-3xl font-mono rounded-md px-4 py-2 shadow-inner border-2 border-gray-700 min-w-[60px] text-center select-none flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center mx-1">
+      <div className="bg-black text-white text-xl font-mono rounded px-2 py-1 shadow-inner border border-gray-700 min-w-[60px] text-center select-none flex flex-col items-center justify-center">
         <span>{value}</span>
-        <span className="text-xs text-gray-300 mt-1">{label}</span>
+        <span className="text-[10px] text-gray-300 mt-0.5">{label}</span>
       </div>
     </div>
   )
 
   return (
-    <div className="flex items-end gap-1">
-      <FlipCard
-        value={years}
-        label={t('year')}
-      />
-      <FlipCard
-        value={months}
-        label={t('month')}
-      />
-      <FlipCard
-        value={days}
-        label={t('day')}
-      />
+    <div className="w-full flex flex-col items-start gap-1 rounded-md min-w-[180px] max-w-full mb-1">
+      <div className="w-full flex items-center justify-center gap-1 mb-1">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-500" />
+        <h6 className="text-xs font-semibold text-gray-800">{label}</h6>
+      </div>
+      <div className="w-full flex items-end justify-center gap-0.5">
+        <FlipCard
+          value={years}
+          label={t('year')}
+        />
+        <FlipCard
+          value={months}
+          label={t('month')}
+        />
+        <FlipCard
+          value={days}
+          label={t('day')}
+        />
+      </div>
     </div>
   )
 }

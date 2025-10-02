@@ -580,5 +580,10 @@
   "category_name": "Категория номи",
   "ligota": "Льгота",
   "poluchatel_fio": "Олинувчи ФИО",
-  "address": "Манзил"
+  "address": "Манзил",
+  "svod_otchet": "Жамланма ҳисобот",
+  "time_elapsed_until_today": "Хизмат бошланганидан ҳозиргача",
+  "time_elapsed_until_start_of_year": "Йил бошигача хизмат муддати",
+  "dont_give_premya": "Премия берилмайди",
+  "by_schets": "Ҳисобот (счетлар бўйича)"
 }

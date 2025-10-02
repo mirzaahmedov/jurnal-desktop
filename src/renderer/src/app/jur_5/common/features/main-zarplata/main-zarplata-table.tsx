@@ -46,6 +46,16 @@ export const MainZarplataTable = ({
               </Button>
             </div>
           )
+        },
+        {
+          key: 'isPremya',
+          header: 'dont_give_premya',
+          renderCell: (row) =>
+            row.isPremya ? (
+              <span className="font-bold text-red-500">{t('dont_give_premya')}</span>
+            ) : (
+              <span className="font-bold text-emerald-500"></span>
+            )
         }
       ]
     }

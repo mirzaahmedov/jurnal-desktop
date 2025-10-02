@@ -122,7 +122,6 @@ export const NachislenieReports = () => {
             <div className="flex items-center flex-wrap justify-end gap-2.5">
               <Button
                 onPress={() => alimonyToggle.open()}
-                variant="ghost"
                 IconStart={WalletCards}
                 className="ml-auto"
               >
@@ -152,6 +151,20 @@ export const NachislenieReports = () => {
                 buttonText={t('podoxod')}
                 variant="ghost"
               />
+
+              <DownloadFile
+                isZarplata
+                url="Excel/svod-otchet-month"
+                params={{
+                  spBudnameId: budjetId,
+                  from,
+                  to
+                }}
+                fileName={`${t('svod_otchet')}_${startDate}_${endDate}.xlsx`}
+                buttonText={t('svod_otchet')}
+                variant="ghost"
+              />
+
               <DownloadFile
                 isZarplata
                 url="Excel/plastik-otchet"

@@ -29,6 +29,7 @@ export interface MainZarplata {
   itogo: number
   workplaceId: number
   isMatPomoch: boolean | null
+  isPremya: boolean | null
   isPoek: boolean | null
   doljnostName: string
   doljnostOklad: number

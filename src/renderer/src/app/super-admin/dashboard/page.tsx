@@ -1,6 +1,6 @@
 import type { AdminDashboardBank, AdminDashboardKassa } from '@/app/super-admin/dashboard/model'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft } from 'lucide-react'
@@ -14,6 +14,7 @@ import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { Badge } from '@/common/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
+import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
 
 const CARD_HEIGHT = 550
@@ -29,6 +30,7 @@ const AdminDashboardPage = () => {
 
   const { t } = useTranslation(['dashboard'])
 
+  const setLayout = useLayout()
   const dashboardKassaQuery = useQuery({
     queryKey: [
       AdminDashboardService.QueryKeys.Kassa,
@@ -43,6 +45,17 @@ const AdminDashboardPage = () => {
     ],
     queryFn: AdminDashboardService.getBank
   })
+
+  useEffect(() => {
+    setLayout({
+      title: t('pages.main', { ns: 'app' }),
+      breadcrumbs: [
+        {
+          title: t('pages.admin', { ns: 'app' })
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   return (
     <div className="p-5 flex-1 flex flex-col gap-5 overflow-y-auto scrollbar">

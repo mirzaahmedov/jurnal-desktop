@@ -579,5 +579,10 @@
   "category_name": "Kategoriya nomi",
   "ligota": "Ligota",
   "poluchatel_fio": "Qabul qiluvchi FIO",
-  "address": "Manzil"
+  "address": "Manzil",
+  "svod_otchet": "Jamlanma hisobot",
+  "time_elapsed_until_today": "Xizmat boshlanganidan hozirgacha",
+  "time_elapsed_until_start_of_year": "Yil boshigacha xizmat muddati",
+  "dont_give_premya": "Premiya berilmasin",
+  "by_schets": "Hisobot (schetlar bo'yicha)"
 }

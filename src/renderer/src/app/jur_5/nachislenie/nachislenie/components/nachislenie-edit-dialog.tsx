@@ -319,6 +319,15 @@ export const NachislenieEditDialog = ({
               fileName={`zarplata_plastik_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
               buttonText={t('plastik')}
             />
+            <DownloadFile
+              isZarplata
+              url="Excel/shapka-vedemost"
+              params={{
+                mainId: nachislenieId
+              }}
+              fileName={`${t('cap')}_${nachislenieData?.docNum}_${nachislenieData?.docDate}.xlsx`}
+              buttonText={t('cap')}
+            />
           </div>
         ) : null}
       </div>

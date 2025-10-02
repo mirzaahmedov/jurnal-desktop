@@ -75,7 +75,7 @@ const AdminOrgan159Page = () => {
           refetch={refetch}
         />
 
-        <div className="flex items-center">
+        <div className="flex items-center flex-wrap w-full max-w-2xl justify-end">
           <DownloadFile
             url="/admin/jur3-159/cap"
             fileName={`${t('pages.bank')}_${t('cap')}_${from}:${to}.xlsx`}
@@ -95,6 +95,50 @@ const AdminOrgan159Page = () => {
               excel: true
             }}
             buttonText={t('summarized_report')}
+          />
+
+          <DownloadFile
+            url="/admin/jur3-159/daily"
+            fileName={`${t('pages.organization')}_${t('daily-report')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('daily-report')}
+          />
+
+          <DownloadFile
+            url="/admin/jur3-159/by-schets"
+            fileName={`${t('pages.organization')}_${t('by_schets')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={t('by_schets')}
+          />
+
+          <DownloadFile
+            url="/admin/jur3-159/prixod/rasxod"
+            fileName={`${t('pages.organization')}_${t('prixod')}/${t('rasxod')}_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText={`${t('prixod')}/${t('rasxod')}`}
+          />
+
+          <DownloadFile
+            url="/admin/jur3-159/2169"
+            fileName={`${t('pages.organization')}_2169_${from}:${to}.xlsx`}
+            params={{
+              from: from,
+              to: to,
+              excel: true
+            }}
+            buttonText="2169"
           />
         </div>
       </ListView.Header>

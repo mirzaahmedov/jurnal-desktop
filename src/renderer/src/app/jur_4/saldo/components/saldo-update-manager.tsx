@@ -1,7 +1,7 @@
 import type { PodotchetSaldoProvodka } from '@/common/models'
 import type { ColDef } from 'ag-grid-community'
 
-import { type SVGAttributes, useEffect, useMemo, useRef, useState } from 'react'
+import { type SVGAttributes, useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
@@ -32,8 +32,6 @@ import { PodotchetSaldoService } from '../service'
 import { usePodotchetSaldo } from '../use-saldo'
 
 export const PodotchetSaldoUpdateManager = () => {
-  const scrollElementRef = useRef<HTMLDivElement>(null)
-
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
@@ -262,10 +260,7 @@ export const PodotchetSaldoUpdateManager = () => {
               />
             </DialogHeader>
 
-            <div
-              className="flex-1 min-h-0 overflow-auto scrollbar relative"
-              ref={scrollElementRef}
-            >
+            <div className="flex-1 min-h-0 overflow-auto scrollbar relative">
               {isAutofilling ? <LoadingOverlay /> : null}
               {queuedMonths.length === 0 ? (
                 <div className="flex h-full flex-col">
