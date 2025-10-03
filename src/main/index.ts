@@ -6,16 +6,19 @@ import icon from '@resources/icon.png?asset'
 import { exec } from 'child_process'
 import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, screen, shell } from 'electron'
+import { Conf } from 'electron-conf/main'
 import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import { NsisUpdater } from 'electron-updater'
-import { Conf } from 'electron-conf/main'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
+import { usb } from 'usb'
 
+import { getSecurityKeys } from './utils/2fa'
 import { events } from './utils/auto-updates'
-// import { logger } from './utils/logger'
 import { getVPNLocalIP, isPingError } from './utils/network'
+
+// import { logger } from './utils/logger'
 
 // let counter = 0
 let interval: NodeJS.Timeout | null = null
@@ -47,7 +50,7 @@ const url =
 // 'http://10.50.0.140/update'
 
 const conf = new Conf<{
-  zoomFactor: number;
+  zoomFactor: number
 }>()
 
 const autoUpdater = new NsisUpdater({
@@ -299,6 +302,15 @@ ipcMain.handle('ping-vpn', () => {
 app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
+
+  const securityKeys = await getSecurityKeys()
+  console.log('Security Keys:', securityKeys)
+
+  usb.on('attach', async () => {
+    console.log('USB device attached')
+    const securityKeys = await getSecurityKeys()
+    console.log('Security Keys:', securityKeys)
+  })
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
