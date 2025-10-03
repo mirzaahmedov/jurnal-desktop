@@ -278,7 +278,7 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
               path: '152',
               title: t('pages.service'),
               icon: Wrench,
-              children: [
+              children: omitEmptyArrayElements<INavElement>([
                 {
                   path: 'monitor',
                   title: t('pages.monitoring'),
@@ -293,8 +293,15 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
                   path: 'saldo',
                   title: t('pages.saldo'),
                   icon: CircleFadingPlus
-                }
-              ]
+                },
+                import.meta.env.DEV
+                  ? {
+                      path: 'demo',
+                      title: 'Demo',
+                      icon: ShieldBan
+                    }
+                  : null
+              ])
             }
           ]
         }

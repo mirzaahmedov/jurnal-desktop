@@ -70,6 +70,8 @@ export interface AdminMainbook {
   accept_user_id: number
   accept_user_fio: string
   accept_user_login: string
+  region_id: number
   region_name: string
+  main_schet_id: number
   childs: MainbookProvodka[]
 }

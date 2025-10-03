@@ -144,6 +144,9 @@ const HeadersPage = lazy(() => import('./region-spravochnik/headers/page'))
 const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
 const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
 
+const OrganSaldoDemo152SaldoPage = lazy(() => import('./jur_3/152/saldo/page'))
+const OrganSaldoDemo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
+
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
   return user?.role_name === 'super-admin' ? (
@@ -221,6 +224,14 @@ export const routes: RouteObject[] = [
               {
                 path: 'saldo/:id',
                 element: <OrganSaldo152DetailsPage />
+              },
+              {
+                path: 'demo',
+                element: <OrganSaldoDemo152SaldoPage />
+              },
+              {
+                path: 'demo/:id',
+                element: <OrganSaldoDemo152DetailsPage />
               }
             ]
           }
@@ -535,14 +546,6 @@ export const routes: RouteObject[] = [
             path: 'saldo/:id',
             element: <PodotchetSaldoDetailsPage />
           }
-          // {
-          //   path: 'demo',
-          //   element: <PodotchetDemoPage />
-          // },
-          // {
-          //   path: 'demo/:id',
-          //   element: <PodotchetDemoDetailsPage />
-          // }
         ]
       },
       {
