@@ -1,4 +1,8 @@
-import { type SVGAttributes, useEffect, useRef } from 'react'
+import type { OrganSaldoProvodka } from '@/common/models'
+import type { ColDef } from 'ag-grid-community'
+import type { CustomCellRendererProps } from 'ag-grid-react'
+
+import { type SVGAttributes, useEffect, useMemo, useState } from 'react'
 
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -7,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { LoadingOverlay } from '@/common/components'
+import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { MonthPicker } from '@/common/components/month-picker'
 import {
   AlertDialog,
@@ -16,28 +21,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/common/components/ui/alert-dialog'
+import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
 import { useToggle } from '@/common/hooks'
 
 import { OrganMonitorQueryKeys } from '../../monitor/config'
 import { OrganSaldoQueryKeys, defaultValues } from '../config'
-import { OrganSaldoTable } from '../details/organ-saldo-table'
-import { getOrganSaldoProvodkaColumns } from '../details/provodki'
 import { calculateTotal } from '../details/utils'
 import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
 
-const columnDefs = getOrganSaldoProvodkaColumns(false)
-
 export const OrganUslugiSaldopdateManager = () => {
-  const scrollElementRef = useRef<HTMLDivElement>(null)
-
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
 
   const { t } = useTranslation()
+  const { clearQueue, queuedMonths, dequeueMonth } = useUslugiSaldo()
 
-  const { queuedMonths, dequeueMonth } = useUslugiSaldo()
+  const [totalRow, setTotalRow] = useState<
+    Pick<OrganSaldoProvodka, 'name' | 'prixod' | 'rasxod' | 'summa'>[]
+  >([])
 
   const form = useForm({
     defaultValues
@@ -52,11 +55,16 @@ export const OrganUslugiSaldopdateManager = () => {
       const month = values?.month
       if (childs.length) {
         const total = calculateTotal(childs)
-        childs.push({
-          name: t('total'),
-          prixod: total.prixod,
-          rasxod: total.rasxod
-        } as any)
+        setTotalRow([
+          {
+            name: t('total'),
+            prixod: total.prixod,
+            rasxod: total.rasxod,
+            summa: total.prixod - total.rasxod
+          }
+        ])
+      } else {
+        setTotalRow([])
       }
       form.setValue('year', year)
       form.setValue('month', month)
@@ -110,8 +118,6 @@ export const OrganUslugiSaldopdateManager = () => {
     }
     const rows = form.getValues('organizations')
 
-    rows.pop()
-
     updateSaldo({
       id: Number(current.doc_id),
       month: form.getValues('month'),
@@ -119,6 +125,130 @@ export const OrganUslugiSaldopdateManager = () => {
       organizations: rows
     })
   }
+
+  const columnDefs = useMemo<ColDef<OrganSaldoProvodka>[]>(
+    () => [
+      {
+        field: 'organization_id',
+        width: 100,
+        pinned: 'left',
+        headerName: t('id'),
+        valueFormatter: (params) => (params.value ? `#${params.value}` : '')
+      },
+      {
+        field: 'name',
+        width: 300,
+        pinned: 'left',
+        headerName: t('name'),
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'inn',
+        width: 160,
+        headerName: t('inn')
+      },
+      {
+        field: 'mfo',
+        width: 100,
+        headerName: t('mfo')
+      },
+      {
+        field: 'bank_klient',
+        width: 300,
+        headerName: t('bank')
+      },
+      {
+        field: 'prixod',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('prixod'),
+        cellRendererParams: {
+          readOnly: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'rasxod',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('rasxod'),
+        cellRendererParams: {
+          readOnly: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'summa',
+        pinned: 'right',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('summa'),
+        cellRendererParams: {
+          readOnly: true,
+          allowNegative: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'sub_childs',
+        width: 80,
+        pinned: 'right',
+        headerName: '',
+        cellRenderer: (props: CustomCellRendererProps) => {
+          const count = props.value?.length ?? 0
+          return props.node.rowPinned === 'bottom' ? null : (
+            <div className="text-center">
+              <Badge
+                className="mx-auto"
+                variant={count > 0 ? 'default' : 'secondary'}
+              >
+                {count}
+              </Badge>
+            </div>
+          )
+        }
+      }
+    ],
+    [t]
+  )
 
   return (
     <AlertDialog
@@ -135,6 +265,7 @@ export const OrganUslugiSaldopdateManager = () => {
           queryClient.invalidateQueries({
             queryKey: [OrganMonitorQueryKeys.getAll]
           })
+          clearQueue()
         }
         dialogToggle.setOpen(open)
       }}
@@ -158,10 +289,7 @@ export const OrganUslugiSaldopdateManager = () => {
           />
         </AlertDialogHeader>
 
-        <div
-          className="flex-1 overflow-auto scrollbar relative"
-          ref={scrollElementRef}
-        >
+        <div className="flex-1 overflow-auto scrollbar relative">
           {isAutofilling ? <LoadingOverlay /> : null}
           {queuedMonths.length === 0 ? (
             <div className="flex h-full flex-col">
@@ -172,10 +300,11 @@ export const OrganUslugiSaldopdateManager = () => {
               </div>
             </div>
           ) : (
-            <OrganSaldoTable
+            <EditorTable
               columnDefs={columnDefs}
               form={form}
-              name="organizations"
+              arrayField="organizations"
+              pinnedBottomRowData={totalRow}
             />
           )}
         </div>

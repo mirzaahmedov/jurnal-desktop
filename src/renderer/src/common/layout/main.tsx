@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 
 import { KassaSaldoUpdateManager } from '@/app/jur_1/saldo/components/saldo-update-manager'
 import { BankSaldoUpdateManager } from '@/app/jur_2/saldo/components/saldo-update-manager'
-import { OrganUslugiSaldopdateManager } from '@/app/jur_3/152/saldo/components/saldo-update-manager'
+import { OrganUslugiSaldopdateManager } from '@/app/jur_3/152/saldo_legacy/components/saldo-update-manager'
 import { OrganAktSaldoUpdateManager } from '@/app/jur_3/159/saldo/components/saldo-update-manager'
 import { PodotchetSaldoUpdateManager } from '@/app/jur_4/saldo/components/saldo-update-manager'
 import { MaterialWarehouseSaldoUpdateManager } from '@/app/jur_7/saldo/components/saldo-update-manager'

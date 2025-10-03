@@ -1,16 +1,16 @@
 import type { OrganSaldoFormValues } from '../config'
+import type { OrganSaldoSubChild } from '@/common/models'
+import type { ColDef } from 'ag-grid-community'
 import type { DialogTriggerProps } from 'react-aria-components'
 
-import { type FC, useEffect, useMemo } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 
 import { Plus } from 'lucide-react'
-import { type UseFormReturn, useWatch } from 'react-hook-form'
+import { type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { ShartnomaForm } from '@/app/jur_3/shartnoma/details/shartnoma-form'
-import { type EditableColumnDef, EditableTable } from '@/common/components/editable-table'
-import { createNumberEditor } from '@/common/components/editable-table/editors'
-import { createShartnomaEditor } from '@/common/components/editable-table/editors/shartnoma'
+import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -19,8 +19,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
-import { useToggle } from '@/common/hooks'
+import { useEventCallback, useToggle } from '@/common/hooks'
 import { capitalize } from '@/common/lib/string'
+
+import { ShartnomaCellRenderer } from './shartnoma-cell'
 
 export interface SaldoSubChildsDialogProps extends Omit<DialogTriggerProps, 'children'> {
   rowIndex?: number
@@ -28,6 +30,7 @@ export interface SaldoSubChildsDialogProps extends Omit<DialogTriggerProps, 'chi
   form: UseFormReturn<OrganSaldoFormValues>
   isEditable: boolean
   refetch: () => void
+  onChangeTotal: () => void
 }
 export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
   rowIndex,
@@ -35,36 +38,83 @@ export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
   form,
   isEditable,
   refetch,
+  onChangeTotal,
   ...props
 }) => {
-  const columns = useMemo(() => getOrganSaldoSubChildColumns(isEditable), [isEditable])
+  const { t } = useTranslation()
 
-  const rows = useWatch({
-    control: form.control,
-    name: `organizations.${rowIndex!}.sub_childs`,
-    disabled: !isEditable || rowIndex === undefined
-  })
-  useEffect(() => {
-    const newValues = form.getValues(`organizations.${rowIndex!}.sub_childs`)
-    if (rowIndex === undefined || !newValues) {
-      return
-    }
+  const onChangeTotalEvent = useEventCallback(onChangeTotal)
 
-    const summaPrixod = newValues?.reduce((acc, row) => acc + row.prixod, 0) ?? 0
-    const summaRasxod = newValues?.reduce((acc, row) => acc + row.rasxod, 0) ?? 0
-    const summaTotal = summaPrixod - summaRasxod
+  const onValueEdited = useCallback(
+    (childIndex: number, field: keyof OrganSaldoSubChild & string) => {
+      if (typeof rowIndex !== 'number') {
+        return
+      }
+      if (field === 'prixod' || field === 'rasxod') {
+        const values = form.getValues(`organizations.${rowIndex}.sub_childs.${childIndex}`)
+        const prixodValue = Number(values.prixod) || 0
+        const rasxodValue = Number(values.rasxod) || 0
+        form.setValue(
+          `organizations.${rowIndex}.sub_childs.${childIndex}.summa`,
+          prixodValue - rasxodValue
+        )
 
-    if (
-      summaPrixod === form.getValues(`organizations.${rowIndex}.prixod`) &&
-      summaRasxod === form.getValues(`organizations.${rowIndex}.rasxod`)
-    ) {
-      return
-    }
+        const allValues = form.getValues(`organizations.${rowIndex}.sub_childs`)
+        const totalPrixod = allValues.reduce((acc, row) => acc + (Number(row.prixod) || 0), 0)
+        const totalRasxod = allValues.reduce((acc, row) => acc + (Number(row.rasxod) || 0), 0)
+        form.setValue(`organizations.${rowIndex}.prixod`, totalPrixod)
+        form.setValue(`organizations.${rowIndex}.rasxod`, totalRasxod)
+        form.setValue(`organizations.${rowIndex}.summa`, totalPrixod - totalRasxod)
 
-    form.setValue(`organizations.${rowIndex}.prixod`, summaPrixod)
-    form.setValue(`organizations.${rowIndex}.rasxod`, summaRasxod)
-    form.setValue(`organizations.${rowIndex}.summa`, summaTotal)
-  }, [rowIndex, rows])
+        onChangeTotalEvent?.()
+      }
+    },
+    [form, rowIndex, onChangeTotalEvent]
+  )
+
+  const columnDefs = useMemo<ColDef<OrganSaldoSubChild>[]>(
+    () => [
+      {
+        field: 'contract_id',
+        headerName: t('shartnoma'),
+        cellRenderer: ShartnomaCellRenderer
+      },
+      {
+        field: 'prixod',
+        headerName: t('prixod'),
+        flex: 1,
+        minWidth: 200,
+        cellRenderer: 'numberEditor',
+        cellRendererParams: {
+          readOnly: !isEditable,
+          allowNegative: false
+        }
+      },
+      {
+        field: 'rasxod',
+        headerName: t('rasxod'),
+        flex: 1,
+        minWidth: 200,
+        cellRenderer: 'numberEditor',
+        cellRendererParams: {
+          readOnly: !isEditable,
+          allowNegative: false
+        }
+      },
+      {
+        field: 'summa',
+        headerName: t('summa'),
+        flex: 1,
+        minWidth: 200,
+        cellRenderer: 'numberEditor',
+        cellRendererParams: {
+          readOnly: true,
+          allowNegative: true
+        }
+      }
+    ],
+    [isEditable]
+  )
 
   return (
     <>
@@ -82,18 +132,18 @@ export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
               </DialogHeader>
               <div className="flex-1 overflow-y-auto scrollbar">
                 {rowIndex !== undefined ? (
-                  <EditableTable
+                  <EditorTable
                     form={form}
-                    name={`organizations.${rowIndex}.sub_childs`}
-                    columnDefs={columns as any}
+                    arrayField={`organizations.${rowIndex}.sub_childs`}
+                    columnDefs={columnDefs}
+                    onValueEdited={onValueEdited}
                   />
                 ) : null}
               </div>
               <div>
                 <ShartnomaQuickCreateDialog
-                  organId={form.watch(`organizations.${rowIndex}.organization_id`)}
+                  organId={form.watch(`organizations.${rowIndex!}.organization_id`)}
                   refetch={() => {
-                    console.log('running refetch from quick create  ')
                     refetch()
                   }}
                 />
@@ -142,43 +192,3 @@ const ShartnomaQuickCreateDialog: FC<{
     </DialogTrigger>
   )
 }
-
-export const getOrganSaldoSubChildColumns = (
-  isEditable: boolean
-): EditableColumnDef<OrganSaldoFormValues, 'organizations.1.sub_childs'>[] => [
-  {
-    key: 'contract_id',
-    header: 'shartnoma',
-    Editor: createShartnomaEditor({
-      key: 'contract_id',
-      readOnly: true
-    })
-  },
-  {
-    key: 'prixod',
-    Editor: createNumberEditor({
-      key: 'prixod',
-      readOnly: !isEditable,
-      inputProps: {
-        allowNegative: false
-      }
-    })
-  },
-  {
-    key: 'rasxod',
-    Editor: createNumberEditor({
-      key: 'rasxod',
-      readOnly: !isEditable,
-      inputProps: {
-        allowNegative: false
-      }
-    })
-  },
-  {
-    key: 'summa',
-    Editor: createNumberEditor({
-      key: 'summa',
-      readOnly: true
-    })
-  }
-]

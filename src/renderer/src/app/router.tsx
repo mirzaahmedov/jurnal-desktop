@@ -52,8 +52,8 @@ const ZarplataSpravochnikPage = lazy(() => import('./super-admin/zarplata/spravo
 const OrganSaldo159Page = lazy(() => import('./jur_3/159/saldo/page'))
 const OrganSaldo159DetailsPage = lazy(() => import('./jur_3/159/saldo/details/page'))
 
-const OrganSaldo152Page = lazy(() => import('./jur_3/152/saldo/page'))
-const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
+// const OrganSaldo152Page = lazy(() => import('./jur_3/152/saldo/page'))
+// const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
 
 const MainLayout = lazy(() => import('../common/layout/main'))
 const BankMonitorPage = lazy(() => import('./jur_2/monitor/page'))
@@ -144,8 +144,8 @@ const HeadersPage = lazy(() => import('./region-spravochnik/headers/page'))
 const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo/page'))
 const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'))
 
-const OrganSaldoDemo152SaldoPage = lazy(() => import('./jur_3/152/saldo/page'))
-const OrganSaldoDemo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
+const OrganSaldo152SaldoPage = lazy(() => import('./jur_3/152/saldo/page'))
+const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
 
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
@@ -219,19 +219,11 @@ export const routes: RouteObject[] = [
               },
               {
                 path: 'saldo',
-                element: <OrganSaldo152Page />
+                element: <OrganSaldo152SaldoPage />
               },
               {
                 path: 'saldo/:id',
                 element: <OrganSaldo152DetailsPage />
-              },
-              {
-                path: 'demo',
-                element: <OrganSaldoDemo152SaldoPage />
-              },
-              {
-                path: 'demo/:id',
-                element: <OrganSaldoDemo152DetailsPage />
               }
             ]
           }

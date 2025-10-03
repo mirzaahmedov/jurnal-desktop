@@ -11,10 +11,10 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { EditorTable } from '@/app/_demo/components/editor-table'
 import { AvansService } from '@/app/jur_4/avans/service'
 import { WorkTripService } from '@/app/jur_4/work-trip/service'
 import { PodotchetDialog } from '@/app/region-spravochnik/podotchet/dialog'
+import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
@@ -176,6 +176,8 @@ const PodotchetSaldoDetailsPage = () => {
             summa: total.prixod - total.rasxod
           }
         ])
+      } else {
+        setTotalRow([])
       }
 
       form.setValue('podotchets', data)
@@ -228,6 +230,8 @@ const PodotchetSaldoDetailsPage = () => {
             summa: total.prixod - total.rasxod
           }
         ])
+      } else {
+        setTotalRow([])
       }
       form.reset({
         month: saldo.data.month,
@@ -450,12 +454,7 @@ const PodotchetSaldoDetailsPage = () => {
                 >
                   {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
                   <Badge className="ml-2.5 text-xs">
-                    {
-                      form
-                        .watch('podotchets')
-                        .slice(0, form.watch('podotchets').length - 1)
-                        .filter(isRowEmpty).length
-                    }
+                    {form.watch('podotchets').filter(isRowEmpty).length}
                   </Badge>
                 </Button>
 

@@ -30,7 +30,7 @@ export const numberEditor = createEditor(
             value={field.value ?? 0}
             onChange={undefined}
             onValueChange={(values, event) => {
-              field.onChange(values.value ?? 0)
+              field.onChange(values.floatValue ?? 0)
               if (event.source === 'event') {
                 context?.onValueEdited?.(originalIndex, colDef?.field)
               }

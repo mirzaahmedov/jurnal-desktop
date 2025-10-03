@@ -30,7 +30,7 @@ import { useLayout } from '@/common/layout'
 import { formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { useUslugiSaldo } from '../saldo/use-saldo'
+import { useUslugiSaldo } from '../saldo_legacy/use-saldo'
 import { pokazatUslugiColumns } from './columns'
 import { PokazatUslugiQueryKeys } from './config'
 import { PokazatUslugiService } from './service'

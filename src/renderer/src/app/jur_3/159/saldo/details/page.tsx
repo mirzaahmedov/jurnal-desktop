@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { SaldoSubChildsDialog } from '@/app/jur_3/152/saldo/details/saldo-sub-childs-dialog'
+import { SaldoSubChildsDialog } from '@/app/jur_3/152/saldo_legacy/details/saldo-sub-childs-dialog'
 import { OrganizationDialog } from '@/app/region-spravochnik/organization/dialog'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'

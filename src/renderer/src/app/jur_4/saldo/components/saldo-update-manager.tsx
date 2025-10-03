@@ -8,11 +8,11 @@ import { ArrowRight } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { EditorTable } from '@/app/_demo/components/editor-table'
 import { AvansService } from '@/app/jur_4/avans/service'
 import { PodotchetMonitorQueryKeys } from '@/app/jur_4/monitor/config'
 import { WorkTripService } from '@/app/jur_4/work-trip/service'
 import { LoadingOverlay } from '@/common/components'
+import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -135,8 +135,6 @@ export const PodotchetSaldoUpdateManager = () => {
       return
     }
     const rows = form.getValues('podotchets')
-
-    rows.pop()
 
     updateSaldo({
       id: Number(current.doc_id),
