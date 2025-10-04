@@ -6,20 +6,20 @@ import icon from '@resources/icon.png?asset'
 import { exec } from 'child_process'
 import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, screen, shell } from 'electron'
-import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
-import { NsisUpdater } from 'electron-updater'
+// import { NsisUpdater } from 'electron-updater'
 import { Conf } from 'electron-conf/main'
+import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { events } from './utils/auto-updates'
+// import { events } from './utils/auto-updates'
 // import { logger } from './utils/logger'
 import { getVPNLocalIP, isPingError } from './utils/network'
 
 // let counter = 0
-let interval: NodeJS.Timeout | null = null
-let initialCheckForUpdate = true
+// let interval: NodeJS.Timeout | null = null
+// let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
 
 const normalizeFileName = (fileName: string): string => {
@@ -33,27 +33,27 @@ if (import.meta.env.DEV) {
   dotenv.config()
 }
 
-const CHECK_UPDATES_INTERVAL = 30 * 1000
+// const CHECK_UPDATES_INTERVAL = 30 * 1000
 
 const programFilesPath =
   os.arch() === 'x64' ? process.env['ProgramFiles'] : process.env['ProgramFiles(x86)']
 const zarplataPath = path.join(programFilesPath || 'C:\\Program Files', 'ISH_HAQQI\\ISH_HAQQI')
-const url =
-  import.meta.env.VITE_MODE === 'staging'
-    ? 'https://nafaqa.fizmasoft.uz'
-    : import.meta.env.VITE_MODE === 'region'
-      ? 'http://10.50.0.140:4001'
-      : 'http://10.50.0.140:4005'
+// const url =
+//   import.meta.env.VITE_MODE === 'staging'
+//     ? 'https://nafaqa.fizmasoft.uz'
+//     : import.meta.env.VITE_MODE === 'region'
+//       ? 'http://10.50.0.140:4001'
+//       : 'http://10.50.0.140:4005'
 // 'http://10.50.0.140/update'
 
 const conf = new Conf<{
-  zoomFactor: number;
+  zoomFactor: number
 }>()
 
-const autoUpdater = new NsisUpdater({
-  provider: 'generic',
-  url
-})
+// const autoUpdater = new NsisUpdater({
+//   provider: 'generic',
+//   url
+// })
 
 const createWindow = (route: string = '', floating: boolean = false): BrowserWindow => {
   // Create the browser window.
@@ -117,55 +117,55 @@ const createWindow = (route: string = '', floating: boolean = false): BrowserWin
   return win
 }
 
-// Update manager
-autoUpdater.on(events.checking_for_update, () => {
-  if (initialCheckForUpdate) {
-    windows.forEach((win) => {
-      win.webContents.send(events.checking_for_update)
-    })
-  }
-})
+// // Update manager
+// autoUpdater.on(events.checking_for_update, () => {
+//   if (initialCheckForUpdate) {
+//     windows.forEach((win) => {
+//       win.webContents.send(events.checking_for_update)
+//     })
+//   }
+// })
 
-autoUpdater.on(events.update_available, () => {
-  if (initialCheckForUpdate) {
-    windows.forEach((win) => {
-      win.webContents.send(events.update_available)
-    })
-  }
-})
+// autoUpdater.on(events.update_available, () => {
+//   if (initialCheckForUpdate) {
+//     windows.forEach((win) => {
+//       win.webContents.send(events.update_available)
+//     })
+//   }
+// })
 
-autoUpdater.on(events.download_progress, (progress) => {
-  if (initialCheckForUpdate) {
-    windows.forEach((win) => {
-      win.webContents.send(events.download_progress, progress)
-    })
-  }
-})
+// autoUpdater.on(events.download_progress, (progress) => {
+//   if (initialCheckForUpdate) {
+//     windows.forEach((win) => {
+//       win.webContents.send(events.download_progress, progress)
+//     })
+//   }
+// })
 
-autoUpdater.on(events.update_not_available, () => {
-  initialCheckForUpdate = false
-})
+// autoUpdater.on(events.update_not_available, () => {
+//   initialCheckForUpdate = false
+// })
 
-autoUpdater.on(events.update_downloaded, () => {
-  windows.forEach((win) => {
-    if (initialCheckForUpdate) {
-      win.webContents.send(events.update_downloaded)
-      initialCheckForUpdate = false
-    } else {
-      win.webContents.send(events.update_downloaded_silent)
-    }
-  })
-})
+// autoUpdater.on(events.update_downloaded, () => {
+//   windows.forEach((win) => {
+//     if (initialCheckForUpdate) {
+//       win.webContents.send(events.update_downloaded)
+//       initialCheckForUpdate = false
+//     } else {
+//       win.webContents.send(events.update_downloaded_silent)
+//     }
+//   })
+// })
 
-autoUpdater.on(events.error, (error) => {
-  windows.forEach((win) => {
-    win.webContents.send(events.error, error)
-  })
-  initialCheckForUpdate = false
-})
+// autoUpdater.on(events.error, (error) => {
+//   windows.forEach((win) => {
+//     win.webContents.send(events.error, error)
+//   })
+//   initialCheckForUpdate = false
+// })
 
-ipcMain.on('check-for-updates', () => autoUpdater.checkForUpdates())
-ipcMain.on('restart', () => autoUpdater.quitAndInstall())
+// ipcMain.on('check-for-updates', () => autoUpdater.checkForUpdates())
+// ipcMain.on('restart', () => autoUpdater.quitAndInstall())
 ipcMain.on('open-dev-tools', (e) => e.sender.openDevTools())
 
 ipcMain.handle(
@@ -352,13 +352,13 @@ app.whenReady().then(async () => {
 
   // console.log({ interval })
 
-  if (interval) {
-    clearInterval(interval)
-  }
+  // if (interval) {
+  //   clearInterval(interval)
+  // }
 
-  interval = setInterval(() => {
-    autoUpdater.checkForUpdates()
-  }, CHECK_UPDATES_INTERVAL)
+  // interval = setInterval(() => {
+  //   autoUpdater.checkForUpdates()
+  // }, CHECK_UPDATES_INTERVAL)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -371,9 +371,9 @@ app.on('window-all-closed', () => {
 })
 
 const cleanup = () => {
-  if (interval) {
-    clearInterval(interval)
-  }
+  // if (interval) {
+  //   clearInterval(interval)
+  // }
 }
 
 app.on('before-quit', () => cleanup())
