@@ -1,14 +1,15 @@
-type RegionData = {
+export interface RegionData {
   id: number
   name: string
-  counts: {
-    kassa_count: number
-    bank_count: number
-    organ_count: number
-    jur7_count: number
-    storage_count: number
-    total_count: number
-  }
+  counts: TableCounts
 }
-
-export type { RegionData }
+export interface TableCounts {
+  order_1: number
+  order_2: number
+  order_3: number
+  order_4: number
+  order_5: number
+  order_7: number
+  storage: number
+  all: number
+}

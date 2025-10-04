@@ -31,32 +31,42 @@ export const RegionDataColumns: ColumnDef<RegionData>[] = [
     key: 'name'
   },
   {
-    key: 'kassa',
+    key: 'order_1',
     header: <Trans values={{ nth: 1 }}>mo-nth</Trans>,
-    renderCell: (row) => <CountCell count={row.counts.kassa_count} />
+    renderCell: (row) => <CountCell count={row.counts.order_1} />
   },
   {
-    key: 'bank',
+    key: 'order_2',
     header: <Trans values={{ nth: 2 }}>mo-nth</Trans>,
-    renderCell: (row) => <CountCell count={row.counts.bank_count} />
+    renderCell: (row) => <CountCell count={row.counts.order_2} />
   },
   {
-    key: 'organization',
-    header: <Trans values={{ nth: 3 }}>mo-nth</Trans>,
-    renderCell: (row) => <CountCell count={row.counts.organ_count} />
+    key: 'order_5',
+    header: <Trans values={{ nth: 5 }}>mo-nth</Trans>,
+    renderCell: (row) => <CountCell count={row.counts.order_5} />
   },
   {
-    key: 'jur7',
-    header: <Trans values={{ nth: 7 }}>mo-nth</Trans>,
-    renderCell: (row) => <CountCell count={row.counts.jur7_count} />
+    key: 'order_3',
+    header: <Trans values={{ nth: 6 }}>mo-nth</Trans>,
+    renderCell: (row) => <CountCell count={row.counts.order_3} />
+  },
+  {
+    key: 'order_4',
+    header: <Trans values={{ nth: 8 }}>mo-nth</Trans>,
+    renderCell: (row) => <CountCell count={row.counts.order_4} />
+  },
+  {
+    key: 'order_7',
+    header: <Trans values={{ nth: 9 }}>mo-nth</Trans>,
+    renderCell: (row) => <CountCell count={row.counts.order_7} />
   },
   {
     key: 'spravochnik',
     header: <Trans ns="app">pages.spravochnik</Trans>,
-    renderCell: (row) => <CountCell count={row.counts.storage_count} />
+    renderCell: (row) => <CountCell count={row.counts.storage} />
   },
   {
     key: 'total',
-    renderCell: (row) => <CountCell count={row.counts.total_count} />
+    renderCell: (row) => <CountCell count={row.counts.all} />
   }
 ]

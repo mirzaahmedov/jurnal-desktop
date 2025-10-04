@@ -7,6 +7,7 @@ import { GenericTable } from '@/common/components'
 import { MonthPicker } from '@/common/components/month-picker'
 import { usePagination } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
+import { formatDate } from '@/common/lib/date'
 import { ListView } from '@/common/views'
 
 import { RegionDataColumns } from './columns'
@@ -17,11 +18,11 @@ const RegionDataPage = () => {
   const pagination = usePagination()
   const setLayout = useLayout()
 
-  const [date, setDate] = useState('')
-  const [year, month] = date.split('-')
+  const [date, setDate] = useState(formatDate(new Date()))
 
   const { t } = useTranslation(['app'])
 
+  const [year, month] = date.split('-')
   const { data: regionDataList, isFetching } = useQuery({
     queryKey: [
       RegionDataQueryKeys.getAll,
@@ -53,9 +54,7 @@ const RegionDataPage = () => {
       <ListView.Content isLoading={isFetching}>
         <GenericTable
           columnDefs={RegionDataColumns}
-          data={(regionDataList?.data ?? [])?.sort(
-            (a, b) => b?.counts?.total_count - a?.counts?.total_count
-          )}
+          data={(regionDataList?.data ?? [])?.sort((a, b) => b?.counts?.all - a?.counts?.all)}
         />
       </ListView.Content>
     </ListView>

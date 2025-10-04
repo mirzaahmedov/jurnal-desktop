@@ -1,13 +1,16 @@
 import type { UseSnippetsReturn } from './use-snippets'
 import type { DialogTriggerProps } from 'react-aria-components'
 
+import { useState } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Trash2 } from 'lucide-react'
+import { Search, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { EmptyList } from '@/common/components/empty-states'
 import { FormElement } from '@/common/components/form'
+import { Debouncer } from '@/common/components/hoc/debouncer'
 import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
@@ -39,6 +42,8 @@ export const SelectSnippetDialog = ({
 
   const { t } = useTranslation()
 
+  const [searchValue, setSearchValue] = useState('')
+
   const form = useForm({
     resolver: zodResolver(SnippetSchema),
     defaultValues
@@ -53,6 +58,13 @@ export const SelectSnippetDialog = ({
     createDialogToggle.close()
   })
 
+  const filteredSnippets = snippets.filter((snippet) => {
+    return (
+      snippet.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      snippet.content.toLowerCase().includes(searchValue.toLowerCase())
+    )
+  })
+
   return (
     <DialogTrigger
       isOpen={isOpen}
@@ -60,9 +72,28 @@ export const SelectSnippetDialog = ({
     >
       <DialogOverlay>
         <DialogContent className="max-w-4xl">
+          <div>
+            <Debouncer
+              value={searchValue}
+              onChange={setSearchValue}
+              delay={300}
+            >
+              {({ value, onChange }) => (
+                <div className="w-full max-w-xs flex items-center gap-2 outline outline-1 outline-gray-200 bg-gray-50 rounded-md px-3 py-2 mb-2 transition-shadow shadow-sm focus-within:outline focus-within:outline-2 focus-within:outline-brand focus-within:shadow-[0_0_0_4px_rgba(59,130,246,0.20)]">
+                  <Search className="text-gray-400" />
+                  <input
+                    placeholder={t('search')}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="focus:outline-none bg-transparent w-full"
+                  />
+                </div>
+              )}
+            </Debouncer>
+          </div>
           <ul className="divide-y">
-            {Array.isArray(snippets) && snippets.length > 0 ? (
-              snippets.map((snippet, index) => (
+            {Array.isArray(filteredSnippets) && filteredSnippets.length > 0 ? (
+              filteredSnippets.map((snippet, index) => (
                 <li
                   key={index}
                   className="p-5 flex items-start hover:bg-slate-50 cursor-pointer"
