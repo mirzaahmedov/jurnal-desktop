@@ -49,6 +49,13 @@ export const GroupTable = ({ data, ...props }: GroupTableProps) => {
 }
 
 export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Group>>) => {
+  const params = extendObject(
+    {
+      page: 1,
+      limit: 100000
+    },
+    config.params ?? {}
+  )
   return extendObject(
     {
       title: t('group'),
@@ -58,13 +65,7 @@ export const createGroupSpravochnik = (config: Partial<SpravochnikHookOptions<Gr
       filters: [SpravochnikSearchField],
       CustomTable: GroupTable as any, // Todo: fix this
       pagination: false,
-      params: extendObject(
-        {
-          page: 1,
-          limit: 100000
-        },
-        config.params ?? {}
-      )
+      params
     } satisfies typeof config,
     config
   )

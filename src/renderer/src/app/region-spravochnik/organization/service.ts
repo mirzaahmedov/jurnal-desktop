@@ -5,6 +5,7 @@ import { t } from 'i18next'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
+import { getMainSchetId } from '@/common/features/requisites'
 import { extendObject } from '@/common/lib/utils'
 
 import { OrganizationColumns } from './columns'
@@ -49,7 +50,10 @@ export const createOrganizationSpravochnik = (
       service: OrganizationService,
       filters: [SpravochnikSearchField],
       Dialog: OrganizationDialog,
-      queryKeys: OrganizationQueryKeys
+      queryKeys: OrganizationQueryKeys,
+      params: {
+        main_schet_id: getMainSchetId()
+      }
     } satisfies typeof config,
     config
   )

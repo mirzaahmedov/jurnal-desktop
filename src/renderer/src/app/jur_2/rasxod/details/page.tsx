@@ -142,11 +142,63 @@ const BankRasxodDetailsPage = () => {
     }
   }
 
+  const handleShartnomaSummaUpdate = (params: {
+    grafikId?: number
+    shartnoma?: Shartnoma
+    applySumma?: boolean
+  }) => {
+    const { shartnoma, grafikId, applySumma = true } = params
+    if (!docDate || !shartnoma) {
+      return
+    }
+
+    const monthIndex = parseDate(docDate).getMonth() + 1
+    if (grafikId) {
+      const grafik = shartnoma.grafiks?.find((item) => item.id === grafikId)
+      if (grafik) {
+        const summaMonth = grafik[`oy_${monthIndex}`]
+        form.setValue('contract_summa', summaMonth)
+        if (applySumma) {
+          applyContractSumma(summaMonth ? Number(summaMonth) : 0)
+        }
+      }
+    } else {
+      if (Array.isArray(shartnoma.grafiks) && shartnoma.grafiks.length) {
+        const summaMonth = shartnoma.grafiks.reduce((result, item) => {
+          return result + item[`oy_${monthIndex}`]
+        }, 0)
+        form.setValue('contract_summa', summaMonth)
+        if (applySumma) {
+          applyContractSumma(summaMonth ? Number(summaMonth) : 0)
+        }
+      } else {
+        form.setValue('contract_summa', Number(shartnoma.summa))
+        if (applySumma) {
+          applyContractSumma(shartnoma.summa ? Number(shartnoma.summa) : 0)
+        }
+      }
+    }
+  }
+
   const shartnomaSpravochnik = useSpravochnik(
     createShartnomaSpravochnik({
       value: form.watch('id_shartnomalar_organization'),
       onChange: (value, shartnoma) => {
-        form.setValue('id_shartnomalar_organization', value, { shouldValidate: true })
+        form.setValue('id_shartnomalar_organization', value, {
+          shouldValidate: true
+        })
+
+        const grafikId = shartnoma?.grafiks?.[0]?.id
+        if (grafikId) {
+          form.setValue('shartnoma_grafik_id', grafikId, { shouldValidate: true })
+          handleShartnomaSummaUpdate({
+            shartnoma,
+            grafikId
+          })
+        } else {
+          form.setValue('shartnoma_grafik_id', 0, { shouldValidate: true })
+          form.setValue('contract_summa', 0)
+        }
 
         if (form.getValues('id_shartnomalar_organization') !== value) {
           handleShartnomaSummaUpdate({
@@ -158,6 +210,29 @@ const BankRasxodDetailsPage = () => {
           form,
           contract: shartnoma
         })
+      },
+      onValueChange: (_, shartnoma) => {
+        if (shartnoma) {
+          const grafik = shartnoma.grafiks?.find(
+            (g) => g.id === form.getValues('shartnoma_grafik_id')
+          )
+          if (grafik) {
+            handleShartnomaSummaUpdate({
+              shartnoma,
+              grafikId: grafik.id,
+              applySumma: false
+            })
+          } else if (shartnoma.grafiks?.length >= 0) {
+            const grafikId = shartnoma.grafiks[0]?.id
+            form.setValue('shartnoma_grafik_id', grafikId)
+            handleShartnomaSummaUpdate({
+              shartnoma,
+              grafikId
+            })
+          } else {
+            form.setValue('contract_summa', 0)
+          }
+        }
       },
       params: {
         organ_id: form.watch('id_spravochnik_organization')
@@ -378,36 +453,6 @@ const BankRasxodDetailsPage = () => {
       }
     })
   }, [shartnoma, grafikId])
-
-  const handleShartnomaSummaUpdate = (args: { grafikId?: number; shartnoma?: Shartnoma }) => {
-    const { shartnoma, grafikId } = args
-    if (!docDate || !shartnoma) {
-      return
-    }
-
-    const monthIndex = parseDate(docDate).getMonth() + 1
-    if (grafikId) {
-      const grafik = shartnoma.grafiks?.find((item) => item.id === grafikId)
-      if (grafik) {
-        const summaMonth = grafik[`oy_${monthIndex}`]
-        form.setValue('contract_summa', summaMonth)
-        applyContractSumma(summaMonth ? Number(summaMonth) : 0)
-      }
-    } else {
-      if (Array.isArray(shartnoma.grafiks) && shartnoma.grafiks.length) {
-        const summaMonth = shartnoma.grafiks.reduce((result, item) => {
-          return result + item[`oy_${monthIndex}`]
-        }, 0)
-        form.setValue('contract_summa', summaMonth)
-        applyContractSumma(summaMonth ? Number(summaMonth) : 0)
-      } else {
-        form.setValue('contract_summa', Number(shartnoma.summa))
-        applyContractSumma(shartnoma.summa ? Number(shartnoma.summa) : 0)
-      }
-    }
-  }
-
-  console.log({ summa: form.watch('contract_summa') })
 
   return (
     <DetailsView>

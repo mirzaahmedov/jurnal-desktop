@@ -817,6 +817,8 @@ const NaimenovanieCells = ({
         onChangeField(index, 'iznos_start', iznos ? (form.watch('doc_date') ?? '') : '')
       },
       params: {
+        page: 1,
+        limit: 100000000,
         ignoreAccess: true
       }
     })

@@ -42,6 +42,8 @@ export const Spravochnik = ({ close, spravochnik }: SpravochnikProps) => {
 
   const queryKey = spravochnik?.queryKeys?.getAll ?? spravochnik?.endpoint ?? 'spravochnik'
 
+  console.log('Spravochnik render', JSON.stringify({ params: spravochnik?.params }))
+
   const { data, error, isFetching } = useQuery({
     queryKey: [
       queryKey,

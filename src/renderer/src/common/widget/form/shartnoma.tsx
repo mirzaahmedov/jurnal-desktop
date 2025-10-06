@@ -2,15 +2,16 @@ import type { FormSpravochnikFieldsComponent } from './types'
 import type { Shartnoma } from '@/common/models'
 import type { UseFormReturn } from 'react-hook-form'
 
-import { useEffect } from 'react'
-
 import { useTranslation } from 'react-i18next'
 
 import { FormElement } from '@/common/components/form'
 import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { SpravochnikField, SpravochnikFields } from '@/common/features/spravochnik'
-import { useEventCallback } from '@/common/hooks'
 import { formatLocaleDate } from '@/common/lib/format'
+
+// import { useEffect } from 'react'
+
+// import { useEventCallback } from '@/common/hooks'
 
 export const ShartnomaFields: FormSpravochnikFieldsComponent<
   Shartnoma,
@@ -18,7 +19,7 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
     form?: UseFormReturn<{
       shartnoma_grafik_id?: number
     }>
-    onGrafikSelected?: (id: number) => void
+    onGrafikSelected?: (id: number, source: 'prop' | 'event', isDefault: boolean) => void
   }
 > = ({ tabIndex, disabled, spravochnik, name, error, form, onGrafikSelected, ...props }) => {
   const { inputRef, ...spravochnikProps } = spravochnik
@@ -26,27 +27,25 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
   const { t } = useTranslation()
 
   const grafikId = form?.watch('shartnoma_grafik_id')
-  const onGrafikSelectedCB = useEventCallback(onGrafikSelected)
+  // const onGrafikSelectedCB = useEventCallback(onGrafikSelected)
 
   const selected = spravochnikProps.selected
-  useEffect(() => {
-    if (!selected) {
-      return
-    }
+  // useEffect(() => {
+  //   if (!selected) {
+  //     return
+  //   }
 
-    if (selected.grafiks?.find((item) => item.id === grafikId)) {
-      onGrafikSelected?.(grafikId!)
-      return
-    }
+  //   if (selected.grafiks?.find((item) => item.id === grafikId)) {
+  //     onGrafikSelectedCB?.(grafikId || 0, 'prop', true)
+  //     return
+  //   }
 
-    if (selected) {
-      const firstGrafikId = selected.grafiks[0]?.id ?? 0
-      form?.setValue('shartnoma_grafik_id', firstGrafikId)
-      if (firstGrafikId) {
-        onGrafikSelectedCB?.(firstGrafikId)
-      }
-    }
-  }, [selected, onGrafikSelectedCB, grafikId])
+  //   const firstGrafikId = selected.grafiks[0]?.id ?? 0
+  //   form?.setValue('shartnoma_grafik_id', firstGrafikId)
+  //   if (firstGrafikId) {
+  //     onGrafikSelectedCB?.(firstGrafikId, 'prop', true)
+  //   }
+  // }, [selected, onGrafikSelectedCB, grafikId])
 
   const handleClear = () => {
     spravochnikProps?.clear()
@@ -94,8 +93,8 @@ export const ShartnomaFields: FormSpravochnikFieldsComponent<
               placeholder=""
               selectedKey={grafikId || null}
               onSelectionChange={(value) => {
+                onGrafikSelected?.(value ? Number(value) : 0, 'event', false)
                 form?.setValue('shartnoma_grafik_id', value ? Number(value) : 0)
-                onGrafikSelected?.(value ? Number(value) : 0)
               }}
             >
               {(item) => (

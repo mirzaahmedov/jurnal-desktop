@@ -3,7 +3,7 @@ import type { ApiResponse } from '@/common/models'
 
 import { type QueryFunctionContext } from '@tanstack/react-query'
 
-import { getMainschetId } from '@/common/features/requisites'
+import { getMainSchetId } from '@/common/features/requisites'
 import { http } from '@/common/lib/http'
 
 interface GetDocumentNumberResponse {
@@ -22,18 +22,17 @@ export const getDocumentNumberQuery = async (
     `/features/doc/num/${documentType}`,
     {
       params: {
-        main_schet_id: getMainschetId()
+        main_schet_id: getMainSchetId()
       }
     }
   )
   return res.data?.data?.doc_num
 }
 
-
 export class DocumentNumberService {
   static endpoint = '/features/doc/num'
 
-  static async getDocumentNumber(args: { type: DocumentType, main_schet_id?: number; }) {
+  static async getDocumentNumber(args: { type: DocumentType; main_schet_id?: number }) {
     const res = await http.get<ApiResponse<GetDocumentNumberResponse>>(
       `${DocumentNumberService.endpoint}/${args.type}`,
       {

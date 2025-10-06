@@ -104,7 +104,7 @@ export const extendObject = <T extends Record<string, unknown>, D extends Record
   if (!target) {
     return data as T & D
   }
-  return Object.assign(target, data)
+  return Object.assign({}, target, data)
 }
 
 export const roundNumberToTwoDecimalPlaces = (num: number): number => {
