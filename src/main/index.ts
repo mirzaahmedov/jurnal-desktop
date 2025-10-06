@@ -24,6 +24,7 @@ import { getVPNLocalIP, isPingError } from './utils/network'
 let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
+let securityKeys: string[] = []
 
 const normalizeFileName = (fileName: string): string => {
   return fileName
@@ -31,6 +32,22 @@ const normalizeFileName = (fileName: string): string => {
     .replace(/[^a-zA-Zа-яА-ЯёЁҳқҲҚ0-9№._-]/g, '')
     .replace(/^[-_.]+|[-_.]+$/g, '')
 }
+
+// const getDeviceId = (device: Device) => {
+//   return new Promise<string>((resolve, reject) => {
+//     device.getStringDescriptor(device.deviceDescriptor.iSerialNumber, (err, serial) => {
+//       if (err) {
+//         reject(err)
+//       }
+//       {
+//         const id = serial
+//           ? `${device.deviceDescriptor.idVendor}:${device.deviceDescriptor.idProduct}:${serial}`
+//           : `${device.busNumber}-${device.deviceAddress}`
+//         resolve(id)
+//       }
+//     })
+//   })
+// }
 
 if (import.meta.env.DEV) {
   dotenv.config()
@@ -303,13 +320,17 @@ app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
-  const securityKeys = await getSecurityKeys()
-  console.log('Security Keys:', securityKeys)
+  securityKeys = await getSecurityKeys()
 
   usb.on('attach', async () => {
-    console.log('USB device attached')
-    const securityKeys = await getSecurityKeys()
-    console.log('Security Keys:', securityKeys)
+    securityKeys = await getSecurityKeys()
+  })
+
+  usb.on('detach', async () => {
+    // const deviceId = await getDeviceId(device)
+    windows.forEach((win) => {
+      win.webContents.send('usb-device-detached')
+    })
   })
 
   // Default open or close DevTools by F12 in development
@@ -321,6 +342,12 @@ app.whenReady().then(async () => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('usb-get-security-key', () => {
+    if (securityKeys.length === 0) {
+      return null
+    }
+    return securityKeys[0]
+  })
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)

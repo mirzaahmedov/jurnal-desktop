@@ -13,7 +13,8 @@ const api = {
   pingVPN: () => ipcRenderer.invoke('ping-vpn'),
   getVPNLocalIP: () => ipcRenderer.invoke('get-vpn-local-ip'),
   openRouteNewWindow: (args: OpenRouteNewWindowArgs) =>
-    ipcRenderer.invoke('open-route-new-window', args)
+    ipcRenderer.invoke('open-route-new-window', args),
+  getUSBSecurityKey: () => ipcRenderer.invoke('usb-get-security-key')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
