@@ -184,7 +184,8 @@ export const MainZarplataForm = ({
       form.reset({
         ...mainZarplataData,
         dateBirth: formatDate(parseLocaleDate(mainZarplataData.dateBirth)),
-        nachaloSlujbi: formatDate(parseLocaleDate(mainZarplataData.nachaloSlujbi))
+        nachaloSlujbi: formatDate(parseLocaleDate(mainZarplataData.nachaloSlujbi)),
+        isPremya: mainZarplataData.isPremya ?? undefined
       })
     } else {
       form.reset(defaultValues)

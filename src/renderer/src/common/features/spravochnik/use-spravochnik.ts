@@ -10,6 +10,7 @@ import { useSpravochnikStore } from './store'
 
 interface SpravochnikHookCallbacks<T> {
   onChange?: (id: number | undefined, data?: T) => void
+  onValueChange?: (id: number | undefined, data?: T) => void
   onClose?: VoidFunction
 }
 
@@ -36,9 +37,11 @@ export const useSpravochnik = <T extends { id: number }>(
 ): UseSpravochnikReturn<T> => {
   const id = options.uniqueId ?? useId()
 
+  const valueRef = useRef<number | undefined>(options.value)
   const inputRef = useRef<HTMLInputElement>(null)
   const callbacksRef = useRef<SpravochnikHookCallbacks<T>>({
     onChange: options.onChange,
+    onValueChange: options.onValueChange,
     onClose: options.onClose
   })
   const paramsRef = useRef<Pick<SpravochnikData<T>, 'disabledIds'>>({
@@ -70,6 +73,7 @@ export const useSpravochnik = <T extends { id: number }>(
   useLayoutEffect(() => {
     callbacksRef.current = {
       onChange: options.onChange,
+      onValueChange: options.onValueChange,
       onClose: options.onClose
     }
   })
@@ -81,6 +85,15 @@ export const useSpravochnik = <T extends { id: number }>(
     }
     setSelectedId(options.value)
   }, [options.value])
+
+  useEffect(() => {
+    if (!selected?.data) {
+      return
+    }
+    if (selected?.data?.id !== valueRef.current) {
+      callbacksRef.current.onValueChange?.(selected.data.id, selected.data)
+    }
+  }, [selected])
 
   const handleOpenDialog = useCallback(() => {
     if (!options.service || !options.columnDefs) {
@@ -114,6 +127,7 @@ export const useSpravochnik = <T extends { id: number }>(
       selectId: (selectedId, values) => {
         setSelectedId(selectedId)
         callbacksRef.current?.onChange?.(selectedId, values)
+        valueRef.current = selectedId
         close(id)
       },
       CustomTable: options.CustomTable,

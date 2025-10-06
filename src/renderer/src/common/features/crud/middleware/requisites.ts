@@ -6,14 +6,14 @@ import {
   getJur3Schet152Id,
   getJur3Schet159Id,
   getJur4SchetId,
-  getMainschetId
+  getMainSchetId
 } from '@/common/features/requisites'
 import { extendObject } from '@/common/lib/utils'
 
 export const main_schet: () => MiddlewareFunction = () => {
   return (config: AxiosRequestConfig) => {
     config.params = extendObject(config.params, {
-      main_schet_id: getMainschetId()
+      main_schet_id: getMainSchetId()
     })
     return config
   }
