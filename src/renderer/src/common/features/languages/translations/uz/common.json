@@ -584,5 +584,6 @@
   "time_elapsed_until_today": "Xizmat boshlanganidan hozirgacha",
   "time_elapsed_until_start_of_year": "Yil boshigacha xizmat muddati",
   "dont_give_premya": "Premiya berilmasin",
-  "by_schets": "Hisobot (schetlar bo'yicha)"
+  "by_schets": "Hisobot (schetlar bo'yicha)",
+  "document_processing": "Hujjatlar qayta ishlanmoqda"
 }
