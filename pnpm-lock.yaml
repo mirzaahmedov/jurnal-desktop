@@ -20,6 +20,9 @@ importers:
       '@internationalized/date':
         specifier: ^3.8.0
         version: 3.8.0
+      '@lottiefiles/dotlottie-react':
+        specifier: ^0.17.4
+        version: 0.17.4(react@18.3.1)
       '@radix-ui/react-accordion':
         specifier: ^1.2.2
         version: 1.2.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -784,6 +787,14 @@ packages:
 
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  '@lottiefiles/dotlottie-react@0.17.4':
+    resolution: {integrity: sha512-PsWq0l+Q/sGwnjWMiRJC1GUmsXFYB8zc5TacWblfaU9EQzqJzBeblk5rqtac/EDQi9QiXqpojPgWsofJX97swg==}
+    peerDependencies:
+      react: ^17 || ^18 || ^19
+
+  '@lottiefiles/dotlottie-web@0.54.0':
+    resolution: {integrity: sha512-Jc/n4i9siOXo9/1CVhKkrWC8pxxsKqKwxYfrL4DFQP/cLUAeAO0TqFPQFx9Klh1m7T+/1RPFriycOcF8gW3ZtQ==}
 
   '@malept/cross-spawn-promise@1.1.1':
     resolution: {integrity: sha512-RTBGWL5FWQcg9orDOCcp4LvItNzUPcyEU9bwaeJX0rJ1IQxzucC48Y0/sQLp/g6t99IQgAlGIaesJS+gTn7tVQ==}
@@ -6221,6 +6232,13 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@juggle/resize-observer@3.4.0': {}
+
+  '@lottiefiles/dotlottie-react@0.17.4(react@18.3.1)':
+    dependencies:
+      '@lottiefiles/dotlottie-web': 0.54.0
+      react: 18.3.1
+
+  '@lottiefiles/dotlottie-web@0.54.0': {}
 
   '@malept/cross-spawn-promise@1.1.1':
     dependencies:
