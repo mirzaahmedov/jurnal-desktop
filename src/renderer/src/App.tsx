@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify'
 
 import { router } from './app/router'
 import { ApplicationUpdateManager } from './common/features/application-update-manager'
+import { useAuthenticationStore } from './common/features/auth'
 import { ConfirmationDialog } from './common/features/confirm'
 import { initLocales } from './common/features/languages'
 import { queryClient } from './common/lib/query-client'
@@ -13,6 +14,8 @@ import { queryClient } from './common/lib/query-client'
 initLocales()
 
 function App() {
+  const setUser = useAuthenticationStore((store) => store.setUser)
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'I' && e.shiftKey && e.ctrlKey) {
@@ -25,6 +28,13 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
+  }, [])
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('usb-device-detached', () => {
+      console.log('usb-device-detached')
+      setUser(null)
+    })
   }, [])
 
   return (

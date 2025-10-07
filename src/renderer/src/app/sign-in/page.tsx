@@ -26,7 +26,7 @@ import { LanguageSelect } from '@/common/features/languages'
 import { useRequisitesStore } from '@/common/features/requisites'
 
 import { SigninFormSchema, defaultValues } from './config'
-import { signinQuery } from './service'
+import { signinQuery, signinUSBQuery } from './service'
 
 const SigninPage = () => {
   const { t, i18n } = useTranslation(['sign-in', 'user', 'app'])
@@ -64,6 +64,9 @@ const SigninPage = () => {
       navigate('/region/dashboard')
     }
   })
+  const { mutate: signinUSB, isPending: isPendingUSB } = useMutation({
+    mutationFn: signinUSBQuery
+  })
 
   useEffect(() => {
     i18n.on('languageChanged', setLanguage)
@@ -97,9 +100,37 @@ const SigninPage = () => {
     }
   }, [navigate])
 
-  const onSubmit = form.handleSubmit((values) => {
+  const handleSubmit = form.handleSubmit((values) => {
     signin(values)
   })
+  const handleUSB = async () => {
+    const hash = await window.api.getUSBSecurityKey()
+    if (!hash) {
+      toast.error(t('no-usb-key'))
+    } else {
+      signinUSB(
+        { hash },
+        {
+          onSuccess(res) {
+            if (res.data?.result.id !== user_id) {
+              clear()
+            }
+            setUser({
+              token: res.data?.token,
+              user: res.data?.result
+            })
+            queryClient.clear()
+            toast.success(res?.message)
+            if (res?.data?.result.role_name === 'super-admin') {
+              navigate('/admin/dashboard')
+              return
+            }
+            navigate('/region/dashboard')
+          }
+        }
+      )
+    }
+  }
 
   return (
     <main className="h-full flex items-center justify-center">
@@ -120,7 +151,7 @@ const SigninPage = () => {
             <Form {...form}>
               <form
                 autoComplete="off"
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit}
                 className="flex flex-col gap-4"
               >
                 <FormField
@@ -180,6 +211,8 @@ const SigninPage = () => {
                   <Button
                     type="button"
                     variant="outline"
+                    isPending={isPendingUSB}
+                    onClick={handleUSB}
                   >
                     <Usb className="btn-icon icon-start" /> {t('enter-usb')}
                   </Button>

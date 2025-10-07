@@ -19,6 +19,7 @@ declare global {
       pingVPN(): Promise<boolean>
       getVPNLocalIP(): Promise<string | null>
       openRouteNewWindow(args: OpenRouteNewWindowArgs): Promise<void>
+      getUSBSecurityKey(): Promise<string>
     }
     downloader: Downloader
   }

@@ -6,21 +6,25 @@ import icon from '@resources/icon.png?asset'
 import { exec } from 'child_process'
 import dotenv from 'dotenv'
 import { BrowserWindow, app, ipcMain, screen, shell } from 'electron'
+import { Conf } from 'electron-conf/main'
 import { REACT_DEVELOPER_TOOLS, installExtension } from 'electron-devtools-installer'
 import { NsisUpdater } from 'electron-updater'
-import { Conf } from 'electron-conf/main'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
+import { usb } from 'usb'
 
+import { getSecurityKeys } from './utils/2fa'
 import { events } from './utils/auto-updates'
-// import { logger } from './utils/logger'
 import { getVPNLocalIP, isPingError } from './utils/network'
+
+// import { logger } from './utils/logger'
 
 // let counter = 0
 let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
+let securityKeys: string[] = []
 
 const normalizeFileName = (fileName: string): string => {
   return fileName
@@ -28,6 +32,22 @@ const normalizeFileName = (fileName: string): string => {
     .replace(/[^a-zA-Zа-яА-ЯёЁҳқҲҚ0-9№._-]/g, '')
     .replace(/^[-_.]+|[-_.]+$/g, '')
 }
+
+// const getDeviceId = (device: Device) => {
+//   return new Promise<string>((resolve, reject) => {
+//     device.getStringDescriptor(device.deviceDescriptor.iSerialNumber, (err, serial) => {
+//       if (err) {
+//         reject(err)
+//       }
+//       {
+//         const id = serial
+//           ? `${device.deviceDescriptor.idVendor}:${device.deviceDescriptor.idProduct}:${serial}`
+//           : `${device.busNumber}-${device.deviceAddress}`
+//         resolve(id)
+//       }
+//     })
+//   })
+// }
 
 if (import.meta.env.DEV) {
   dotenv.config()
@@ -47,7 +67,7 @@ const url =
 // 'http://10.50.0.140/update'
 
 const conf = new Conf<{
-  zoomFactor: number;
+  zoomFactor: number
 }>()
 
 const autoUpdater = new NsisUpdater({
@@ -300,6 +320,19 @@ app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
+  securityKeys = await getSecurityKeys()
+
+  usb.on('attach', async () => {
+    securityKeys = await getSecurityKeys()
+  })
+
+  usb.on('detach', async () => {
+    // const deviceId = await getDeviceId(device)
+    windows.forEach((win) => {
+      win.webContents.send('usb-device-detached')
+    })
+  })
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -309,6 +342,12 @@ app.whenReady().then(async () => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('usb-get-security-key', () => {
+    if (securityKeys.length === 0) {
+      return null
+    }
+    return securityKeys[0]
+  })
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)
