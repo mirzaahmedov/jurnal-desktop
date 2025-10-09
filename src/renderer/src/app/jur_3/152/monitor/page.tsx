@@ -36,7 +36,7 @@ import { useLayout } from '@/common/layout'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { useUslugiSaldo } from '../saldo_legacy/use-saldo'
+import { useUslugiSaldo } from '../saldo/use-saldo'
 import { AktSverkiDialog } from './akt-sverka'
 import { OrganMonitorColumns } from './columns'
 import { OrganMonitorQueryKeys } from './config'

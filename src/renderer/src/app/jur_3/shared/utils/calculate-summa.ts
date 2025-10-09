@@ -1,6 +1,6 @@
-import type { OrganSaldoProvodkaFormValues } from '../config'
+import type { OrganSaldoProvodka } from '@/common/models'
 
-export const calculateTotal = (rows: OrganSaldoProvodkaFormValues[]) => {
+export const calculateSumma = (rows: Pick<OrganSaldoProvodka, 'prixod' | 'rasxod'>[]) => {
   return rows.reduce(
     (result, row) => {
       return {

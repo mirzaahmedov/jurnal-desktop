@@ -153,7 +153,11 @@ export const MonthPicker = ({
     >
       <Button
         variant="outline"
-        className={cn('flex items-center gap-1', readOnly && 'disabled:opacity-100', className)}
+        className={cn(
+          'flex items-center gap-1',
+          readOnly && 'disabled:opacity-100 pointer-events-none',
+          className
+        )}
         {...props}
       >
         <CalendarIcon className="size-4 mx-0" />

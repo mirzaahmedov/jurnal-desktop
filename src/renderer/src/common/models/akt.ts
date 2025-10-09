@@ -27,6 +27,9 @@ export interface Akt {
   shartnomalar_organization_id: number
   shartnomalar_organization_doc_num: string
   shartnomalar_organization_doc_date: string
+  user_id: number
+  login: string
+  fio: string
   provodki_array: Array<{
     provodki_schet: string
     provodki_sub_schet: string

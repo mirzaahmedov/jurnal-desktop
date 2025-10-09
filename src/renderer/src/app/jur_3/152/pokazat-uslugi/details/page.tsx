@@ -45,7 +45,7 @@ import {
   SummaFields
 } from '@/common/widget/form'
 
-import { useUslugiSaldo } from '../../saldo_legacy/use-saldo'
+import { useUslugiSaldo } from '../../saldo/use-saldo'
 import {
   PokazatUslugiFormSchema,
   PokazatUslugiProvodkaFormSchema,

@@ -35,8 +35,6 @@ const PositionPage = lazy(() => import('./super-admin/spravochnik/position/page'
 
 const KassaSaldoPage = lazy(() => import('./jur_1/saldo/page'))
 const BankSaldoPage = lazy(() => import('./jur_2/saldo/page'))
-// const PodotchetSaldoPage = lazy(() => import('./jur_4/saldo_legacy/page'))
-// const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo_legacy/details/page'))
 
 const AdminPrixodSchetPage = lazy(() => import('./super-admin/prixod-schet/page'))
 

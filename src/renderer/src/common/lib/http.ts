@@ -109,6 +109,11 @@ http.interceptors.response.use(
       throw error
     }
 
+    if (error.response?.status === 403) {
+      useAuthenticationStore.getState().setUser(null)
+      throw error
+    }
+
     const response = error.response
     if (response) {
       const data = getResponseData(response)

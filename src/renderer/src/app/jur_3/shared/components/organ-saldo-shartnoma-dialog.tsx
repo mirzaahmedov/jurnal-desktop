@@ -1,4 +1,4 @@
-import type { OrganSaldoFormValues } from '../config'
+import type { OrganSaldoFormValues } from '../../152/saldo/config'
 import type { OrganSaldoSubChild } from '@/common/models'
 import type { ColDef } from 'ag-grid-community'
 import type { DialogTriggerProps } from 'react-aria-components'
@@ -24,7 +24,7 @@ import { capitalize } from '@/common/lib/string'
 
 import { ShartnomaCellRenderer } from './shartnoma-cell'
 
-export interface SaldoSubChildsDialogProps extends Omit<DialogTriggerProps, 'children'> {
+export interface OrganSaldoShartnomaDialogProps extends Omit<DialogTriggerProps, 'children'> {
   rowIndex?: number
   organName?: string
   form: UseFormReturn<OrganSaldoFormValues>
@@ -32,7 +32,7 @@ export interface SaldoSubChildsDialogProps extends Omit<DialogTriggerProps, 'chi
   refetch: () => void
   onChangeTotal: () => void
 }
-export const SaldoSubChildsDialog: FC<SaldoSubChildsDialogProps> = ({
+export const OrganSaldoShartnomaDialog: FC<OrganSaldoShartnomaDialogProps> = ({
   rowIndex,
   organName,
   form,

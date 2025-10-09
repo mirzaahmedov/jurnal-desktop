@@ -1,17 +1,20 @@
-import type { EditableTableMethods } from '@/common/components/editable-table'
 import type { OrganSaldoProvodka } from '@/common/models'
+import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community'
+import type { CustomCellRendererProps } from 'ag-grid-react'
 
-import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { SaldoSubChildsDialog } from '@/app/jur_3/152/saldo_legacy/details/saldo-sub-childs-dialog'
+import { OrganSaldoShartnomaDialog } from '@/app/jur_3/shared/components/organ-saldo-shartnoma-dialog'
+import { calculateSumma } from '@/app/jur_3/shared/utils/calculate-summa'
 import { OrganizationDialog } from '@/app/region-spravochnik/organization/dialog'
+import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
@@ -27,39 +30,44 @@ import { useSelectedMonthStore } from '@/common/features/selected-month'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 import { formatDate } from '@/common/lib/date'
-import { capitalize } from '@/common/lib/string'
 import { DetailsView } from '@/common/views'
 
-import { type OrganSaldoProvodkaFormValues, OrganSaldoQueryKeys, defaultValues } from '../config'
+import {
+  type OrganSaldoFormValues,
+  type OrganSaldoProvodkaFormValues,
+  OrganSaldoQueryKeys,
+  defaultValues
+} from '../config'
 import { OrganSaldoService } from '../service'
 import { useAktSaldo } from '../use-saldo'
-import { OrganSaldoTable } from './organ-saldo-table'
-import { getOrganSaldoProvodkaColumns } from './provodki'
-import { calculateTotal } from './utils'
 
 const OrganSaldoDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
 
-  const tableMethods = useRef<EditableTableMethods>(null)
   const navigate = useNavigate()
   const location = useLocation()
-  const queryClient = useQueryClient()
   const dialogToggle = useToggle()
+  const queryClient = useQueryClient()
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const [selectedRowIndex, setSelectedRowIndex] = useState<number>()
   const [selectedOrganName, setSelectedOrganName] = useState('')
 
+  const [totalRow, setTotalRow] = useState<
+    Pick<OrganSaldoProvodkaFormValues, 'name' | 'prixod' | 'rasxod' | 'summa'>[]
+  >([])
+
   const [isEditable, setEditable] = useState(false)
+  const [gridApi, setGridApi] = useState<GridApi>()
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
   const { t } = useTranslation(['app'])
   const { queuedMonths } = useAktSaldo()
   const { budjet_id, main_schet_id, jur3_schet_159_id } = useRequisitesStore()
 
-  const form = useForm({
+  const form = useForm<OrganSaldoFormValues>({
     defaultValues: {
       ...defaultValues,
       year: location.state?.year ?? startDate.getFullYear(),
@@ -155,8 +163,6 @@ const OrganSaldoDetailsPage = () => {
             }
           )
 
-          console.log('totalSums', totalSums)
-
           return {
             ...item,
             prixod: totalSums.prixod,
@@ -167,14 +173,17 @@ const OrganSaldoDetailsPage = () => {
       }
 
       if (data.length) {
-        const total = calculateTotal(data)
-        data.push({
-          _total: true,
-          name: t('total'),
-          prixod: total.prixod,
-          rasxod: total.rasxod,
-          summa: total.prixod - total.rasxod
-        } as OrganSaldoProvodka)
+        const total = calculateSumma(data)
+        setTotalRow([
+          {
+            name: t('total'),
+            prixod: total.prixod,
+            rasxod: total.rasxod,
+            summa: total.prixod - total.rasxod
+          }
+        ])
+      } else {
+        setTotalRow([])
       }
       form.setValue('organizations', data)
     },
@@ -183,7 +192,7 @@ const OrganSaldoDetailsPage = () => {
     }
   })
 
-  const { mutate: createSaldo, isPending: isCreatingSaldo } = useMutation({
+  const { mutate: createMainbook, isPending: isCreatingMainbook } = useMutation({
     mutationFn: OrganSaldoService.create,
     onSuccess: (res) => {
       toast.success(res?.message)
@@ -195,7 +204,7 @@ const OrganSaldoDetailsPage = () => {
       navigate(-1)
     }
   })
-  const { mutate: updateSaldo, isPending: isUpdatingSaldo } = useMutation({
+  const { mutate: updateMainbook, isPending: isUpdatingMainbook } = useMutation({
     mutationFn: OrganSaldoService.update,
     onSuccess: (res) => {
       toast.success(res?.message)
@@ -215,14 +224,17 @@ const OrganSaldoDetailsPage = () => {
   useEffect(() => {
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
-        const total = calculateTotal(saldo.data.childs)
-        saldo.data.childs.push({
-          _total: true,
-          name: t('total'),
-          prixod: total.prixod,
-          rasxod: total.rasxod,
-          summa: total.prixod - total.rasxod
-        } as OrganSaldoProvodka)
+        const total = calculateSumma(saldo.data.childs)
+        setTotalRow([
+          {
+            name: t('total'),
+            prixod: total.prixod,
+            rasxod: total.rasxod,
+            summa: total.prixod - total.rasxod
+          }
+        ])
+      } else {
+        setTotalRow([])
       }
       form.reset({
         month: saldo.data.month,
@@ -231,7 +243,7 @@ const OrganSaldoDetailsPage = () => {
       })
       setEditable(saldo.data.first)
     }
-  }, [form, saldo, id, startDate])
+  }, [form, saldo, id])
   useEffect(() => {
     setLayout({
       title: id === 'create' ? t('create') : t('edit'),
@@ -256,12 +268,10 @@ const OrganSaldoDetailsPage = () => {
   }, [id, year, month, budjet_id, main_schet_id, jur3_schet_159_id])
 
   const onSubmit = form.handleSubmit((values) => {
-    values.organizations.pop()
-
     if (id === 'create') {
-      createSaldo(values)
+      createMainbook(values)
     } else {
-      updateSaldo({
+      updateMainbook({
         id: Number(id),
         ...values
       })
@@ -276,50 +286,18 @@ const OrganSaldoDetailsPage = () => {
       const value = e.currentTarget.value
       if (value.length > 0) {
         const rows = form.getValues('organizations')
-        const index = rows.findIndex(
-          (row) =>
-            row.name?.toLowerCase()?.includes(value?.toLowerCase()) ||
-            row.inn?.toLowerCase()?.includes(value.toLowerCase())
+        const index = rows.findIndex((row) =>
+          row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        tableMethods.current?.scrollToRow(index)
+        gridApi?.forEachNode((node) => {
+          if (node.data.__originalIndex === index) {
+            gridApi?.ensureIndexVisible(node.rowIndex!, 'middle')
+            node.setSelected(true, true)
+          }
+        })
       }
     }
   }
-
-  const rows = useWatch({
-    control: form.control,
-    name: 'organizations'
-  })
-  useEffect(() => {
-    if (!isEditable || rows.length === 0) {
-      return
-    }
-
-    const total = calculateTotal(rows, true)
-    const totalRow = rows[rows.length - 1]
-    const name = t('total')
-
-    if (Number(totalRow?.prixod) !== Number(total.prixod)) {
-      form.setValue(`organizations.${rows.length - 1}.prixod`, total.prixod)
-    }
-    if (Number(totalRow?.rasxod) !== Number(total.rasxod)) {
-      form.setValue(`organizations.${rows.length - 1}.rasxod`, total.rasxod)
-    }
-    if (Number(totalRow?.summa) !== Number(total.prixod - total.rasxod)) {
-      form.setValue(`organizations.${rows.length - 1}.summa`, total.prixod - total.rasxod)
-    }
-    if (totalRow?.name !== name) {
-      form.setValue(`organizations.${rows.length - 1}.name`, name)
-    }
-  }, [rows, form, isEditable, t])
-
-  const columns = useMemo(() => getOrganSaldoProvodkaColumns(false), [isEditable])
-
-  useEffect(() => {
-    if (error) {
-      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
-    }
-  }, [error])
 
   const isRowEmpty = (row: OrganSaldoProvodkaFormValues) => {
     return !row.prixod && !row.rasxod
@@ -330,6 +308,139 @@ const OrganSaldoDetailsPage = () => {
     },
     [isEmptyRowsHidden, form]
   )
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    setGridApi(params.api)
+  }, [])
+
+  const columnDefs = useMemo<ColDef<OrganSaldoProvodkaFormValues>[]>(
+    () => [
+      {
+        field: 'organization_id',
+        width: 100,
+        pinned: 'left',
+        headerName: t('id'),
+        valueFormatter: (params) => (params.value ? `#${params.value}` : '')
+      },
+      {
+        field: 'name',
+        width: 300,
+        pinned: 'left',
+        headerName: t('name'),
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'inn',
+        width: 160,
+        headerName: t('inn')
+      },
+      {
+        field: 'mfo',
+        width: 100,
+        headerName: t('mfo')
+      },
+      {
+        field: 'bank_klient',
+        width: 300,
+        headerName: t('bank')
+      },
+      {
+        field: 'prixod',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('prixod'),
+        cellRendererParams: {
+          readOnly: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'rasxod',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('rasxod'),
+        cellRendererParams: {
+          readOnly: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'summa',
+        pinned: 'right',
+        flex: 1,
+        minWidth: 160,
+        headerName: t('summa'),
+        cellRendererParams: {
+          readOnly: true,
+          allowNegative: true
+        },
+        cellRendererSelector: (params) => {
+          if (params.node.rowPinned === 'bottom') {
+            return {
+              component: 'numberCell'
+            }
+          }
+          return {
+            component: 'numberEditor'
+          }
+        },
+        cellClassRules: {
+          'font-bold': (params) => params.node.rowPinned === 'bottom'
+        }
+      },
+      {
+        field: 'sub_childs',
+        width: 80,
+        pinned: 'right',
+        headerName: '',
+        cellRenderer: (props: CustomCellRendererProps) => {
+          const count = props.value?.length ?? 0
+          return props.node.rowPinned === 'bottom' ? null : (
+            <div className="text-center">
+              <Badge
+                className="mx-auto"
+                variant={count > 0 ? 'default' : 'secondary'}
+              >
+                {count}
+              </Badge>
+            </div>
+          )
+        }
+      }
+    ],
+    [t]
+  )
+
+  useEffect(() => {
+    if (error) {
+      handleSaldoErrorDates(SaldoNamespace.JUR_3_159, error)
+    }
+  }, [error])
 
   return (
     <DetailsView className="h-full">
@@ -352,9 +463,10 @@ const OrganSaldoDetailsPage = () => {
                 >
                   {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
                   <Badge className="ml-2.5 text-xs">
-                    {rows.slice(0, rows.length - 1).filter(isRowEmpty).length}
+                    {form.watch('organizations').filter(isRowEmpty).length}
                   </Badge>
                 </Button>
+
                 <MonthPicker
                   value={date}
                   onChange={(value) => {
@@ -377,17 +489,17 @@ const OrganSaldoDetailsPage = () => {
                 {isEditable ? (
                   <Button
                     type="button"
-                    onPress={dialogToggle.open}
-                    IconStart={Plus}
                     variant="outline"
+                    IconStart={Plus}
+                    onPress={dialogToggle.open}
                   >
-                    {capitalize(t('create-something', { something: t('organization') }))}
+                    {t('create-something', { something: t('organization') })}
                   </Button>
                 ) : null}
+
                 {isEditable ? (
                   <Button
                     type="button"
-                    IconStart={RefreshCw}
                     onClick={() => {
                       autoFill({
                         year,
@@ -398,6 +510,7 @@ const OrganSaldoDetailsPage = () => {
                         first: true
                       })
                     }}
+                    IconStart={RefreshCw}
                     isPending={isAutoFilling}
                   >
                     {t('update_data')}
@@ -405,7 +518,6 @@ const OrganSaldoDetailsPage = () => {
                 ) : (
                   <Button
                     type="button"
-                    IconStart={RefreshCw}
                     onClick={() => {
                       autoFill({
                         year,
@@ -416,6 +528,7 @@ const OrganSaldoDetailsPage = () => {
                         first: false
                       })
                     }}
+                    IconStart={RefreshCw}
                     isPending={isAutoFilling}
                   >
                     {t('autofill')}
@@ -423,16 +536,20 @@ const OrganSaldoDetailsPage = () => {
                 )}
               </div>
             </div>
-            <div className="overflow-auto scrollbar flex-1 relative">
-              <OrganSaldoTable
-                columnDefs={columns}
-                methods={tableMethods}
+            <div className="flex-1 overflow-auto scrollbar">
+              <EditorTable
+                columnDefs={columnDefs}
                 form={form}
-                name="organizations"
-                isRowVisible={isRowVisible}
-                onCellDoubleClick={({ index, row }) => {
-                  setSelectedRowIndex(index)
-                  setSelectedOrganName(row.name ?? '')
+                arrayField="organizations"
+                onGridReady={onGridReady}
+                onRowDoubleClicked={(params) => {
+                  setSelectedRowIndex(params.data?.__originalIndex)
+                  setSelectedOrganName(params.data?.name ?? '')
+                }}
+                pinnedBottomRowData={totalRow}
+                isExternalFilterPresent={() => isEmptyRowsHidden}
+                doesExternalFilterPass={(params) => {
+                  return isRowVisible({ index: params.data?.__originalIndex })
                 }}
               />
             </div>
@@ -441,20 +558,19 @@ const OrganSaldoDetailsPage = () => {
           <DetailsView.Footer>
             <Button
               type="submit"
-              isDisabled={isCreatingSaldo || isUpdatingSaldo}
-              isPending={isCreatingSaldo || isUpdatingSaldo}
+              isDisabled={isCreatingMainbook || isUpdatingMainbook}
+              isPending={isCreatingMainbook || isUpdatingMainbook}
             >
               {t('save')}
             </Button>
           </DetailsView.Footer>
         </form>
-
         <OrganizationDialog
           open={dialogToggle.isOpen}
           onOpenChange={dialogToggle.setOpen}
         />
 
-        <SaldoSubChildsDialog
+        <OrganSaldoShartnomaDialog
           isOpen={selectedRowIndex !== undefined}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
@@ -475,6 +591,17 @@ const OrganSaldoDetailsPage = () => {
               schet_id: jur3_schet_159_id!,
               first: isEditable
             })
+          }}
+          onChangeTotal={() => {
+            const total = calculateSumma(form.getValues('organizations'))
+            setTotalRow([
+              {
+                name: t('total'),
+                prixod: total.prixod,
+                rasxod: total.rasxod,
+                summa: total.prixod - total.rasxod
+              }
+            ])
           }}
         />
       </DetailsView.Content>

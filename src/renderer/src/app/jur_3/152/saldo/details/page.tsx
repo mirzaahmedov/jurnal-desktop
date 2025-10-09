@@ -11,6 +11,8 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { OrganSaldoShartnomaDialog } from '@/app/jur_3/shared/components/organ-saldo-shartnoma-dialog'
+import { calculateSumma } from '@/app/jur_3/shared/utils/calculate-summa'
 import { OrganizationDialog } from '@/app/region-spravochnik/organization/dialog'
 import { EditorTable } from '@/common/components/editor-table/editor-table'
 import { Button } from '@/common/components/jolly/button'
@@ -38,8 +40,6 @@ import {
 } from '../config'
 import { OrganSaldoService } from '../service'
 import { useUslugiSaldo } from '../use-saldo'
-import { SaldoSubChildsDialog } from './saldo-sub-childs-dialog'
-import { calculateTotal } from './utils'
 
 const OrganSaldoDetailsPage = () => {
   const { id } = useParams()
@@ -173,7 +173,7 @@ const OrganSaldoDetailsPage = () => {
       }
 
       if (data.length) {
-        const total = calculateTotal(data)
+        const total = calculateSumma(data)
         setTotalRow([
           {
             name: t('total'),
@@ -224,7 +224,7 @@ const OrganSaldoDetailsPage = () => {
   useEffect(() => {
     if (saldo?.data) {
       if (saldo.data.childs?.length) {
-        const total = calculateTotal(saldo.data.childs)
+        const total = calculateSumma(saldo.data.childs)
         setTotalRow([
           {
             name: t('total'),
@@ -570,7 +570,7 @@ const OrganSaldoDetailsPage = () => {
           onOpenChange={dialogToggle.setOpen}
         />
 
-        <SaldoSubChildsDialog
+        <OrganSaldoShartnomaDialog
           isOpen={selectedRowIndex !== undefined}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
@@ -593,7 +593,7 @@ const OrganSaldoDetailsPage = () => {
             })
           }}
           onChangeTotal={() => {
-            const total = calculateTotal(form.getValues('organizations'))
+            const total = calculateSumma(form.getValues('organizations'))
             setTotalRow([
               {
                 name: t('total'),
