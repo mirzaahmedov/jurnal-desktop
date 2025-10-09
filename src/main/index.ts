@@ -12,11 +12,13 @@ import { NsisUpdater } from 'electron-updater'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import { usb } from 'usb'
 
-import { getSecurityKeys } from './utils/2fa'
 import { events } from './utils/auto-updates'
 import { getVPNLocalIP, isPingError } from './utils/network'
+
+// import { usb } from 'usb'
+
+// import { getSecurityKeys } from './utils/2fa'
 
 // import { logger } from './utils/logger'
 
@@ -24,7 +26,7 @@ import { getVPNLocalIP, isPingError } from './utils/network'
 let interval: NodeJS.Timeout | null = null
 let initialCheckForUpdate = true
 let windows: BrowserWindow[] = []
-let securityKeys: string[] = []
+// let securityKeys: string[] = []
 
 const normalizeFileName = (fileName: string): string => {
   return fileName
@@ -320,18 +322,18 @@ app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
-  securityKeys = await getSecurityKeys()
+  // securityKeys = await getSecurityKeys()
 
-  usb.on('attach', async () => {
-    securityKeys = await getSecurityKeys()
-  })
+  // usb.on('attach', async () => {
+  //   securityKeys = await getSecurityKeys()
+  // })
 
-  usb.on('detach', async () => {
-    // const deviceId = await getDeviceId(device)
-    windows.forEach((win) => {
-      win.webContents.send('usb-device-detached')
-    })
-  })
+  // usb.on('detach', async () => {
+  //   // const deviceId = await getDeviceId(device)
+  //   windows.forEach((win) => {
+  //     win.webContents.send('usb-device-detached')
+  //   })
+  // })
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -343,10 +345,10 @@ app.whenReady().then(async () => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
   ipcMain.handle('usb-get-security-key', () => {
-    if (securityKeys.length === 0) {
-      return null
-    }
-    return securityKeys[0]
+    // if (securityKeys.length === 0) {
+    //   return null
+    // }
+    // return securityKeys[0]
   })
 
   if (import.meta.env.DEV) {
