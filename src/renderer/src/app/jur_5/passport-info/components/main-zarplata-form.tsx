@@ -81,6 +81,12 @@ export const MainZarplataForm = ({
         } else {
           setProfileImage(undefined)
         }
+
+        if (res?.data?.[0]) {
+          const fio = `${res?.data?.[0]?.surnamelat ?? ''} ${res?.data?.[0]?.namelat ?? ''} ${res?.data?.[0]?.patronymlat ?? ''}`
+          form.setValue('fio', fio ?? '')
+          form.setValue('fioDop', fio ?? '')
+        }
       } catch (error) {
         console.log(error)
         setProfileImage(undefined)
