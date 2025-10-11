@@ -350,6 +350,7 @@ const AlimonyModal: FC<AlimonyModalProps> = ({ from, to, budjetId, ...props }) =
               <DialogTitle>{t('aliment')}</DialogTitle>
 
               <DownloadFile
+                isZarplata
                 url="/AlimentDeduction/generate-excel"
                 fileName={`${t('aliment')}.xlsx`}
                 buttonText={t('export-excel')}
