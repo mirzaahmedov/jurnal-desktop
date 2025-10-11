@@ -346,8 +346,19 @@ const AlimonyModal: FC<AlimonyModalProps> = ({ from, to, budjetId, ...props }) =
       <DialogOverlay>
         <DialogContent className="w-full max-w-full h-full max-h-[800px]">
           <div className="flex flex-col gap-5">
-            <DialogHeader>
+            <DialogHeader className="flex flex-row items-center justify-between">
               <DialogTitle>{t('aliment')}</DialogTitle>
+
+              <DownloadFile
+                url="/AlimentDeduction/generate-excel"
+                fileName={`${t('aliment')}.xlsx`}
+                buttonText={t('export-excel')}
+                params={{
+                  from: from,
+                  to: to,
+                  spBudnameId: budjetId
+                }}
+              />
             </DialogHeader>
             <div className="flex-1 overflow-y-auto scrollbar">
               {alimentsQuery.isPending ? <LoadingOverlay /> : null}
