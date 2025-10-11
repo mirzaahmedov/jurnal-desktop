@@ -64,6 +64,22 @@ export const PaymentsChangePayment = () => {
   const [selectedMainZarplata, setSelectedMainZarplata] = useState<MainZarplata[]>([])
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
 
+  const calculateSalaryAllMutation = useMutation({
+    mutationFn: MainZarplataService.calculateSalaryAll,
+    onSuccess: () => {
+      toast.success(t('update_success'))
+      queryClient.invalidateQueries({
+        queryKey: [PayrollPaymentService.QueryKeys.GetAll]
+      })
+      queryClient.invalidateQueries({
+        queryKey: [PayrollDeductionService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('update_failed'))
+    }
+  })
+
   const changePaymentsMutation = useMutation({
     mutationFn: PayrollPaymentService.changePayments,
     onSuccess: () => {
@@ -74,14 +90,14 @@ export const PaymentsChangePayment = () => {
       toast.success(t('update_success'))
     }
   })
-  // const changePaymentsAllMutation = useMutation({
-  //   mutationFn: PayrollPaymentService.changePaymentsAll,
-  //   onSuccess: () => {
-  //     form.reset()
-  //     setSelectedPayment(undefined)
-  //     toast.success(t('update_success'))
-  //   }
-  // })
+  const changePaymentsAllMutation = useMutation({
+    mutationFn: PayrollPaymentService.changePaymentsAll,
+    onSuccess: () => {
+      form.reset()
+      setSelectedPayment(undefined)
+      toast.success(t('update_success'))
+    }
+  })
 
   const deletePaymentsMutation = useMutation({
     mutationFn: PayrollPaymentService.deletePayments,
@@ -94,14 +110,14 @@ export const PaymentsChangePayment = () => {
     }
   })
 
-  // const deletePaymentsAllMutation = useMutation({
-  //   mutationFn: PayrollPaymentService.deletePaymentsAll,
-  //   onSuccess: () => {
-  //     form.reset()
-  //     setSelectedPayment(undefined)
-  //     toast.success(t('update_success'))
-  //   }
-  // })
+  const deletePaymentsAllMutation = useMutation({
+    mutationFn: PayrollPaymentService.deletePaymentsAll,
+    onSuccess: () => {
+      form.reset()
+      setSelectedPayment(undefined)
+      toast.success(t('update_success'))
+    }
+  })
 
   const calculateSalaryByIdsMutation = useMutation({
     mutationFn: MainZarplataService.calculateSalaryById,
@@ -156,18 +172,63 @@ export const PaymentsChangePayment = () => {
     )
   })
 
-  // const handleChangePaymentsAll = () => {
-  //   const values = form.getValues()
-  //   changePaymentsAllMutation.mutate({
-  //     isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-  //     values: {
-  //       paymentId: values.paymentId,
-  //       payment: selectedPayment,
-  //       percentage: values.percentage,
-  //       summa: values.summa
-  //     }
-  //   })
-  // }
+  const handleChangePaymentsAll = () => {
+    if (!selectedPayment) {
+      return
+    }
+    const values = form.getValues()
+    changePaymentsAllMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          paymentId: values.paymentId,
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: () => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryAllMutation.mutate()
+            }
+          })
+        }
+      }
+    )
+  }
+
+  const handleDeletePaymentsAll = () => {
+    if (!selectedPayment) {
+      return
+    }
+    const values = form.getValues()
+    deletePaymentsAllMutation.mutate(
+      {
+        isXarbiy:
+          values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
+        values: {
+          paymentId: values.paymentId,
+          percentage: values.percentage,
+          summa: values.summa
+        }
+      },
+      {
+        onSuccess: () => {
+          confirm({
+            title: t('should_calculate_payroll'),
+            danger: false,
+            onConfirm: () => {
+              calculateSalaryAllMutation.mutate()
+            }
+          })
+        }
+      }
+    )
+  }
 
   const handleDeletePayments = () => {
     if (!selectedPayment) {
@@ -198,21 +259,6 @@ export const PaymentsChangePayment = () => {
       }
     )
   }
-
-  // const handleDeletePaymentsAll = () => {
-  //   if (!selectedPayment) {
-  //     return
-  //   }
-  //   const values = form.getValues()
-  //   deletePaymentsAllMutation.mutate({
-  //     isXarbiy: values.type === 'military' ? true : values.type === 'civilian' ? false : undefined,
-  //     values: {
-  //       paymentId: values.paymentId,
-  //       percentage: values.percentage,
-  //       summa: values.summa
-  //     }
-  //   })
-  // }
 
   const filterOptions = useVacantFilters({
     vacants: treeNodes,
@@ -461,14 +507,14 @@ export const PaymentsChangePayment = () => {
                       {t('update')}
                     </Button>
 
-                    {/* <Button
+                    <Button
                       isPending={changePaymentsAllMutation.isPending}
                       isDisabled={changePaymentsAllMutation.isPending || !form.watch('paymentId')}
-                      type="submit"
-                      onPress={handleChangePaymentsAll}
+                      type="button"
+                      onClick={handleChangePaymentsAll}
                     >
                       {t('update_all')}
-                    </Button> */}
+                    </Button>
 
                     <Button
                       variant="destructive"
@@ -484,7 +530,7 @@ export const PaymentsChangePayment = () => {
                       {t('delete')}
                     </Button>
 
-                    {/* <Button
+                    <Button
                       variant="destructive"
                       isPending={deletePaymentsAllMutation.isPending}
                       isDisabled={deletePaymentsAllMutation.isPending || !form.watch('paymentId')}
@@ -492,7 +538,7 @@ export const PaymentsChangePayment = () => {
                       onPress={handleDeletePaymentsAll}
                     >
                       {t('delete_all')}
-                    </Button> */}
+                    </Button>
                   </div>
                 </div>
               </form>
