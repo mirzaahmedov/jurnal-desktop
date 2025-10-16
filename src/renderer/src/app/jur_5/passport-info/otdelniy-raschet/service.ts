@@ -10,6 +10,7 @@ export class OtdelniyRaschetService {
 
   static QueryKeys = {
     GetById: 'OtdelniyRaschet/get-by-id',
+    GetByMonthly: 'OtdelniyRaschet/get-by-monthly',
     GetByMainZarplataId: 'OtdelniyRaschet/get-by-mainId'
   }
 
@@ -144,6 +145,20 @@ export class OtdelniyRaschetService {
       {
         params: {
           mainId
+        }
+      }
+    )
+    return res.data
+  }
+
+  static async getByMonthly(budjetId: number, year: number, month: number) {
+    const res = await zarplataApiNew.get<OtdelniyRaschet[]>(
+      `${OtdelniyRaschetService.endpoint}/get-by-monthly`,
+      {
+        params: {
+          budjetId,
+          year,
+          month
         }
       }
     )

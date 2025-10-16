@@ -9,6 +9,7 @@ import { CollapsibleTable } from '@/common/components/collapsible-table'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { SummaCell } from '@/common/components/table/renderers/summa'
+import { DownloadFile } from '@/common/features/file'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/date'
 import { formatLocaleDate, formatNumber } from '@/common/lib/format'
@@ -57,7 +58,7 @@ export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-5 p-5">
-        <div className="flex items-center flex-wrap gap-x-1 gap-y-2.5">
+        <div className="flex items-center justify-between flex-wrap gap-x-1 gap-y-2.5">
           <Button
             type="button"
             variant="outline"
@@ -102,6 +103,19 @@ export const Payroll: FC<PayrollProps> = ({ mainZarplataId }) => {
           >
             <ChevronRight className="btn-icon" />
           </Button>
+
+          <DownloadFile
+            isZarplata
+            url="/Excel2/dnejniy-astat"
+            fileName={`${t('cash_balance')}.xlsx`}
+            buttonText={t('cash_balance')}
+            variant="default"
+            params={{
+              mainZarplataId,
+              from,
+              to
+            }}
+          />
         </div>
       </div>
       <div className="relative flex-1 overflow-y-auto scrollbar">

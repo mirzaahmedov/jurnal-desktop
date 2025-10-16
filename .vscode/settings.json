@@ -3,5 +3,10 @@
     "activityBar.background": "#352E00",
     "titleBar.activeBackground": "#4A4000",
     "titleBar.activeForeground": "#FFFBDF"
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "src/locales",
+    "src/renderer/src/common/features/languages",
+    "../../../../../../Users/U0154/Projects/SmartBase/jurnal-desktop/src/renderer/src/common/features/languages/translations"
+  ]
 }

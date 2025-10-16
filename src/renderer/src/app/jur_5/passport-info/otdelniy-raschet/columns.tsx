@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@/common/components'
 import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 
-export const DopOplataColumnDefs: ColumnDef<OtdelniyRaschet>[] = [
+export const OtdelniyRaschetColumnDefs: ColumnDef<OtdelniyRaschet>[] = [
   {
     key: 'docNum',
     header: 'doc_num'

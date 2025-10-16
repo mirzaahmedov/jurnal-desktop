@@ -17,7 +17,7 @@ import { formatDate, getFirstDayOfMonth, getLastDayOfMonth } from '@/common/lib/
 import { formatLocaleDate } from '@/common/lib/format'
 import { ListView } from '@/common/views'
 
-import { DopOplataColumnDefs } from './columns'
+import { OtdelniyRaschetColumnDefs } from './columns'
 import { OtdelniyRaschetCreateDialog } from './otdelniy-raschet-create-dialog'
 import { OtdelniyRaschetDetails } from './otdelniy-raschet-details'
 import { OtdelniyRaschetService } from './service'
@@ -149,7 +149,7 @@ export const OtdelniyRaschetContainer = ({ mainZarplata }: OtdelniyRaschetContai
       </ListView.Header>
       <ListView.Content isLoading={otdelniyRaschetQuery.isFetching}>
         <GenericTable
-          columnDefs={DopOplataColumnDefs}
+          columnDefs={OtdelniyRaschetColumnDefs}
           data={otdelniyRaschetQuery.data ?? []}
           className="table-generic-xs"
           onDelete={handleOtdelniyRaschetDelete}

@@ -585,5 +585,7 @@
   "time_elapsed_until_start_of_year": "Yil boshigacha xizmat muddati",
   "dont_give_premya": "Premiya berilmasin",
   "by_schets": "Hisobot (schetlar bo'yicha)",
-  "document_processing": "Hujjatlar qayta ishlanmoqda"
+  "document_processing": "Hujjatlar qayta ishlanmoqda",
+  "cash_balance": "Pul qoldig'i",
+  "has_gotten_payroll": "Ish haqi olgan"
 }

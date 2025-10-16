@@ -14,6 +14,8 @@ import { toast } from 'react-toastify'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { MainZarplataInfo } from '@/app/jur_5/passport-info/components'
+import { OtdelniyRaschetColumnDefs } from '@/app/jur_5/passport-info/otdelniy-raschet/columns'
+import { OtdelniyRaschetService } from '@/app/jur_5/passport-info/otdelniy-raschet/service'
 import {
   FooterCell,
   FooterRow,
@@ -65,7 +67,8 @@ import { NachisleniePaymentDialog } from './nachislenie-payments-dialog'
 
 enum TabOptions {
   View = 'view',
-  Update = 'update'
+  Update = 'update',
+  OtdelniyRaschet = 'OtdelniyRaschet'
 }
 
 export interface NachislenieEditDialogProps extends Omit<DialogTriggerProps, 'children'> {
@@ -104,6 +107,28 @@ export const NachislenieEditDialog = ({
     enabled: !!nachislenieId
   })
   const nachislenieProvodka = nachislenieQuery?.data ?? []
+
+  const otdelniyRaschetQuery = useQuery({
+    queryKey: [
+      OtdelniyRaschetService.QueryKeys.GetByMonthly,
+      {
+        spravochnikBudjetNameId: nachislenieData?.spravochnikBudjetNameId ?? 0,
+        nachislenieYear: nachislenieData?.nachislenieYear ?? 0,
+        nachislenieMonth: nachislenieData?.nachislenieMonth ?? 0
+      }
+    ],
+    queryFn: () =>
+      OtdelniyRaschetService.getByMonthly(
+        nachislenieData?.spravochnikBudjetNameId ?? 0,
+        nachislenieData?.nachislenieYear ?? 0,
+        nachislenieData?.nachislenieMonth ?? 0
+      ),
+    enabled:
+      !!nachislenieData?.spravochnikBudjetNameId &&
+      !!nachislenieData?.nachislenieYear &&
+      !!nachislenieData?.nachislenieMonth
+  })
+  console.log({ nachislenieData })
 
   const deleteChildMutation = useMutation({
     mutationFn: NachislenieService.deleteChild,
@@ -352,6 +377,9 @@ export const NachislenieEditDialog = ({
                   <TabsList>
                     <TabsTrigger value={TabOptions.View}>{t('view')}</TabsTrigger>
                     <TabsTrigger value={TabOptions.Update}>{t('update')}</TabsTrigger>
+                    <TabsTrigger value={TabOptions.OtdelniyRaschet}>
+                      {t('otdelniy_raschet')}
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
 
@@ -576,6 +604,14 @@ export const NachislenieEditDialog = ({
                     </div>
                   )}
                 </PDFSaver>
+              )}
+              {tabValue === TabOptions.OtdelniyRaschet && (
+                <div className="relative mt-5 flex-1 mih-h-0 flex flex-col gap-5 overflow-hidden">
+                  <GenericTable
+                    columnDefs={OtdelniyRaschetColumnDefs}
+                    data={otdelniyRaschetQuery?.data ?? []}
+                  />
+                </div>
               )}
             </div>
           </DialogContent>

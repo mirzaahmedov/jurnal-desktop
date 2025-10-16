@@ -586,5 +586,7 @@
   "time_elapsed_until_start_of_year": "Срок службы до начала года",
   "dont_give_premya": "Не давать премию",
   "by_schets": "Отчет (по счетам)",
-  "document_processing": "Документы обрабатываются"
+  "document_processing": "Документы обрабатываются",
+  "cash_balance": "Денежный остаток",
+  "has_gotten_payroll": "Получил зарплату"
 }

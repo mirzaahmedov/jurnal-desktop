@@ -353,6 +353,7 @@ export const TabelCreateForm = ({
               <div className="relative w-full h-full overflow-auto scrollbar pl-px">
                 {mainZarplataQuery.isFetching && <LoadingOverlay />}
                 <MainZarplataTable
+                  enableTabel
                   data={mainZarplataQuery.data ?? []}
                   selectedIds={selectedIds}
                   onClickRow={handleClickRow}

@@ -586,5 +586,7 @@
   "time_elapsed_until_start_of_year": "Йил бошигача хизмат муддати",
   "dont_give_premya": "Премия берилмайди",
   "by_schets": "Ҳисобот (счетлар бўйича)",
-  "document_processing": "Ҳужжатлар қайта ишланмоқда"
+  "document_processing": "Ҳужжатлар қайта ишланмоқда",
+  "cash_balance": "Пул қолдиғи",
+  "has_gotten_payroll": "Иш ҳақи олган"
 }
