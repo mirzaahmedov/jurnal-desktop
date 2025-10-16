@@ -156,7 +156,7 @@ export class OtdelniyRaschetService {
       `${OtdelniyRaschetService.endpoint}/get-by-monthly`,
       {
         params: {
-          budjetId,
+          spBudnameId: budjetId,
           year,
           month
         }
