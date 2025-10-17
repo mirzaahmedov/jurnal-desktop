@@ -1,6 +1,6 @@
 import type { ApiResponse } from '@/common/models'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 export interface PersonInformation {
   transaction_id: number
@@ -37,7 +37,7 @@ export class PersonService {
   static endpoint = '/int/person'
 
   static async getByPnfl(values: { pinpp: string; birth_date: string }) {
-    const res = await http.post<ApiResponse<PersonInformation[]>>(
+    const res = await api.post<ApiResponse<PersonInformation[]>>(
       `${PersonService.endpoint}/by-pnfl`,
       values
     )

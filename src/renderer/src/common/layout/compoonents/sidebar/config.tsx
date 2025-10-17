@@ -576,6 +576,13 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
             },
             !is_revisor
               ? {
+                  path: 'feedback',
+                  title: t('pages.feedback'),
+                  icon: SquareActivity
+                }
+              : null,
+            !is_revisor
+              ? {
                   path: 'logs',
                   title: t('pages.logs'),
                   icon: FileClock

@@ -4,7 +4,7 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 import { z } from 'zod'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 import { withPreprocessor } from '@/common/lib/validation'
 
 export const VideoModuleFormSchema = withPreprocessor(
@@ -28,7 +28,7 @@ export const VideoModuleService = new CRUDService<VideoModule, VideoModuleFormVa
 export class VideoService {
   static async getAll(ctx: QueryFunctionContext<[string, { module_id: number }]>) {
     const { module_id } = ctx.queryKey[1] ?? {}
-    const res = await http.get<ApiResponse<Video[]>>(ApiEndpoints.admin_video, {
+    const res = await api.get<ApiResponse<Video[]>>(ApiEndpoints.admin_video, {
       params: {
         module_id
       }
@@ -36,17 +36,17 @@ export class VideoService {
     return res.data
   }
   static async create(values: FormData) {
-    const res = await http.post<ApiResponse<Video>>(ApiEndpoints.admin_video, values)
+    const res = await api.post<ApiResponse<Video>>(ApiEndpoints.admin_video, values)
     return res.data
   }
   static async update(args: { id: number; values: FormData }) {
     const { id, values } = args
-    const res = await http.put<ApiResponse<Video>>(`${ApiEndpoints.admin_video}/${id}`, values)
+    const res = await api.put<ApiResponse<Video>>(`${ApiEndpoints.admin_video}/${id}`, values)
     return res.data
   }
   static async delete(args: { id: number }) {
     const { id } = args
-    const res = await http.delete<ApiResponse<Video>>(`${ApiEndpoints.admin_video}/${id}`)
+    const res = await api.delete<ApiResponse<Video>>(`${ApiEndpoints.admin_video}/${id}`)
     return res.data
   }
 }

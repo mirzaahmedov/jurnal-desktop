@@ -2,7 +2,7 @@ import type { AdminMaterial } from './interfaces'
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 interface AdminMaterialMeta {
   summa_from: number
@@ -23,7 +23,7 @@ export class AdminMaterialService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminMaterial[], AdminMaterialMeta>>('/admin/jur7', {
+    const res = await api.get<ApiResponse<AdminMaterial[], AdminMaterialMeta>>('/admin/jur7', {
       params
     })
     return res.data

@@ -22,7 +22,7 @@ import {
 import { Checkbox } from '@/common/components/ui/checkbox'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 import { useAuthenticationStore } from './store'
 
@@ -44,7 +44,7 @@ export const UpdateProfileDialog = (props: Omit<DialogTriggerProps, 'children'>)
 
   const { mutate: updateProfile, isPending } = useMutation({
     mutationFn: async (values: UpdateProfileFormValues) => {
-      const res = await http.patch<ApiResponse<[User]>>('auth', values)
+      const res = await api.patch<ApiResponse<[User]>>('auth', values)
       return res.data
     },
     onSuccess: (res) => {

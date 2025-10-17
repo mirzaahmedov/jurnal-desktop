@@ -7,7 +7,7 @@ import { Download, Loader2 } from 'lucide-react'
 import { Button } from '@/common/components/jolly/button'
 // import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 import { zarplataApiNew } from '@/common/lib/zarplata_new'
 
 import { useDownloadsManagerStore } from '../downloads-manager/store'
@@ -43,7 +43,7 @@ export const DownloadFile = ({
             params
           })
         } else {
-          res = await http.get(url, {
+          res = await api.get(url, {
             responseType: 'arraybuffer',
             params
           })

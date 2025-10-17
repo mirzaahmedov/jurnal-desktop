@@ -10,7 +10,7 @@ import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 export class CRUDService<T, C = T, U = C, M = undefined> {
   public middleware: MiddlewareFunction[]
@@ -22,7 +22,7 @@ export class CRUDService<T, C = T, U = C, M = undefined> {
   constructor(options: CRUDServiceOptions<T, M>) {
     this.options = options
     this.endpoint = options.endpoint
-    this.client = options.client ?? http
+    this.client = options.client ?? api
     this.middleware = []
 
     this.getAll = this.getAll.bind(this)

@@ -17,7 +17,10 @@ export const pageSizeOptions = [
   { value: 20 },
   { value: 25 },
   { value: 50 },
-  { value: 100 }
+  { value: 100 },
+  { value: 200 },
+  { value: 500 },
+  { value: 1000 }
 ]
 
 export interface PaginationValues {

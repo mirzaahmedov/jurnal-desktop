@@ -52,14 +52,14 @@ const customParamsSerializer = (params: Record<string, any>) => {
   return searchParams.toString()
 }
 
-export const http = axios.create({
+export const api = axios.create({
   baseURL,
   paramsSerializer: {
     serialize: customParamsSerializer
   }
 })
 
-http.interceptors.request.use(
+api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers['x-app-lang'] = i18next.language
 
@@ -80,11 +80,12 @@ http.interceptors.request.use(
   }
 )
 
-http.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     return response
   },
   (error) => {
+    console.log('running', error)
     if (!error) {
       notify({
         variant: 'error',
@@ -110,8 +111,10 @@ http.interceptors.response.use(
     }
 
     if (error.response?.status === 403) {
-      useAuthenticationStore.getState().setUser(null)
-      throw error
+      if (window.location.pathname !== '/') {
+        useAuthenticationStore.getState().setUser(null)
+        throw error
+      }
     }
 
     const response = error.response

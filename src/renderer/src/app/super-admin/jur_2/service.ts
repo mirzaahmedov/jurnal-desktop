@@ -2,7 +2,7 @@ import type { AdminBank } from './interfaces'
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 interface AdminBankMeta {
   summa_from: number
@@ -23,7 +23,7 @@ export class AdminBankService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminBank[], AdminBankMeta>>('/admin/jur2', {
+    const res = await api.get<ApiResponse<AdminBank[], AdminBankMeta>>('/admin/jur2', {
       params
     })
     return res.data

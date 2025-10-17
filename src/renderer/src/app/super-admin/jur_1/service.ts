@@ -2,7 +2,7 @@ import type { AdminKassa } from './interfaces'
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 interface AdminKassaMeta {
   summa_from: number
@@ -23,7 +23,7 @@ export class AdminKassaService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminKassa[], AdminKassaMeta>>('/admin/jur1', {
+    const res = await api.get<ApiResponse<AdminKassa[], AdminKassaMeta>>('/admin/jur1', {
       params
     })
     return res.data

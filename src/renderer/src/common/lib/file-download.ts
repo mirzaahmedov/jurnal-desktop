@@ -1,11 +1,11 @@
-import { http } from './http'
+import { api } from './http'
 
 export type DownloadFileParams = {
   url: string
   params: Record<string, unknown>
 }
 export const downloadFile = async ({ url, params }: DownloadFileParams) => {
-  const { data } = await http.get(url, {
+  const { data } = await api.get(url, {
     responseType: 'blob',
     params
   })

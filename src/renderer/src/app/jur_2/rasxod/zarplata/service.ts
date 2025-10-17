@@ -8,7 +8,7 @@ import type {
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@/common/features/crud'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 import { zarplataApi } from '@/common/lib/zarplata'
 
 export class NachislenieService {
@@ -72,7 +72,7 @@ export class UderjanieService {
 export class BankRasxodImportService {
   static async importZarplata(args: { data: UderjanieAliment[]; main_schet_id: number }) {
     const { data, main_schet_id } = args
-    const res = await http.post<ApiResponse<unknown>>(
+    const res = await api.post<ApiResponse<unknown>>(
       `${ApiEndpoints.bank_rasxod}/import`,
       { docs: data },
       {

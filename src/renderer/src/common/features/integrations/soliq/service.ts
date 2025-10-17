@@ -1,7 +1,7 @@
 import type { SoliqOrganization } from './model'
 import type { ApiResponse } from '@/common/models'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 export class SoliqIntegrationService {
   static endpoint = 'int'
@@ -11,7 +11,7 @@ export class SoliqIntegrationService {
   }
 
   static async findOrganizationByInn(tin: string) {
-    const res = await http.post<ApiResponse<SoliqOrganization>>(
+    const res = await api.post<ApiResponse<SoliqOrganization>>(
       `${SoliqIntegrationService.endpoint}/organization/by-inn`,
       {
         tin

@@ -145,6 +145,8 @@ const PodotchetSaldoDetailsPage = lazy(() => import('./jur_4/saldo/details/page'
 const OrganSaldo152SaldoPage = lazy(() => import('./jur_3/152/saldo/page'))
 const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/page'))
 
+const FeedbackPage = lazy(() => import('./super-admin/feedback/page'))
+
 const FallbackRoute = () => {
   const user = useAuthenticationStore((store) => store.user)
   return user?.role_name === 'super-admin' ? (
@@ -484,6 +486,10 @@ export const routes: RouteObject[] = [
           {
             path: 'jur_7',
             element: <AdminMaterialPage />
+          },
+          {
+            path: 'feedback',
+            element: <FeedbackPage />
           },
           {
             path: 'spravochnik',

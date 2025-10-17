@@ -20,7 +20,7 @@ import {
 import { Card } from '@/common/components/ui/card'
 import { Progress } from '@/common/components/ui/progress'
 import { useToggle } from '@/common/hooks'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 const acceptFiles: Accept = {
   'application/vnd.ms-excel': [],
@@ -45,7 +45,7 @@ export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialog
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.set('file', file)
-      const res = await http.post(url, formData, {
+      const res = await api.post(url, formData, {
         params,
         onUploadProgress: (e) => {
           if (!e.total) {

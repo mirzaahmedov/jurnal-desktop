@@ -4,12 +4,12 @@ import type { ApiResponse, Bank } from '@/common/models'
 import { useAsyncList } from 'react-stately'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 export const useAsyncListBank = () => {
   return useAsyncList<Bank>({
     async load({ signal, filterText }) {
-      const response = await http.get<ApiResponse<Bank[]>>(ApiEndpoints.spravochnik_bank, {
+      const response = await api.get<ApiResponse<Bank[]>>(ApiEndpoints.spravochnik_bank, {
         signal,
         params: {
           search: filterText ? filterText : undefined

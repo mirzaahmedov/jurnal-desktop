@@ -3,7 +3,7 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { ApiResponse, Group, Pereotsenka } from '@/common/models'
 
 import { ApiEndpoints, CRUDService } from '@/common/features/crud'
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 import { extendObject } from '@/common/lib/utils'
 
 import { PereotsenkaColumns } from './columns'
@@ -18,7 +18,7 @@ export type CreateBatchParams = {
   data: PereotsenkaFormValues[]
 }
 export const pereotsenkaCreateBatchQuery = async ({ data }: CreateBatchParams) => {
-  const res = await http.post('/jur_7/pereotsenka', { data })
+  const res = await api.post('/jur_7/pereotsenka', { data })
   return res.data
 }
 
@@ -38,7 +38,7 @@ export const createPereotsenkaSpravochnik = (
 
 export const getLatestPereotsenkaQuery = async () => {
   const res =
-    await http.get<ApiResponse<Group & Pick<Pereotsenka, 'pereotsenka_foiz'>>>(
+    await api.get<ApiResponse<Group & Pick<Pereotsenka, 'pereotsenka_foiz'>>>(
       '/jur_7/group/percent'
     )
   return res.data

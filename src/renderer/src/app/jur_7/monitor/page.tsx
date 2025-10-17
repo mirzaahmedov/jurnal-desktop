@@ -96,7 +96,15 @@ const MaterialMonitorPage = () => {
     <ListView>
       <ListView.Header>
         <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-5">
-          <ListView.RangeDatePicker {...dates} />
+          <div className="flex flex-col gap-5">
+            <ListView.RangeDatePicker {...dates} />
+            <SummaTotal className="w-full grid-cols-1 mt-5">
+              <SummaTotal.Value
+                name={t('remainder-from')}
+                value={formatNumber(monitoring?.meta?.from_summa ?? 0)}
+              />
+            </SummaTotal>
+          </div>
           <ButtonGroup
             borderStyle="dashed"
             className="text-end"

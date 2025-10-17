@@ -17,6 +17,7 @@ import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
 import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
 
+import { SpravochnikSearchField } from '../filters/search/search-filter-spravochnik'
 import { MainZarplataColumns } from './columns'
 
 export class MainZarplataService {
@@ -226,7 +227,7 @@ export const createMainZarplataSpravochnik = (
       columnDefs: MainZarplataColumns,
       endpoint: ApiEndpoints.main_zarplata,
       service: MainZarplataService,
-      filters: []
+      filters: [SpravochnikSearchField]
     } satisfies typeof config,
     config
   )

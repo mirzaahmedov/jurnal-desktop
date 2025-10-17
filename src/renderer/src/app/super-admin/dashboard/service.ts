@@ -2,7 +2,7 @@ import type { AdminDashboardBank, AdminDashboardKassa, AdminDashboardPodotchet }
 import type { ApiResponse } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { http } from '@/common/lib/http'
+import { api } from '@/common/lib/http'
 
 interface DashboardCommonParams {
   to: string
@@ -21,7 +21,7 @@ export class AdminDashboardService {
 
   static async getKassa(ctx: QueryFunctionContext<[string, DashboardCommonParams]>) {
     const { to } = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminDashboardKassa[]>>(
+    const res = await api.get<ApiResponse<AdminDashboardKassa[]>>(
       `${AdminDashboardService.endpoint}/kassa`,
       {
         params: {
@@ -34,7 +34,7 @@ export class AdminDashboardService {
 
   static async getBank(ctx: QueryFunctionContext<[string, DashboardCommonParams]>) {
     const { to } = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminDashboardBank[]>>(
+    const res = await api.get<ApiResponse<AdminDashboardBank[]>>(
       `${AdminDashboardService.endpoint}/bank`,
       {
         params: {
@@ -58,7 +58,7 @@ export class AdminDashboardService {
     >
   ) {
     const { to, region_id, budjet_id } = ctx.queryKey[1]
-    const res = await http.get<ApiResponse<AdminDashboardPodotchet[]>>(
+    const res = await api.get<ApiResponse<AdminDashboardPodotchet[]>>(
       `${AdminDashboardService.endpoint}/podotchet`,
       {
         params: {
