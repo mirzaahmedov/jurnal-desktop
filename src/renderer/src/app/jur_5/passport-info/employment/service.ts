@@ -2,7 +2,7 @@ import type { EmploymentFormValues } from './config'
 import type { Employment } from '@/common/models/employment'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 export class EmploymentService {
   static endpoint = 'Trudovoy'

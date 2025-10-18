@@ -5,7 +5,7 @@ import type {
 import type { PayrollDeduction } from '@/common/models/payroll-deduction'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 export class PayrollDeductionService {
   static endpoint = 'PayrollDeduction'

@@ -1,27 +1,50 @@
-import type { ApiResponse } from '@/common/models'
+import type { ApiResponse } from '../models'
 
 import axios from 'axios'
-import { toast } from 'react-toastify'
 
-// export const baseURL = 'http://10.50.0.140:8091/api'
+import { useAuthStore } from '@/common/features/auth'
+
 export const baseURL =
   import.meta.env.VITE_MODE === 'prod'
     ? 'http://10.50.0.140:8091/api'
     : 'https://nafaqa.fizmasoft.uz/zarplata/api'
+// export const baseURL = 'http://10.50.0.140:8091/api'
 
-export interface PaginationParams {
+export interface ZarplataPaginationParams {
   PageIndex: number
   PageSize: number
 }
-export interface Response<T> {
+export interface ZarplataApiResponse<T> {
   totalCount: number
   data: T
 }
 
-export const zarplataApi = axios.create({
+export const zarplataApiNew = axios.create({
   baseURL
 })
 
+zarplataApiNew.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token
+    config.headers.Authorization = `Bearer ${token}`
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+zarplataApiNew.interceptors.response.use(
+  (config) => config,
+  (error) => {
+    const message = error?.response?.data?.message
+    console.log('API Error:', message || error.message, 'Response', error?.response)
+    if (message) {
+      return Promise.reject(new Error(message))
+    }
+    return Promise.reject(error)
+  }
+)
 export const getMultiApiResponse = <T>({
   response,
   page = 0,
@@ -56,20 +79,7 @@ export const getSingleApiResponse = <T>({ response }: { response: T }): ApiRespo
   } as ApiResponse<T>
 }
 
-zarplataApi.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  (error) => {
-    if (axios.isAxiosError(error)) {
-      // Handle Axios errors
-      const message = error.response?.data?.message || error.message || 'An error occurred'
-      toast.error(message)
-      return Promise.reject(new Error(message))
-    } else {
-      // Handle non-Axios errors
-      toast.error('An unexpected error occurred')
-      return Promise.reject(new Error('An unexpected error occurred'))
-    }
-  }
-)
+export interface Response<T> {
+  totalCount: number
+  data: T
+}

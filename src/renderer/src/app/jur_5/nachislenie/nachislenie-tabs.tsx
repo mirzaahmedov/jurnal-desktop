@@ -8,14 +8,16 @@ export enum NachislenieTabOptions {
   Nachislenie = 'nachislenie',
   OtherVedemost = 'other_vedemost',
   Vedemost = 'vedemost',
-  Reports = 'reports'
+  Reports = 'reports',
+  Podpis = 'podpis'
 }
 
 const tabOptions = [
   NachislenieTabOptions.Tabel,
   NachislenieTabOptions.Nachislenie,
   NachislenieTabOptions.OtherVedemost,
-  NachislenieTabOptions.Reports
+  NachislenieTabOptions.Reports,
+  NachislenieTabOptions.Podpis
 ]
 
 export const useNachislenieTab = () => {

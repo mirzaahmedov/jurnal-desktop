@@ -4,7 +4,7 @@ import type { Nachislenie, NachislenieProvodka } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { getMultiApiResponse } from '@/common/lib/zarplata'
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 export class NachislenieService {
   static endpoint = 'Nachislenie'

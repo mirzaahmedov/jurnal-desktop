@@ -3,7 +3,7 @@ import type { OtdelniyRaschetPaymentFormValues } from './otdelniy-raschet-paymen
 import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 export class OtdelniyRaschetService {
   static endpoint = 'OtdelniyRaschet'

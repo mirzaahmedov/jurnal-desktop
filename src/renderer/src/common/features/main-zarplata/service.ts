@@ -15,7 +15,7 @@ import { ApiEndpoints } from '@/common/features/crud'
 import { capitalize } from '@/common/lib/string'
 import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 import { SpravochnikSearchField } from '../filters/search/search-filter-spravochnik'
 import { MainZarplataColumns } from './columns'

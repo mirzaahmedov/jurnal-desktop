@@ -5,7 +5,7 @@ import type { Workplace } from '@/common/models/workplace'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 export class WorkplaceService {
   static endpoint = 'Workplace'

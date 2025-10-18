@@ -1,5 +1,13 @@
 import type { AxiosInstance } from 'axios'
 
+export interface ServiceQueryKeys {
+  getAll: () => string[]
+  getById: (id: string) => string[]
+  create: () => string[]
+  update: (id: string) => string[]
+  delete: (id: string) => string[]
+}
+
 type ServiceMethods = {
   create?: (data: any) => any
   update?: (id: number, data: any) => any

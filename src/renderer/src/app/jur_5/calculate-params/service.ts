@@ -6,7 +6,7 @@ import {
   type ZarplataApiResponse,
   type ZarplataPaginationParams,
   zarplataApiNew
-} from '@/common/lib/zarplata_new'
+} from '@/common/lib/zarplata'
 
 export class CalculateParamsService {
   static endpoint = 'RegisterMonth'

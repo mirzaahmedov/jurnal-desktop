@@ -9,14 +9,14 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { ApiEndpoints } from '@/common/features/crud'
 import { api } from '@/common/lib/http'
-import { zarplataApi } from '@/common/lib/zarplata'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 export class NachislenieService {
   static async getElementsByRayon(
     ctx: QueryFunctionContext<[string, { userId: number; rayon: string }]>
   ) {
     const { userId, rayon } = ctx.queryKey[1]
-    const res = await zarplataApi.get<Nachislenie[]>('Nachislenie/get-items-with-rayon', {
+    const res = await zarplataApiNew.get<Nachislenie[]>('Nachislenie/get-items-with-rayon', {
       params: {
         PageIndex: 1,
         PageSize: 10000000,
@@ -33,7 +33,7 @@ export class UderjanieService {
     ctx: QueryFunctionContext<[string, { userId: number; tabelDocNum: number }]>
   ) {
     const { userId, tabelDocNum } = ctx.queryKey[1]
-    const res = await zarplataApi.get<Uderjanie[]>(`Uderjanie/nachislenie/${userId}`, {
+    const res = await zarplataApiNew.get<Uderjanie[]>(`Uderjanie/nachislenie/${userId}`, {
       params: {
         PageIndex: 1,
         PageSize: 10000000,
@@ -46,7 +46,7 @@ export class UderjanieService {
     ctx: QueryFunctionContext<[string, { userId: number; tabelDocNum: number }]>
   ) {
     const { userId, tabelDocNum } = ctx.queryKey[1]
-    const res = await zarplataApi.get<UderjanieAliment[]>(
+    const res = await zarplataApiNew.get<UderjanieAliment[]>(
       `Uderjanie/nachislenie-aliment/${userId}`,
       {
         params: {
@@ -60,11 +60,14 @@ export class UderjanieService {
     ctx: QueryFunctionContext<[string, { userId: number; tabelDocNum: number }]>
   ) {
     const { userId, tabelDocNum } = ctx.queryKey[1]
-    const res = await zarplataApi.get<UderjaniePlastik>(`Uderjanie/nachislenie-plastik/${userId}`, {
-      params: {
-        tabelDocNum
+    const res = await zarplataApiNew.get<UderjaniePlastik>(
+      `Uderjanie/nachislenie-plastik/${userId}`,
+      {
+        params: {
+          tabelDocNum
+        }
       }
-    })
+    )
     return res.data
   }
 }

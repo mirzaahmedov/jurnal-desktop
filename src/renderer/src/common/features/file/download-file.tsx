@@ -8,7 +8,7 @@ import { Button } from '@/common/components/jolly/button'
 // import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
 import { api } from '@/common/lib/http'
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 import { useDownloadsManagerStore } from '../downloads-manager/store'
 import { SelectReportTitleAlert } from './select-report-title-alert'

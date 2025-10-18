@@ -6,7 +6,7 @@ import type { QueryFunctionContext } from '@tanstack/react-query'
 import { ApiEndpoints } from '@/common/features/crud'
 import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 import { PaymentColumnDefs } from './columns'
 import { PaymentsSpravochnikFilter } from './filters'

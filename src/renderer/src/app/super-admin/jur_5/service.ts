@@ -3,7 +3,7 @@ import type { AdminZarplataDashboard, ApiResponse, MainZarplata } from '@/common
 import type { Vacant } from '@/common/models/vacant'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApi } from '@/common/lib/zarplata'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 interface AdminZarplataDashboardMeta {
   totalRegion: number
@@ -27,7 +27,7 @@ export class AdminZarplataDashboardService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApi.get<
+    const res = await zarplataApiNew.get<
       ApiResponse<AdminZarplataDashboard[], AdminZarplataDashboardMeta>
     >(`/ExportZarplata/get-dashboard`, {
       params
@@ -41,7 +41,7 @@ export class AdminZarplataDashboardService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApi.get<AdminZarplataDocument[]>(
+    const res = await zarplataApiNew.get<AdminZarplataDocument[]>(
       `/ExportZarplata/get-dashboard-by-mainSchetId`,
       {
         params
@@ -62,7 +62,7 @@ export class AdminZarplataDashboardService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApi.get<Vacant[]>(`/ExportZarplata/get-dashboard-vacant`, {
+    const res = await zarplataApiNew.get<Vacant[]>(`/ExportZarplata/get-dashboard-vacant`, {
       params: {
         regionId: params.regionId,
         spId: params.budjetId
@@ -83,7 +83,7 @@ export class AdminZarplataDashboardService {
     >
   ) {
     const params = ctx.queryKey[1]
-    const res = await zarplataApi.get<MainZarplata[]>(
+    const res = await zarplataApiNew.get<MainZarplata[]>(
       `/ExportZarplata/get-dashboard-mainZarplata`,
       {
         params: {

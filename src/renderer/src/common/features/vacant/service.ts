@@ -2,7 +2,7 @@ import type { VacantFormValues } from './config'
 import type { Vacant } from '@/common/models/vacant'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 export class VacantService {
   static endpoint = 'Vacant'

@@ -2,7 +2,7 @@ import type { PayrollChangePaymentFormValues, PayrollPaymentFormValues } from '.
 import type { PayrollPayment } from '@/common/models/payroll-payment'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 export class PayrollPaymentService {
   static endpoint = 'PayrollPayment'

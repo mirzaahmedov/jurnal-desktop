@@ -7,7 +7,7 @@ import { ApiEndpoints } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'
 import { getMultiApiResponse, getSingleApiResponse } from '@/common/lib/zarplata'
-import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata_new'
+import { type ZarplataApiResponse, zarplataApiNew } from '@/common/lib/zarplata'
 
 import { getZarplataSpravochnikDialogColumnDefs } from './columns'
 

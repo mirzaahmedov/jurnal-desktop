@@ -1,10 +1,10 @@
 import type { TabelFormValues } from './config'
-import type { ZarplataApiResponse } from '@/common/lib/zarplata_new'
+import type { ZarplataApiResponse } from '@/common/lib/zarplata'
 import type { Tabel, TabelProvodka } from '@/common/models/tabel'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
 import { getMultiApiResponse } from '@/common/lib/zarplata'
-import { zarplataApiNew } from '@/common/lib/zarplata_new'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 export class TabelService {
   static endpoint = 'Tabel'

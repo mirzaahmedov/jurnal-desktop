@@ -1,7 +1,7 @@
 import type { Vacant } from '@/common/models/vacant'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
-import { zarplataApi } from '@/common/lib/zarplata'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 export const getVacantListQuery = async (
   ctx: QueryFunctionContext<
@@ -14,7 +14,7 @@ export const getVacantListQuery = async (
   >
 ) => {
   const { userId } = ctx.queryKey[1]
-  const res = await zarplataApi.get<{
+  const res = await zarplataApiNew.get<{
     totalCount: number
     data: Vacant[]
   }>('Vacant', {
@@ -38,7 +38,7 @@ export const getUserVacantIdsQuery = async (
   >
 ) => {
   const { userId } = ctx.queryKey[1]
-  const res = await zarplataApi.get<number[]>(`Vacant/vacants/${userId}`)
+  const res = await zarplataApiNew.get<number[]>(`Vacant/vacants/${userId}`)
   return res.data
 }
 
@@ -47,7 +47,7 @@ export interface CreateVacantGrantArgs {
   userId: number
 }
 export const createVacantGrantQuery = async ({ ids, userId }: CreateVacantGrantArgs) => {
-  const res = await zarplataApi.post<{
+  const res = await zarplataApiNew.post<{
     totalCount: number
     data: Vacant[]
   }>('Vacant/grant', ids, {
