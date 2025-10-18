@@ -20,6 +20,12 @@ importers:
       '@internationalized/date':
         specifier: ^3.8.0
         version: 3.8.0
+      '@lineiconshq/free-icons':
+        specifier: ^1.0.3
+        version: 1.0.3
+      '@lineiconshq/react-lineicons':
+        specifier: ^1.0.5
+        version: 1.0.5(react@18.3.1)
       '@lottiefiles/dotlottie-react':
         specifier: ^0.17.4
         version: 0.17.4(react@18.3.1)
@@ -86,6 +92,9 @@ importers:
       '@react-pdf/renderer':
         specifier: ^4.1.5
         version: 4.1.6(react@18.3.1)
+      '@remixicon/react':
+        specifier: ^4.7.0
+        version: 4.7.0(react@18.3.1)
       '@tabler/icons-react':
         specifier: ^3.26.0
         version: 3.29.0(react@18.3.1)
@@ -176,6 +185,9 @@ importers:
       just-is-empty:
         specifier: ^3.4.1
         version: 3.4.1
+      lineicons-react:
+        specifier: ^2.0.0
+        version: 2.0.0(react@18.3.1)
       lotin-kirill:
         specifier: ^0.1.5
         version: 0.1.5
@@ -803,6 +815,19 @@ packages:
 
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  '@lineiconshq/free-icons@0.0.1':
+    resolution: {integrity: sha512-fnWSSjIv/4vojAKsBZXluhMRr1LIb5p85IzXK0Dh27KF9qXxz89HZJrnvXH71ZqMCP+NFzo/xh0dJsv8PT+3xg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@lineiconshq/free-icons@1.0.3':
+    resolution: {integrity: sha512-VFilyDa9JBFRRwsMYeeigHREzzo8ZuoV5jyn6PC4UpMreUD/XckX212ypnnw9WtBXVIGrtm7mdHuJ9RIKluA5Q==}
+
+  '@lineiconshq/react-lineicons@1.0.5':
+    resolution: {integrity: sha512-GfUBSMLoL7siDOmVwDTTGwGCREu7Q/g7PAzqoMII+SF6ZWQS3ZfTLupNcQkTx4R6+mTibz5OIoWHCseVF8WsMQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@lottiefiles/dotlottie-react@0.17.4':
     resolution: {integrity: sha512-PsWq0l+Q/sGwnjWMiRJC1GUmsXFYB8zc5TacWblfaU9EQzqJzBeblk5rqtac/EDQi9QiXqpojPgWsofJX97swg==}
@@ -2328,6 +2353,11 @@ packages:
     resolution: {integrity: sha512-/eG8hiW0D4vaCqGDa4ttb+Jnbiz6nUr5+f+LRgz3AnIkdjS9eOhpn6vXMX4hkNgcN5FGfA4Uu1C1QdM6W97Kfw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
+  '@remixicon/react@4.7.0':
+    resolution: {integrity: sha512-ODBQjdbOjnFguCqctYkpDjERXOInNaBnRPDKfZOBvbzExBAwr2BaH/6AHFTg/UAFzBDkwtylfMT8iKPAkLwPLQ==}
+    peerDependencies:
+      react: '>=18.2.0'
 
   '@rollup/rollup-android-arm-eabi@4.34.2':
     resolution: {integrity: sha512-6Fyg9yQbwJR+ykVdT9sid1oc2ewejS6h4wzQltmJfSW53N60G/ah9pngXGANdy9/aaE/TcUFpWosdm7JXS1WTQ==}
@@ -4366,6 +4396,11 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
+  lineicons-react@2.0.0:
+    resolution: {integrity: sha512-Q3vFZgciMDPLSLpqVHBLaBFj+CeorDJMy92iRMpiyNXHn/Us2iH0rBmxYJaP16niOMagXrHyjVBKX9DkOBLJYw==}
+    peerDependencies:
+      react: '>16.0.0'
+
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
@@ -4486,6 +4521,9 @@ packages:
 
   media-engine@1.0.3:
     resolution: {integrity: sha512-aa5tG6sDoK+k70B9iEX1NeyfT8ObCKhNDs6lJVpwF6r8vhUfuKMslIcirq6HIUYuuUYLefcEQOn9bSBOvawtwg==}
+
+  meilisearch@0.53.0:
+    resolution: {integrity: sha512-nG4VXbEOSzUmtbfsgOo+t6yX1ECEgXaT4hC0ap9MBpQGK5xwT+NWYDENYsKWR75cVaWaAqva+ok4zHlgtdXlLw==}
 
   memoize-one@5.2.1:
     resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
@@ -6442,6 +6480,19 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@juggle/resize-observer@3.4.0': {}
+
+  '@lineiconshq/free-icons@0.0.1(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+
+  '@lineiconshq/free-icons@1.0.3':
+    dependencies:
+      meilisearch: 0.53.0
+
+  '@lineiconshq/react-lineicons@1.0.5(react@18.3.1)':
+    dependencies:
+      '@lineiconshq/free-icons': 0.0.1(react@18.3.1)
+      react: 18.3.1
 
   '@lottiefiles/dotlottie-react@0.17.4(react@18.3.1)':
     dependencies:
@@ -8592,6 +8643,10 @@ snapshots:
     dependencies:
       '@react-types/overlays': 3.8.16(react@18.3.1)
       '@react-types/shared': 3.30.0(react@18.3.1)
+      react: 18.3.1
+
+  '@remixicon/react@4.7.0(react@18.3.1)':
+    dependencies:
       react: 18.3.1
 
   '@rollup/rollup-android-arm-eabi@4.34.2':
@@ -11056,6 +11111,10 @@ snapshots:
 
   lilconfig@3.1.3: {}
 
+  lineicons-react@2.0.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
   lines-and-columns@1.2.4: {}
 
   listenercount@1.0.1: {}
@@ -11181,6 +11240,8 @@ snapshots:
   math-intrinsics@1.1.0: {}
 
   media-engine@1.0.3: {}
+
+  meilisearch@0.53.0: {}
 
   memoize-one@5.2.1: {}
 

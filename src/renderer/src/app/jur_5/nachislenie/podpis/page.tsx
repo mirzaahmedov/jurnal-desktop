@@ -2,8 +2,8 @@ import type { CustomCellRendererProps } from 'ag-grid-react'
 
 import { useEffect, useState } from 'react'
 
+import { RiDeleteBinLine, RiEdit2Line } from '@remixicon/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GridTable } from '@/common/components/grid-table/table'
@@ -69,7 +69,7 @@ export const ZarplataPodpisPage = () => {
                       modalToggle.open()
                     }}
                   >
-                    <Pencil className="btn-icon" />
+                    <RiEdit2Line className="btn-icon" />
                   </Button>
                   <Button
                     size="icon"
@@ -85,7 +85,7 @@ export const ZarplataPodpisPage = () => {
                       })
                     }}
                   >
-                    <Trash2 className="btn-icon" />
+                    <RiDeleteBinLine className="btn-icon" />
                   </Button>
                 </div>
               )
