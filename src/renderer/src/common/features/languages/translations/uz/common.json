@@ -586,6 +586,7 @@
   "dont_give_premya": "Premiya berilmasin",
   "by_schets": "Hisobot (schetlar bo'yicha)",
   "document_processing": "Hujjatlar qayta ishlanmoqda",
-  "cash_balance": "Pul qoldig'i",
-  "has_gotten_payroll": "Ish haqi olgan"
+  "message": "Xabar",
+  "additional_file": "Qo'shimcha fayl",
+  "feedback_sent_successfully": "Fikr-mulohaza muvaffaqiyatli yuborildi"
 }

@@ -1,9 +1,13 @@
 export interface IFeedBack {
   id: number
-  message: string
+  login: string
+  fio: string
+  region_name: string
   user_id: number
+  meta_data: any
+  message: string
   file: string
-  meta_data: string
   created_at: string
   updated_at: string
+  isdeleted: boolean
 }

@@ -2,7 +2,7 @@ import type { ToastContentProps } from 'react-toastify'
 
 import { useState } from 'react'
 
-import { ClipboardCheck, ClipboardPlus, Headset, X } from 'lucide-react'
+import { ClipboardCheck, ClipboardPlus, Send, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/common/components/ui/button'
@@ -48,7 +48,6 @@ export const ErrorToastContent = ({
   data
 }: ToastContentProps<ErrorToastContentOptions>) => {
   const { title, details } = data ?? {}
-  const { open: openFeedbackModal } = useFeedbackModalState()
 
   return (
     <div className="w-full flex items-center justify-between gap-2">
@@ -57,13 +56,16 @@ export const ErrorToastContent = ({
       </div>
       <div className="flex gap-1 text-slate-500">
         {details ? <CopyButton details={details} /> : null}
+
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          onClick={() => openFeedbackModal()}
+          onClick={() => {
+            useFeedbackModalState.getState().open(details || '{}')
+          }}
         >
-          <Headset className="size-4" />
+          <Send className="size-4" />
         </Button>
         <Button
           type="button"

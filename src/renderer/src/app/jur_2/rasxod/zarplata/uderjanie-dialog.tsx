@@ -16,7 +16,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { useRequisitesStore } from '@/common/features/requisites'
 
 import {
@@ -57,7 +57,7 @@ export const UderjanieDialog = ({
   onSelect,
   ...props
 }: UderjanieDialogProps) => {
-  const userOwnId = useAuthenticationStore((store) => store.user?.id)
+  const userOwnId = useAuthStore((store) => store.user?.id)
   const main_schet_id = useRequisitesStore((store) => store.main_schet_id)
 
   const [tabValue, setTabValue] = useState<TabOption>(

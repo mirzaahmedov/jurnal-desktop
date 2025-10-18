@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 
 export const baseURL =
   import.meta.env.VITE_MODE === 'prod'
@@ -23,7 +23,7 @@ export const zarplataApiNew = axios.create({
 
 zarplataApiNew.interceptors.request.use(
   (config) => {
-    const token = useAuthenticationStore.getState().token
+    const token = useAuthStore.getState().token
     config.headers.Authorization = `Bearer ${token}`
     return config
   },

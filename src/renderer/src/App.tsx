@@ -6,15 +6,16 @@ import { ToastContainer } from 'react-toastify'
 
 import { router } from './app/router'
 import { ApplicationUpdateManager } from './common/features/application-update-manager'
-import { useAuthenticationStore } from './common/features/auth'
+import { useAuthStore } from './common/features/auth'
 import { ConfirmationDialog } from './common/features/confirm'
+import { SendFeedbackModal } from './common/features/feedback/SendFeedbackModal'
 import { initLocales } from './common/features/languages'
 import { queryClient } from './common/lib/query-client'
 
 initLocales()
 
 function App() {
-  const setUser = useAuthenticationStore((store) => store.setUser)
+  const setUser = useAuthStore((store) => store.setUser)
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -50,6 +51,7 @@ function App() {
       />
       <ConfirmationDialog />
       <ApplicationUpdateManager />
+      <SendFeedbackModal />
     </QueryClientProvider>
   )
 }

@@ -22,7 +22,7 @@ import { JollySelect, SelectItem } from '@/common/components/jolly/select'
 import { Button } from '@/common/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { useConfirm } from '@/common/features/confirm'
 
 import { RequisitesFormSchema, type RequisitesFormValues, useRequisitesStore } from './store'
@@ -34,7 +34,7 @@ export type RequisitesDialogProps = {
 export const RequisitesDialog = ({ isOpen, onOpenChange }: RequisitesDialogProps) => {
   const { t } = useTranslation()
   const { confirm } = useConfirm()
-  const { user } = useAuthenticationStore()
+  const { user } = useAuthStore()
 
   const setRequisites = useRequisitesStore((store) => store.setRequisites)
 

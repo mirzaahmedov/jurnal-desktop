@@ -3,7 +3,7 @@ import type { Nachislenie } from '@/common/models'
 import { useQuery } from '@tanstack/react-query'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 
 import { nachieslenieColumns } from './columns'
 import { NachislenieQueryKeys } from './config'
@@ -14,7 +14,7 @@ export interface NachislenieTableProps {
   onSelect: (selected: Nachislenie) => void
 }
 export const NachislenieTable = ({ rayon, onSelect }: NachislenieTableProps) => {
-  const userOwnId = useAuthenticationStore((store) => store.user?.id)
+  const userOwnId = useAuthStore((store) => store.user?.id)
 
   const { data: nachislenie, isFetching: isFetchingNachislenie } = useQuery({
     queryKey: [NachislenieQueryKeys.getAll, { userId: userOwnId!, rayon: rayon! }],

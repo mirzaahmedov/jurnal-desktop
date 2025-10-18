@@ -21,7 +21,7 @@ import {
   FormMessage
 } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { LanguageSelect } from '@/common/features/languages'
 import { useRequisitesStore } from '@/common/features/requisites'
 
@@ -38,7 +38,7 @@ const SigninPage = () => {
   const navigate = useNavigate()
 
   const { user_id, clear } = useRequisitesStore()
-  const { setUser, setAuthenticated } = useAuthenticationStore()
+  const { setUser, setAuthenticated } = useAuthStore()
 
   const form = useForm({
     resolver: zodResolver(SigninFormSchema),
@@ -81,7 +81,7 @@ const SigninPage = () => {
     const route = params.get('route')
 
     const handleRehydrate = () => {
-      useAuthenticationStore.persist.rehydrate()
+      useAuthStore.persist.rehydrate()
       setAuthenticated(true)
       navigate(route!)
     }

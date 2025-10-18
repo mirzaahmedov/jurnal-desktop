@@ -24,11 +24,11 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { api } from '@/common/lib/http'
 
-import { useAuthenticationStore } from './store'
+import { useAuthStore } from './store'
 
 export const UpdateProfileDialog = (props: Omit<DialogTriggerProps, 'children'>) => {
   const { t } = useTranslation(['sign-in'])
-  const { user, setUser } = useAuthenticationStore()
+  const { user, setUser } = useAuthStore()
 
   const [isPasswordVisible, setPasswordVisible] = useState(false)
 
@@ -49,7 +49,7 @@ export const UpdateProfileDialog = (props: Omit<DialogTriggerProps, 'children'>)
     },
     onSuccess: (res) => {
       const user = res?.data?.[0]
-      const prevState = useAuthenticationStore.getState()
+      const prevState = useAuthStore.getState()
       if (user && prevState.user) {
         setUser({
           user: {

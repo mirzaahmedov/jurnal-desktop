@@ -63,7 +63,7 @@ import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-control
 import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
 import { WarehouseSaldoController } from '@/app/jur_7/saldo/components/saldo-controller'
 import { AdminRoles } from '@/app/super-admin/role'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { ZarplataActions } from '@/common/features/zarplata/zarplata-actions'
 import { omitEmptyArrayElements } from '@/common/lib/validation'
 
@@ -78,7 +78,7 @@ export interface INavElement {
 }
 
 export const getNavElements = (t: TFunction, budjetId: number): INavElement[] => {
-  const user = useAuthenticationStore.getState().user
+  const user = useAuthStore.getState().user
   const permissions =
     user?.acesses?.find((access) => access.budjet_id === budjetId) ?? ({} as RoleAccess)
 

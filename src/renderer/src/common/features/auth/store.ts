@@ -3,17 +3,17 @@ import type { RoleAccess, User } from '@/common/models'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-export type AuthenticationStore = {
+export type AuthStore = {
   isAuthenticated: boolean
   user?: User & { acesses: RoleAccess[] }
   token?: string
   deviceId?: string
-  setUser(payload: Pick<AuthenticationStore, 'user' | 'token' | 'deviceId'> | null): void
+  setUser(payload: Pick<AuthStore, 'user' | 'token' | 'deviceId'> | null): void
   setAuthenticated(isAuthenticated: boolean): void
 }
 
-export const useAuthenticationStore = create<AuthenticationStore>()(
-  persist<AuthenticationStore>(
+export const useAuthStore = create<AuthStore>()(
+  persist<AuthStore>(
     (set) => ({
       isAuthenticated: false,
       setUser: (payload) => {
@@ -43,4 +43,4 @@ export const useAuthenticationStore = create<AuthenticationStore>()(
   )
 )
 
-export const getUserId = () => useAuthenticationStore.getState()?.user?.id
+export const getUserId = () => useAuthStore.getState()?.user?.id

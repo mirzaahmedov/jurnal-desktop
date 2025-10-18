@@ -4,7 +4,7 @@ import { lazy } from 'react'
 
 import { Navigate, createHashRouter } from 'react-router-dom'
 
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { BudjetSelectedGuard, MainSchetSelectedGuard } from '@/common/features/requisites'
 import { DuplicateSchetsGuard } from '@/common/features/requisites/guards/duplicate-schets-guard'
 
@@ -148,7 +148,7 @@ const OrganSaldo152DetailsPage = lazy(() => import('./jur_3/152/saldo/details/pa
 const FeedbackPage = lazy(() => import('./super-admin/feedback/page'))
 
 const FallbackRoute = () => {
-  const user = useAuthenticationStore((store) => store.user)
+  const user = useAuthStore((store) => store.user)
   return user?.role_name === 'super-admin' ? (
     <Navigate to="/admin/dashboard" />
   ) : (

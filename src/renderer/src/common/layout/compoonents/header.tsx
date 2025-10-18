@@ -10,7 +10,7 @@ import { Popover, PopoverDialog, PopoverTrigger } from '@/common/components/joll
 import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { NewWindowLauncher } from '@/common/components/new-window-launcher'
 import { RefreshPage } from '@/common/components/reload'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { Downloads } from '@/common/features/downloads-manager'
 import { RequisitesController } from '@/common/features/requisites'
 import { useElementWidth } from '@/common/hooks'
@@ -24,7 +24,7 @@ import { UserProfile } from './user-profile'
 export const Header = () => {
   const { t } = useTranslation(['app'])
   const { title, content: Content, enableSaldo, breadcrumbs, onCreate, onBack } = useLayoutStore()
-  const { user, setUser } = useAuthenticationStore()
+  const { user, setUser } = useAuthStore()
   const { setElementRef, width } = useElementWidth()
 
   const location = useLocation()

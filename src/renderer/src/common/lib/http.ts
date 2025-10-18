@@ -3,9 +3,7 @@ import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axio
 import axios from 'axios'
 import i18next, { t } from 'i18next'
 
-import { useAuthenticationStore } from '@/common/features/auth'
-
-import { notify } from './notify'
+import { useAuthStore } from '@/common/features/auth'
 
 interface ErrorResponse {
   success: false
@@ -29,7 +27,7 @@ export class HttpResponseError extends Error {
 // ? 'http://10.50.0.140:3006'
 // ? 'http://10.51.2.242:3005'
 // ? 'http://192.168.5.45:3005'
-const baseURL = import.meta.env.DEV
+export const baseURL = import.meta.env.DEV
   ? import.meta.env.VITE_DEV_URL
     ? import.meta.env.VITE_DEV_URL
     : 'https://nafaqa.fizmasoft.uz/api'
@@ -67,7 +65,7 @@ api.interceptors.request.use(
       return config
     }
 
-    const { token } = useAuthenticationStore.getState()
+    const { token } = useAuthStore.getState()
     if (!token) {
       throw new axios.Cancel('No token')
     }
@@ -84,8 +82,9 @@ api.interceptors.response.use(
   (response) => {
     return response
   },
-  (error) => {
-    console.log('running', error)
+  async (error) => {
+    const { notify } = await import('@/common/lib/notify')
+
     if (!error) {
       notify({
         variant: 'error',
@@ -112,7 +111,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === 403) {
       if (window.location.pathname !== '/') {
-        useAuthenticationStore.getState().setUser(null)
+        useAuthStore.getState().setUser(null)
         throw error
       }
     }

@@ -2,10 +2,10 @@ import type { AxiosInstance } from 'axios'
 
 type ServiceMethods = {
   create?: (data: any) => any
-  update?: (id: string, data: any) => any
+  update?: (id: number, data: any) => any
   getAll?: () => any
-  getById?: (id: string) => any
-  delete?: (id: string) => any
+  getById?: (id: number) => any
+  delete?: (id: number) => any
 }
 
 export interface ServiceBuilderParams {
@@ -37,7 +37,7 @@ export class ServiceBuilder<TMethods extends ServiceMethods = {}> {
 
   withUpdate<TUpdate, TResult>() {
     this.methods.push('update')
-    type Added = { update: (id: string, data: TUpdate) => Promise<TResult> }
+    type Added = { update: (id: number, data: TUpdate) => Promise<TResult> }
     const next = this as unknown as ServiceBuilder<TMethods & Added>
     return next
   }
@@ -51,14 +51,14 @@ export class ServiceBuilder<TMethods extends ServiceMethods = {}> {
 
   withGetById<TResult>() {
     this.methods.push('getById')
-    type Added = { getById: (id: string) => Promise<TResult> }
+    type Added = { getById: (id: number) => Promise<TResult> }
     const next = this as unknown as ServiceBuilder<TMethods & Added>
     return next
   }
 
   withDelete<TResult>() {
     this.methods.push('delete')
-    type Added = { delete: (id: string) => Promise<TResult> }
+    type Added = { delete: (id: number) => Promise<TResult> }
     const next = this as unknown as ServiceBuilder<TMethods & Added>
     return next
   }

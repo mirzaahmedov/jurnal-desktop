@@ -587,6 +587,7 @@
   "dont_give_premya": "Премия берилмайди",
   "by_schets": "Ҳисобот (счетлар бўйича)",
   "document_processing": "Ҳужжатлар қайта ишланмоқда",
-  "cash_balance": "Пул қолдиғи",
-  "has_gotten_payroll": "Иш ҳақи олган"
+  "message": "Хабар",
+  "additional_file": "Қўшимча файл",
+  "feedback_sent_successfully": "Фикр-мулоҳазалар муваффақиятли юборилди"
 }

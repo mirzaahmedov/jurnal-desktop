@@ -587,6 +587,7 @@
   "dont_give_premya": "Не давать премию",
   "by_schets": "Отчет (по счетам)",
   "document_processing": "Документы обрабатываются",
-  "cash_balance": "Денежный остаток",
-  "has_gotten_payroll": "Получил зарплату"
+  "message": "Сообщение",
+  "additional_file": "Дополнительный файл",
+  "feedback_sent_successfully": "Обратная связь успешно отправлена"
 }

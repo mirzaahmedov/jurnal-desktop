@@ -8,7 +8,7 @@ import { vacantQueryKeys } from '@/app/region-admin/vacant/config'
 import { getVacantListQuery } from '@/app/region-admin/vacant/service'
 import { VacantTree } from '@/app/region-admin/vacant/vacant-tree'
 import { LoadingOverlay } from '@/common/components'
-import { useAuthenticationStore } from '@/common/features/auth'
+import { useAuthStore } from '@/common/features/auth'
 import { type RelationTreeNode, arrayToTreeByRelations } from '@/common/lib/tree/relation-tree'
 
 export interface VacantsProps {
@@ -16,7 +16,7 @@ export interface VacantsProps {
   onSelect: (vacant: RelationTreeNode<Vacant, number | null>) => void
 }
 export const Vacants = ({ selected, onSelect: setSelected }: VacantsProps) => {
-  const userOwnId = useAuthenticationStore((store) => store.user?.id)
+  const userOwnId = useAuthStore((store) => store.user?.id)
 
   const { data: vacants, isFetching: isFetchingVacants } = useQuery({
     queryKey: [vacantQueryKeys.getAll, { userId: userOwnId! }],

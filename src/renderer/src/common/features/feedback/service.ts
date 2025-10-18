@@ -1,5 +1,5 @@
-import type { FeedbackForm } from './config'
 import type { IFeedBack } from './model'
+import type { ApiResponse } from '@/common/models'
 
 import { ServiceBuilder } from '@/common/features/api/service'
 import { api } from '@/common/lib/http'
@@ -16,6 +16,7 @@ export const FeedbackService = ServiceBuilder.createService({
   resource: '/general/error',
   api
 })
-  .withCreate<FeedbackForm, void>()
-  .withGetAll<IFeedBack[]>()
+  .withCreate<FormData, void>()
+  .withDelete<void>()
+  .withGetAll<ApiResponse<IFeedBack[]>>()
   .build()
