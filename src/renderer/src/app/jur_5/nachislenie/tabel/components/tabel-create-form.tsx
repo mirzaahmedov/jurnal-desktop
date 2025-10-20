@@ -1,5 +1,6 @@
 import type { VacantTreeNode } from '@/app/region-admin/vacant/vacant-tree'
 import type { MainZarplata } from '@/common/models'
+import type { OtdelniyRaschet } from '@/common/models/otdelniy-raschet'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -13,6 +14,8 @@ import { SelectedVacantsFilter } from '@/app/jur_5/common/components/selected-va
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { useVacantFilters } from '@/app/jur_5/common/hooks/use-selected-vacant-filters'
+import { OtdelniyRaschetDetails } from '@/app/jur_5/passport-info/otdelniy-raschet/otdelniy-raschet-details'
+import { OtdelniyRaschetService } from '@/app/jur_5/passport-info/otdelniy-raschet/service'
 import { LoadingOverlay, NumericInput, Spinner } from '@/common/components'
 import { EditableTable } from '@/common/components/editable-table'
 import { createEditorDeleteHandler } from '@/common/components/editable-table/helpers'
@@ -26,7 +29,12 @@ import { Form, FormField } from '@/common/components/ui/form'
 import { Tabs, TabsList, TabsTrigger } from '@/common/components/ui/tabs'
 import { Textarea } from '@/common/components/ui/textarea'
 import { YearSelect } from '@/common/components/year-select'
-import { getWorkdaysInMonth } from '@/common/lib/date'
+import {
+  formatDate,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+  getWorkdaysInMonth
+} from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { getVacantRayon } from '@/common/utils/zarplata'
 
@@ -64,8 +72,13 @@ export const TabelCreateForm = ({
 
   const [activeTab, setActiveTab] = useState<TabelFormTabs>(TabelFormTabs.SELECT)
   const [visibleVacant, setVisibleVacant] = useState<number | null>(null)
+  const [mainZarplata, setMainZarplata] = useState<MainZarplata>()
+  const [otdelniyRaschet, setOtdelniyRaschet] = useState<OtdelniyRaschet[] | null>(null)
 
   const tabelChildren = form.watch('tabelChildren')
+  const getOtdelniyRaschet = useMutation({
+    mutationFn: OtdelniyRaschetService.getByMainZarplataId
+  })
   const mainZarplataQuery = useMainZarplataList({
     vacantId: vacant?.id ?? 0,
     ostanovit: false,
@@ -357,6 +370,29 @@ export const TabelCreateForm = ({
                   data={mainZarplataQuery.data ?? []}
                   selectedIds={selectedIds}
                   onClickRow={handleClickRow}
+                  onViewPayroll={(mainZarplata) => {
+                    const date = new Date(
+                      form.getValues('tabelYear'),
+                      form.getValues('tabelMonth') - 1,
+                      1
+                    )
+                    const from = formatLocaleDate(formatDate(getFirstDayOfMonth(date)))
+                    const to = formatLocaleDate(formatDate(getLastDayOfMonth(date)))
+                    setMainZarplata(mainZarplata)
+                    getOtdelniyRaschet.mutate(
+                      {
+                        mainZarplataId: mainZarplata.id,
+                        from,
+                        to
+                      },
+                      {
+                        onSuccess: (data) => {
+                          setOtdelniyRaschet(data)
+                          setMainZarplata(mainZarplata)
+                        }
+                      }
+                    )
+                  }}
                 />
               </div>
             )}
@@ -379,6 +415,22 @@ export const TabelCreateForm = ({
             )}
           </div>
         </div>
+
+        {mainZarplata && (
+          <OtdelniyRaschetDetails
+            isOpen={!!mainZarplata}
+            onOpenChange={(open) => {
+              if (!open) {
+                setMainZarplata(undefined)
+                setOtdelniyRaschet(null)
+              }
+            }}
+            mainZarplata={mainZarplata}
+            currentIndex={0}
+            items={otdelniyRaschet ?? []}
+            onIndexChange={() => {}}
+          />
+        )}
 
         <div className="px-5 pt-5">
           <Button

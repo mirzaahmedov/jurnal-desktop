@@ -589,5 +589,6 @@
   "document_processing": "Документы обрабатываются",
   "message": "Сообщение",
   "additional_file": "Дополнительный файл",
-  "feedback_sent_successfully": "Обратная связь успешно отправлена"
+  "feedback_sent_successfully": "Обратная связь успешно отправлена",
+  "has_gotten_payroll": "Получил зарплату"
 }

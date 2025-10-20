@@ -94,7 +94,8 @@
     "payments": "Платежи",
     "deductions": "Удержания",
     "staffing_table": "Штатное расписание",
-    "headers": "Заголовки"
+    "headers": "Заголовки",
+    "feedback": "Сообщение об ошибке"
   },
   "app": {
     "settings": "Настройки",

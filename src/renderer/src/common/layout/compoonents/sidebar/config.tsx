@@ -3,61 +3,51 @@ import type { TFunction } from 'i18next'
 import type { ComponentType, HTMLAttributes, ReactNode } from 'react'
 
 import {
-  AppWindow,
-  ArrowLeftRight,
-  BadgeDollarSign,
-  Book,
-  BriefcaseBusiness,
-  Building,
-  Building2,
-  Calculator,
-  CalendarCheck,
-  ChartCandlestick,
-  CircleDollarSign,
-  CircleFadingPlus,
-  Database,
-  DollarSign,
-  FileCheck,
-  FileCheck2,
-  FileClock,
-  FileDown,
-  FileUp,
-  FileVideo,
-  Folder,
-  Group,
-  IdCard,
-  Landmark,
-  LayoutDashboard,
-  LayoutGrid,
-  LetterText,
-  MapPinHouse,
-  MapPinned,
-  MonitorCog,
-  NotebookTabs,
-  NotepadText,
-  Percent,
-  Receipt,
-  ReceiptText,
-  RemoveFormatting,
-  Ruler,
-  Settings,
-  ShieldBan,
-  ShieldCheck,
-  Signature,
-  SquareActivity,
-  SquareCheck,
-  SquareUser,
-  SquareUserRound,
-  Table2,
-  UserCog,
-  UserSquare,
-  Users,
-  Wallet,
-  WalletCards,
-  Warehouse,
-  Weight,
-  Wrench
-} from 'lucide-react'
+  BankIcon,
+  BookIcon,
+  BriefcaseIcon,
+  BuildingApartmentIcon,
+  BuildingOfficeIcon,
+  CalculatorIcon,
+  CalendarCheckIcon,
+  ChatsCircleIcon,
+  CheckSquareIcon,
+  CheckSquareOffsetIcon,
+  CreditCardIcon,
+  CurrencyCircleDollarIcon,
+  CurrencyDollarIcon,
+  DatabaseIcon,
+  FileArrowDownIcon,
+  FileArrowUpIcon,
+  FolderSimpleIcon,
+  GearIcon,
+  IdentificationCardIcon,
+  MapPinAreaIcon,
+  MicrosoftExcelLogoIcon,
+  MoneyIcon,
+  MonitorIcon,
+  NewspaperIcon,
+  NotebookIcon,
+  PercentIcon,
+  PlusMinusIcon,
+  RulerIcon,
+  ScalesIcon,
+  ShieldCheckIcon,
+  ShieldIcon,
+  SignatureIcon,
+  SquaresFourIcon,
+  SwapIcon,
+  TableIcon,
+  TerminalWindowIcon,
+  TextTIcon,
+  UserGearIcon,
+  UserSquareIcon,
+  UsersIcon,
+  VideoIcon,
+  WalletIcon,
+  WarehouseIcon,
+  WrenchIcon
+} from '@phosphor-icons/react'
 
 import { KassaSaldoController } from '@/app/jur_1/saldo/components/saldo-controller'
 import { BankSaldoController } from '@/app/jur_2/saldo/components/saldo-controller'
@@ -90,40 +80,40 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
     {
       path: is_super_admin ? '/admin/dashboard' : '/region/dashboard',
       title: t('pages.main'),
-      icon: LayoutDashboard
+      icon: SquaresFourIcon
     },
     !is_super_admin
       ? {
           path: '/video-tutorials',
           title: t('pages.video_tutorials'),
-          icon: FileVideo
+          icon: VideoIcon
         }
       : null,
     !is_super_admin && (permissions.kassa || is_admin)
       ? {
           path: '/kassa',
           title: `1-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_1').toLowerCase()}`,
-          icon: BadgeDollarSign,
+          icon: CurrencyCircleDollarIcon,
           children: [
             {
               path: 'monitor',
               title: t('pages.monitoring'),
-              icon: SquareActivity
+              icon: MonitorIcon
             },
             {
               path: 'prixod',
               title: t('pages.prixod-docs'),
-              icon: FileDown
+              icon: FileArrowDownIcon
             },
             {
               path: 'rasxod',
               title: t('pages.rasxod-docs'),
-              icon: FileUp
+              icon: FileArrowUpIcon
             },
             {
               path: 'ostatok',
               title: t('pages.saldo'),
-              icon: CircleFadingPlus
+              icon: PlusMinusIcon
             },
             {
               displayOnly: true,
@@ -138,27 +128,27 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/bank',
           title: `2-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_2').toLowerCase()}`,
-          icon: Landmark,
+          icon: BankIcon,
           children: [
             {
               path: 'monitor',
               title: t('pages.monitoring'),
-              icon: SquareActivity
+              icon: MonitorIcon
             },
             {
               path: 'prixod',
               title: t('pages.prixod-docs'),
-              icon: FileDown
+              icon: FileArrowDownIcon
             },
             {
               path: 'rasxod',
               title: t('pages.rasxod-docs'),
-              icon: FileUp
+              icon: FileArrowUpIcon
             },
             {
               path: 'ostatok',
               title: t('pages.saldo'),
-              icon: CircleFadingPlus
+              icon: PlusMinusIcon
             },
             {
               displayOnly: true,
@@ -182,51 +172,51 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/jur-5',
           title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,
-          icon: Receipt,
+          icon: CreditCardIcon,
           children: omitEmptyArrayElements<INavElement>([
             permissions.zarplata_1 || is_admin
               ? {
                   path: 'staffing_table',
                   title: t('pages.staffing_table'),
-                  icon: SquareCheck
+                  icon: CheckSquareIcon
                 }
               : null,
             permissions.zarplata_2 || is_admin
               ? {
                   path: 'calculate-params',
                   title: t('pages.calc_parameters'),
-                  icon: Settings
+                  icon: GearIcon
                 }
               : null,
             permissions.zarplata_3 || is_admin
               ? {
                   path: 'passport-info',
                   title: t('pages.passport_details'),
-                  icon: IdCard
+                  icon: IdentificationCardIcon
                 }
               : null,
             permissions.zarplata_4 || is_admin
               ? {
                   path: 'nachislenie',
                   title: t('pages.nachislenie'),
-                  icon: Calculator
+                  icon: CalculatorIcon
                 }
               : null,
             permissions.zarplata_5 || is_admin
               ? {
                   path: 'payment-type',
                   title: t('pages.payment_type'),
-                  icon: Folder,
+                  icon: FolderSimpleIcon,
                   children: [
                     {
                       path: 'payments',
                       title: t('pages.payments'),
-                      icon: ReceiptText
+                      icon: CheckSquareIcon
                     },
                     {
                       path: 'deductions',
                       title: t('pages.deductions'),
-                      icon: ReceiptText
+                      icon: CheckSquareIcon
                     }
                   ]
                 }
@@ -245,60 +235,60 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/organization',
           title: `6-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_6').toLowerCase()}`,
-          icon: Building2,
+          icon: BuildingOfficeIcon,
           children: [
             {
               path: 'shartnoma',
               title: t('pages.shartnoma'),
-              icon: ReceiptText
+              icon: NewspaperIcon
             },
             {
               path: '159',
               title: t('pages.akt'),
-              icon: FileCheck2,
+              icon: CheckSquareOffsetIcon,
               children: [
                 {
                   path: 'monitor',
                   title: t('pages.monitoring'),
-                  icon: SquareActivity
+                  icon: MonitorIcon
                 },
                 {
                   path: 'akt',
                   title: t('pages.schet_faktura'),
-                  icon: FileCheck2
+                  icon: CheckSquareOffsetIcon
                 },
                 {
                   path: 'saldo',
                   title: t('pages.saldo'),
-                  icon: CircleFadingPlus
+                  icon: PlusMinusIcon
                 }
               ]
             },
             {
               path: '152',
               title: t('pages.service'),
-              icon: Wrench,
+              icon: WrenchIcon,
               children: omitEmptyArrayElements<INavElement>([
                 {
                   path: 'monitor',
                   title: t('pages.monitoring'),
-                  icon: SquareActivity
+                  icon: MonitorIcon
                 },
                 {
                   path: 'pokazat-uslugi',
                   title: t('pages.schet_faktura'),
-                  icon: Wrench
+                  icon: WrenchIcon
                 },
                 {
                   path: 'saldo',
                   title: t('pages.saldo'),
-                  icon: CircleFadingPlus
+                  icon: PlusMinusIcon
                 },
                 import.meta.env.DEV
                   ? {
                       path: 'demo',
                       title: 'Demo',
-                      icon: ShieldBan
+                      icon: ShieldIcon
                     }
                   : null
               ])
@@ -310,27 +300,27 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/accountable',
           title: `8-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_8').toLowerCase()}`,
-          icon: UserSquare,
+          icon: UserSquareIcon,
           children: omitEmptyArrayElements<INavElement>([
             {
               path: 'monitor',
               title: t('pages.monitoring'),
-              icon: SquareActivity
+              icon: MonitorIcon
             },
             {
               path: 'advance-report',
               title: t('pages.avans'),
-              icon: FileCheck
+              icon: MoneyIcon
             },
             {
               path: 'work-trip',
               title: t('pages.work_trip'),
-              icon: MapPinned
+              icon: MapPinAreaIcon
             },
             {
               path: 'saldo',
               title: t('pages.saldo'),
-              icon: CircleFadingPlus
+              icon: PlusMinusIcon
             }
             // {
             //   path: 'demo',
@@ -343,49 +333,49 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
 
     !is_super_admin && (permissions.jur7 || is_admin)
       ? {
-          icon: NotepadText,
+          icon: NotebookIcon,
           path: '/journal-7',
           title: `9-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_9').toLowerCase()}`,
           children: [
             {
-              icon: SquareActivity,
+              icon: MonitorIcon,
               path: 'monitor',
               title: t('pages.monitoring')
             },
             {
-              icon: FileDown,
+              icon: FileArrowDownIcon,
               path: 'prixod',
               title: t('pages.prixod-docs')
             },
             {
-              icon: FileUp,
+              icon: FileArrowUpIcon,
               path: 'rasxod',
               title: t('pages.rasxod-docs')
             },
             {
-              icon: ArrowLeftRight,
+              icon: SwapIcon,
               path: 'internal',
               title: t('pages.internal-docs')
             },
             {
               path: 'responsible',
               title: t('pages.responsible'),
-              icon: UserSquare
+              icon: UserSquareIcon
             },
             {
               path: 'subdivision-7',
               title: t('pages.podrazdelenie'),
-              icon: Building
+              icon: FolderSimpleIcon
             },
             {
               path: 'ostatok',
               title: t('pages.saldo'),
-              icon: Warehouse
+              icon: WarehouseIcon
             },
             {
               path: 'iznos',
               title: t('pages.iznos'),
-              icon: Percent
+              icon: PercentIcon
             },
             {
               displayOnly: true,
@@ -398,17 +388,17 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       : null,
     !is_super_admin && (permissions.jur8 || is_admin)
       ? {
-          icon: NotepadText,
+          icon: NotebookIcon,
           path: '/jur_8',
           title: t('pages.jur_8_old'),
           children: [
             {
-              icon: SquareActivity,
+              icon: MonitorIcon,
               path: 'monitor',
               title: t('pages.monitoring')
             },
             {
-              icon: Percent,
+              icon: GearIcon,
               path: 'schets',
               title: t('pages.schets')
             }
@@ -419,52 +409,52 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/spravochnik',
           title: t('pages.spravochnik'),
-          icon: NotebookTabs,
+          icon: GearIcon,
           children: [
             {
               path: 'organization',
               title: t('pages.organization'),
-              icon: Building
+              icon: BuildingOfficeIcon
             },
             {
               path: 'subdivision',
               title: t('pages.podrazdelenie'),
-              icon: Building2
+              icon: FolderSimpleIcon
             },
             {
               path: 'operation-type',
               title: t('pages.type-operatsii'),
-              icon: Folder
+              icon: FolderSimpleIcon
             },
             {
               path: 'main-schet',
               title: t('pages.main-schet'),
-              icon: Wallet
+              icon: WalletIcon
             },
             {
               path: 'podotchet',
               title: t('pages.podotchet-litso'),
-              icon: SquareUser
+              icon: UserSquareIcon
             },
             {
               path: 'sostav',
               title: t('pages.sostav'),
-              icon: Users
+              icon: UsersIcon
             },
             {
               path: 'group',
               title: t('pages.group'),
-              icon: Group
+              icon: FolderSimpleIcon
             },
             {
               path: 'podpis',
               title: t('pages.podpis'),
-              icon: Signature
+              icon: SignatureIcon
             },
             {
               path: 'headers',
               title: t('pages.headers'),
-              icon: RemoveFormatting
+              icon: TextTIcon
             }
           ]
         }
@@ -473,22 +463,22 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/region',
           title: t('pages.region'),
-          icon: MapPinHouse,
+          icon: BuildingApartmentIcon,
           children: [
             {
               path: 'user',
               title: t('pages.user'),
-              icon: Users
+              icon: UsersIcon
             },
             {
               path: 'role-access',
               title: t('pages.access_rights'),
-              icon: ShieldCheck
+              icon: ShieldCheckIcon
             },
             {
               path: 'vacant',
               title: t('pages.vacant'),
-              icon: SquareUserRound
+              icon: UserSquareIcon
             }
           ]
         }
@@ -497,59 +487,59 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/admin',
           title: t('pages.admin'),
-          icon: UserCog,
+          icon: UserGearIcon,
           children: omitEmptyArrayElements<INavElement>([
             {
               path: 'video-tutorials',
               title: t('pages.video_tutorials'),
-              icon: FileVideo
+              icon: VideoIcon
             },
             !is_revisor
               ? {
                   path: 'user',
                   title: t('pages.user'),
-                  icon: Users
+                  icon: UsersIcon
                 }
               : null,
             {
               path: 'jur_1',
               title: `1-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_1').toLowerCase()}`,
-              icon: BadgeDollarSign
+              icon: CurrencyCircleDollarIcon
             },
             {
               path: 'jur_2',
               title: `2-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_2').toLowerCase()}`,
-              icon: Landmark
+              icon: BankIcon
             },
             {
               path: '/jur_5',
               title: `5-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_5').toLowerCase()}`,
-              icon: Receipt
+              icon: CreditCardIcon
             },
             {
               path: '/jur_3',
               title: `6-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_6').toLowerCase()}`,
-              icon: Building2,
+              icon: BuildingOfficeIcon,
               children: [
                 {
                   path: '159',
                   title: t('pages.akt'),
-                  icon: FileCheck2
+                  icon: CheckSquareOffsetIcon
                 },
                 {
                   path: '152',
                   title: t('pages.service'),
-                  icon: Wrench
+                  icon: WrenchIcon
                 }
               ]
             },
             {
               path: '/jur_4',
               title: `8-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_8').toLowerCase()}`,
-              icon: UserSquare
+              icon: UserSquareIcon
             },
             {
-              icon: NotepadText,
+              icon: NotebookIcon,
               path: '/jur_7',
               title: `9-${t('pages.memorial_order').toLowerCase()} — ${t('pages.jur_9').toLowerCase()}`
             },
@@ -557,117 +547,117 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
             {
               path: 'mainbook',
               title: t('pages.mainbook'),
-              icon: Book
+              icon: BookIcon
             },
             {
               path: 'odinox',
               title: t('pages.odinox'),
-              icon: Table2
+              icon: MicrosoftExcelLogoIcon
             },
             {
               path: 'two-f',
               title: t('pages.two-f'),
-              icon: Table2
+              icon: MicrosoftExcelLogoIcon
             },
             {
               path: 'realcost',
               title: t('pages.realcost'),
-              icon: WalletCards
+              icon: MicrosoftExcelLogoIcon
             },
             !is_revisor
               ? {
                   path: 'feedback',
                   title: t('pages.feedback'),
-                  icon: SquareActivity
+                  icon: ChatsCircleIcon
                 }
               : null,
             !is_revisor
               ? {
                   path: 'logs',
                   title: t('pages.logs'),
-                  icon: FileClock
+                  icon: TerminalWindowIcon
                 }
               : null,
             !is_revisor
               ? {
                   path: '',
                   title: t('pages.spravochnik'),
-                  icon: NotebookTabs,
+                  icon: GearIcon,
                   children: [
                     {
                       path: 'report-title',
                       title: t('pages.report_title'),
-                      icon: LetterText
+                      icon: TextTIcon
                     },
                     {
                       path: 'prixod-schets',
                       title: t('pages.prixod_schets'),
-                      icon: Percent
+                      icon: PercentIcon
                     },
                     {
                       path: 'pereotsenka',
                       title: t('pages.pereotsenka'),
-                      icon: ChartCandlestick
+                      icon: TableIcon
                     },
                     {
                       path: 'group',
                       title: t('pages.group'),
-                      icon: Group
+                      icon: FolderSimpleIcon
                     },
                     {
                       path: 'bank',
                       title: t('pages.bank'),
-                      icon: Building
+                      icon: BankIcon
                     },
                     {
                       path: 'region',
                       title: t('pages.region'),
-                      icon: LayoutGrid
+                      icon: BuildingApartmentIcon
                     },
                     {
                       path: 'role',
                       title: t('pages.role'),
-                      icon: MonitorCog
+                      icon: UserGearIcon
                     },
                     {
                       path: 'smeta',
                       title: t('pages.smeta'),
-                      icon: CircleFadingPlus
+                      icon: PlusMinusIcon
                     },
                     {
                       path: 'budget',
                       title: t('pages.budjets'),
-                      icon: CircleDollarSign
+                      icon: WalletIcon
                     },
                     {
                       path: 'operation',
                       title: t('pages.operatsii'),
-                      icon: Percent
+                      icon: PercentIcon
                     },
                     {
                       path: 'unit',
                       title: t('pages.edin'),
-                      icon: Weight
+                      icon: ScalesIcon
                     },
                     {
                       path: 'zarplata/spravochnik',
                       title: t('pages.zarplata'),
-                      icon: AppWindow
+                      icon: FolderSimpleIcon
                     },
                     {
                       path: 'spravochnik/minimum-wage',
                       title: t('pages.bhm'),
-                      icon: DollarSign
+                      icon: CurrencyDollarIcon
                     },
                     {
                       path: 'spravochnik/distance',
                       title: t('pages.distance'),
-                      icon: Ruler
+                      icon: RulerIcon
                     },
                     {
                       path: 'spravochnik/position',
                       title: t('pages.position'),
-                      icon: BriefcaseBusiness
+                      icon: BriefcaseIcon
                     }
                   ]
                 }
@@ -679,47 +669,47 @@ export const getNavElements = (t: TFunction, budjetId: number): INavElement[] =>
       ? {
           path: '/smeta-grafik',
           title: t('pages.smeta_grafik'),
-          icon: CalendarCheck
+          icon: CalendarCheckIcon
         }
       : null,
     !is_super_admin && (permissions.main_book || is_admin)
       ? {
           path: '/mainbook',
           title: t('pages.mainbook'),
-          icon: Book
+          icon: BookIcon
         }
       : null,
     !is_super_admin && (permissions.odinox || is_admin)
       ? {
           path: '/odinox',
           title: t('pages.odinox'),
-          icon: Table2
+          icon: MicrosoftExcelLogoIcon
         }
       : null,
     !is_super_admin && (permissions.odinox || is_admin)
       ? {
           path: '/two-f',
           title: t('pages.two-f'),
-          icon: Table2
+          icon: MicrosoftExcelLogoIcon
         }
       : null,
     !is_super_admin
       ? {
           path: '/realcost',
           title: t('pages.realcost'),
-          icon: WalletCards
+          icon: MicrosoftExcelLogoIcon
         }
       : null,
     {
       path: '/region-data',
       title: t('pages.region-data'),
-      icon: Database
+      icon: DatabaseIcon
     },
     import.meta.env.DEV
       ? {
           path: '/demo',
           title: 'Demo',
-          icon: ShieldBan
+          icon: ShieldIcon
         }
       : null
   ])

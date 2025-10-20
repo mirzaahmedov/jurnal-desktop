@@ -1,6 +1,8 @@
 import type { IFeedBack } from '@/common/features/feedback/model'
 import type { CustomCellRendererProps } from 'ag-grid-react'
 
+import { useEffect } from 'react'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -10,10 +12,11 @@ import { Button } from '@/common/components/jolly/button'
 import { useConfirm } from '@/common/features/confirm'
 import { FeedbackQueryKeys, FeedbackService } from '@/common/features/feedback/service'
 import { DownloadFile } from '@/common/features/file'
+import { useLayout } from '@/common/layout'
 import { baseURL } from '@/common/lib/http'
 
 const FeedbackPage = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation(['app'])
 
   const { confirm } = useConfirm()
   const { data: feedbacks, isFetching } = useQuery({
@@ -21,10 +24,22 @@ const FeedbackPage = () => {
     queryFn: FeedbackService.getAll
   })
 
+  const setLayout = useLayout()
   const queryClient = useQueryClient()
   const feedbackDelete = useMutation({
     mutationFn: FeedbackService.delete
   })
+
+  useEffect(() => {
+    setLayout({
+      title: t('pages.feedback'),
+      breadcrumbs: [
+        {
+          title: t('pages.admin')
+        }
+      ]
+    })
+  }, [setLayout, t])
 
   return (
     <GridTable

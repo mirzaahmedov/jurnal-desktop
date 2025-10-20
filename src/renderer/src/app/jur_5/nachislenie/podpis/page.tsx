@@ -11,6 +11,7 @@ import { Button } from '@/common/components/jolly/button'
 import { useToggle } from '@/common/hooks'
 import { useLayout } from '@/common/layout'
 
+import { NachislenieTabs } from '../nachislenie-tabs'
 import { ZarplataPodpisDialog } from './podpis-dialog'
 import { ZarplataPodpisService, ZarplataQueryKeys } from './service'
 
@@ -39,6 +40,7 @@ export const ZarplataPodpisPage = () => {
           title: t('zarplata')
         }
       ],
+      content: NachislenieTabs,
       onCreate: () => {
         modalToggle.open()
         setPodpisData(undefined)

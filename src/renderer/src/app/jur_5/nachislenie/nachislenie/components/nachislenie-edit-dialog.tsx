@@ -3,6 +3,7 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useEffect, useState } from 'react'
 
+import { TreeViewIcon } from '@phosphor-icons/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { Download, Plus, Search, Sigma, UserSquare } from 'lucide-react'
@@ -63,6 +64,7 @@ import {
 
 import { defaultValues } from '../config'
 import { type NachislenieCreateChildPayload, NachislenieService } from '../service'
+import { NachislenieOtdelniyRaschetDialog } from './nachislenie-otdelniy-raschet-dialog'
 import { NachisleniePaymentDialog } from './nachislenie-payments-dialog'
 
 enum TabOptions {
@@ -89,6 +91,7 @@ export const NachislenieEditDialog = ({
   const [tabValue, setTabValue] = useState(TabOptions.View)
   const [comboValue, setComboValue] = useState(null)
   const [mainZarplataId, setMainZarplataId] = useState<number | null>(null)
+  const [otdelniyRaschetData, setOtdelniyRaschetData] = useState<any>(null)
   const [, setSearchParams] = useSearchParams()
 
   const comboModal = useToggle()
@@ -126,9 +129,9 @@ export const NachislenieEditDialog = ({
     enabled:
       !!nachislenieData?.spravochnikBudjetNameId &&
       !!nachislenieData?.nachislenieYear &&
-      !!nachislenieData?.nachislenieMonth
+      !!nachislenieData?.nachislenieMonth &&
+      tabValue === TabOptions.OtdelniyRaschet
   })
-  console.log({ nachislenieData })
 
   const deleteChildMutation = useMutation({
     mutationFn: NachislenieService.deleteChild,
@@ -607,10 +610,120 @@ export const NachislenieEditDialog = ({
               )}
               {tabValue === TabOptions.OtdelniyRaschet && (
                 <div className="relative mt-5 flex-1 mih-h-0 flex flex-col gap-5 overflow-hidden">
-                  <GenericTable
-                    columnDefs={OtdelniyRaschetColumnDefs}
+                  <CollapsibleTable
+                    getRowId={(row) => row.id}
+                    columnDefs={[
+                      {
+                        key: 'docNum',
+                        header: 'doc_num'
+                      },
+                      {
+                        key: 'docDate',
+                        header: 'doc_date'
+                      },
+                      {
+                        key: 'fio'
+                      },
+                      {
+                        key: 'doljnost'
+                      },
+                      {
+                        key: 'nachislenieYear',
+                        header: 'year'
+                      },
+                      {
+                        key: 'nachislenieMonth',
+                        header: 'month'
+                      },
+                      {
+                        key: 'rabDni',
+                        header: 'workdays'
+                      },
+                      {
+                        key: 'otrabDni',
+                        header: 'worked_days'
+                      },
+                      {
+                        numeric: true,
+                        key: 'nachislenieSum',
+                        header: 'nachislenie',
+                        className: 'font-black'
+                      },
+                      {
+                        numeric: true,
+                        key: 'uderjanieSum',
+                        header: 'uderjanie',
+                        className: 'font-black'
+                      },
+                      {
+                        numeric: true,
+                        key: 'naRukiSum',
+                        header: 'na_ruki',
+                        className: 'font-black'
+                      }
+                    ]}
                     data={otdelniyRaschetQuery?.data ?? []}
-                  />
+                    className="table-generic-xs"
+                  >
+                    {({ row }) => (
+                      <div className="flex-1 grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] p-5 gap-5">
+                        <div className="bg-teal-700 p-5 rounded-xl h-full flex flex-col">
+                          <div className="flex items-center justify-between gap-5 mb-4">
+                            <h2 className="text-xl text-white font-medium mb-2">
+                              {t('nachislenie')}
+                            </h2>
+                          </div>
+                          <div className="flex-1 overflow-auto scrollbar">
+                            <GenericTable
+                              data={row.otdelniyRaschetPaymentDtos ?? []}
+                              columnDefs={[
+                                {
+                                  key: 'paymentName',
+                                  header: 'name'
+                                },
+                                {
+                                  key: 'percentage',
+                                  header: 'foiz'
+                                },
+                                {
+                                  numeric: true,
+                                  key: 'summa',
+                                  renderCell: (row) => <SummaCell summa={row.summa} />
+                                }
+                              ]}
+                              className="table-generic-xs shadow-md rounded overflow-hidden"
+                            />
+                          </div>
+                        </div>
+                        <div className="bg-teal-700 p-5 rounded-xl">
+                          <div className="flex items-center justify-between gap-5 mb-4">
+                            <h2 className="text-xl text-white font-medium mb-2">
+                              {t('uderjanie')}
+                            </h2>
+                          </div>
+                          <GenericTable
+                            data={row.otdelniyRaschetDeductionDtos ?? []}
+                            columnDefs={[
+                              {
+                                key: 'deductionName',
+                                header: 'name'
+                              },
+                              {
+                                key: 'percentage',
+                                header: 'foiz'
+                              },
+                              {
+                                numeric: true,
+                                key: 'summa',
+                                renderCell: (row) => <SummaCell summa={row.summa} />
+                              }
+                            ]}
+                            className="table-generic-xs shadow-md rounded overflow-hidden"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </CollapsibleTable>
                 </div>
               )}
             </div>
@@ -622,6 +735,13 @@ export const NachislenieEditDialog = ({
         mainId={nachislenieId!}
         isOpen={createChildModal.isOpen}
         onOpenChange={createChildModal.setOpen}
+      />
+      <NachislenieOtdelniyRaschetDialog
+        isOpen={!!otdelniyRaschetData}
+        onOpenChange={(state) => {
+          if (!state) setOtdelniyRaschetData(null)
+        }}
+        data={otdelniyRaschetData}
       />
     </>
   )

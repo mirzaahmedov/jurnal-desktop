@@ -51,7 +51,12 @@ const renderNavElement = (elem: null | INavElement, isCollapsed: boolean, rootPa
               )}
               title={String(elem.title)}
             >
-              {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
+              {elem.icon && (
+                <elem.icon
+                  weight="duotone"
+                  className="text-brand size-5 flex-shrink-0"
+                />
+              )}
               {!isCollapsed ? (
                 <span className="font-semibold text-sm text-start">{elem.title}</span>
               ) : null}
@@ -82,7 +87,12 @@ const renderNavElement = (elem: null | INavElement, isCollapsed: boolean, rootPa
           )}
           title={String(elem.title)}
         >
-          {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
+          {elem.icon && (
+            <elem.icon
+              weight="duotone"
+              className="size-5 flex-shrink-0 text-brand"
+            />
+          )}
           <span className={cn('w-full font-semibold text-sm break-words', isCollapsed && 'hidden')}>
             {elem.title}
           </span>
@@ -100,7 +110,12 @@ const renderNavElement = (elem: null | INavElement, isCollapsed: boolean, rootPa
           }
           title={String(elem.title)}
         >
-          {elem.icon && <elem.icon className="size-5 flex-shrink-0" />}
+          {elem.icon && (
+            <elem.icon
+              weight="duotone"
+              className="size-5 flex-shrink-0 text-brand"
+            />
+          )}
           <span className={cn('font-semibold text-sm break-words', isCollapsed && 'hidden')}>
             {elem.title}
           </span>

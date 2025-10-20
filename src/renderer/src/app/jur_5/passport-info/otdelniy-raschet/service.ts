@@ -14,6 +14,27 @@ export class OtdelniyRaschetService {
     GetByMainZarplataId: 'OtdelniyRaschet/get-by-mainId'
   }
 
+  static async getByMainZarplataId({
+    mainZarplataId,
+    from,
+    to
+  }: {
+    mainZarplataId: number
+    from: string
+    to: string
+  }) {
+    const res = await zarplataApiNew.get<OtdelniyRaschet[]>(
+      `${OtdelniyRaschetService.endpoint}/${mainZarplataId}`,
+      {
+        params: {
+          from,
+          to
+        }
+      }
+    )
+    return res.data
+  }
+
   static async getAll(
     ctx: QueryFunctionContext<
       [

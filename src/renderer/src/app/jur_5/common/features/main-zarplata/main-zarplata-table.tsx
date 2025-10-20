@@ -15,15 +15,19 @@ export interface MainZarplataTableProps extends Partial<GenericTableProps<MainZa
   enableMatPomoch?: boolean
   enableTabel?: boolean
   onViewMatPomoch?: (row: MainZarplata) => void
+  onViewPayroll?: (row: MainZarplata) => void
 }
 export const MainZarplataTable = ({
   data,
   enableMatPomoch,
   enableTabel,
   onViewMatPomoch,
+  onViewPayroll,
   ...props
 }: MainZarplataTableProps) => {
   const onViewMatPomochCallback = useEventCallback(onViewMatPomoch)
+  const onViewPayrollCallback = useEventCallback(onViewPayroll)
+
   const columnDefs = useMemo(() => {
     const columns = [...MainZarplataColumnDefs]
     if (enableMatPomoch) {
@@ -67,12 +71,27 @@ export const MainZarplataTable = ({
       columns.push({
         key: 'isRaschet',
         header: 'has_gotten_payroll',
-        renderCell: (row) =>
-          row.isRaschet ? (
-            <span className="font-bold text-emerald-500">{t('yes')}</span>
-          ) : (
-            <span className="font-bold text-red-500">{t('no')}</span>
-          )
+        renderCell: (row) => (
+          <div className="flex items-center gap-2.5">
+            {row.isRaschet ? (
+              <span className="font-bold text-emerald-500">{t('yes')}</span>
+            ) : (
+              <span className="font-bold text-red-500">{t('no')}</span>
+            )}
+
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={(e) => {
+                e.stopPropagation()
+                onViewPayrollCallback?.(row)
+              }}
+              className="size-8"
+            >
+              <Eye className="btn-icon" />
+            </Button>
+          </div>
+        )
       })
     }
     return columns
