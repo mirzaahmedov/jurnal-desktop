@@ -51,12 +51,6 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           onSubmit={(e) => {
             e.preventDefault()
           }}
-          onFocus={(e) => {
-            e.currentTarget.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest'
-            })
-          }}
           className="w-[2200px]"
         >
           <SaldoProductSpravochnikDialog
@@ -109,6 +103,7 @@ export const ProvodkaTable = ({ form, tabIndex }: ProvodkaTableProps) => {
           <Table className="border border-slate-200 table-xs">
             <TableHeader>
               <EditableTableRow>
+                <EditableTableHead rowSpan={2}>№</EditableTableHead>
                 <EditableTableHead rowSpan={2}>{t('code')}</EditableTableHead>
                 <EditableTableHead
                   rowSpan={2}
@@ -269,6 +264,9 @@ const Provodka = ({ rowIndex, row, form, tabIndex, onOpenDialog, onRemove }: Pro
 
   return (
     <EditableTableRow key={rowIndex}>
+      <EditableTableCell>
+        <div className="relative px-1">{rowIndex + 1}</div>
+      </EditableTableCell>
       <NaimenovanieCells
         row={row}
         kimdan_id={form.watch('kimdan_id')}
