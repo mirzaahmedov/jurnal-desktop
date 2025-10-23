@@ -3,6 +3,8 @@ import type { SpravochnikHookOptions } from '@/common/features/spravochnik'
 import type { ApiResponse, Zarplata } from '@/common/models'
 import type { QueryFunctionContext } from '@tanstack/react-query'
 
+import { t } from 'i18next'
+
 import { ApiEndpoints } from '@/common/features/crud'
 import { SpravochnikSearchField } from '@/common/features/filters/search/search-filter-spravochnik'
 import { extendObject } from '@/common/lib/utils'

@@ -14,6 +14,10 @@ import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
+import {
+  SearchFilterDebounced,
+  useSearchFilter
+} from '@/common/features/filters/search/search-filter-debounced'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -43,6 +47,7 @@ const StaffingTable = () => {
   const [vacantData, setVacantData] = useState<VacantTreeNode>()
   const [vacantParent, setVacantParent] = useState<VacantTreeNode>()
 
+  const [searchFilter] = useSearchFilter()
   const [selectedWorkplace, setSelectedWorkplace] = useState<Workplace>()
 
   const calculateParamsId = useZarplataStore((store) => store.calculateParamsId)
@@ -114,7 +119,8 @@ const StaffingTable = () => {
       {
         vacantId: selectedVacant?.id ?? 0,
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        search: searchFilter
       }
     ],
     queryFn: WorkplaceService.getWorkplaces,
@@ -245,6 +251,7 @@ const StaffingTable = () => {
           title: t('pages.zarplata')
         }
       ],
+      content: SearchFilterDebounced,
       onCreate:
         selectedVacant && calculateParams
           ? () => {

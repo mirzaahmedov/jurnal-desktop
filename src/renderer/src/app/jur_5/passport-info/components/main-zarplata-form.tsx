@@ -152,6 +152,7 @@ export const MainZarplataForm = ({
 
   const zarplataZvanieSpravochnik = useSpravochnik(
     createZarplataSpravochnik({
+      title: t('military_rank'),
       value: form.watch('spravochikZarplataZvanieId'),
       onChange: (value) => form.setValue('spravochikZarplataZvanieId', value ?? 0),
       params: {

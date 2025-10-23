@@ -18,7 +18,13 @@ export class WorkplaceService {
 
   static async getWorkplaces(
     ctx: QueryFunctionContext<
-      [typeof WorkplaceService.QueryKeys.GetAll, PaginationParams & { vacantId: number }]
+      [
+        typeof WorkplaceService.QueryKeys.GetAll,
+        PaginationParams & {
+          vacantId: number
+          search?: string
+        }
+      ]
     >
   ): Promise<ApiResponse<Workplace[]>> {
     const params = ctx.queryKey[1] ?? {}
