@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { WalletCards } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { BiCreditCard } from 'react-icons/bi'
 
 import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
@@ -120,6 +121,15 @@ export const NachislenieReports = () => {
             />
 
             <div className="flex items-center flex-wrap justify-end gap-2.5">
+              <DownloadFile
+                isZarplata
+                url="Excel2/get-plastik"
+                params={{}}
+                fileName={`plastik.xlsx`}
+                buttonText={t('plastik')}
+                variant="default"
+                IconStart={BiCreditCard}
+              />
               <Button
                 onPress={() => alimonyToggle.open()}
                 IconStart={WalletCards}

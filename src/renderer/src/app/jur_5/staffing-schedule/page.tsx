@@ -14,6 +14,7 @@ import { GenericTable, LoadingOverlay } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
+import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -251,7 +252,23 @@ const StaffingTable = () => {
           title: t('pages.zarplata')
         }
       ],
-      content: SearchFilterDebounced,
+      content: () => (
+        <div className="flex items-center justify-between gap-4 min-w-0">
+          <SearchFilterDebounced />
+
+          {selectedVacant ? (
+            <DownloadFile
+              isZarplata
+              url="Excel2/get-workplace"
+              params={{
+                vacantId: selectedVacant.id
+              }}
+              fileName={`ish_joylari__${selectedVacant?.name}.xlsx`}
+              buttonText={t('export-excel')}
+            />
+          ) : null}
+        </div>
+      ),
       onCreate:
         selectedVacant && calculateParams
           ? () => {

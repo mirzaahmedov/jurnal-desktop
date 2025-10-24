@@ -24,6 +24,7 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Pagination } from '@/common/components/pagination'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
 import { Textarea } from '@/common/components/ui/textarea'
@@ -57,6 +58,7 @@ export const PassportInfoAssignPositionDialog = ({
   const { t } = useTranslation(['app'])
 
   const [budjetId, setBudjetId] = useState<number>()
+  const [searchValue, setSearchValue] = useState<string>('')
   const [selectedVacant, setSelectedVacant] = useState<VacantTreeNode | null>(null)
   const [selectedWorkplace, setSelectedWorkplace] = useState<Workplace | null>(null)
 
@@ -74,7 +76,8 @@ export const PassportInfoAssignPositionDialog = ({
       {
         vacantId: selectedVacant?.id ?? 0,
         page: pagination.page,
-        limit: pagination.limit
+        limit: pagination.limit,
+        search: searchValue
       }
     ],
     queryFn: WorkplaceService.getWorkplaces,
@@ -102,6 +105,11 @@ export const PassportInfoAssignPositionDialog = ({
               <BudjetSelect
                 selectedKey={budjetId}
                 onSelectionChange={(value) => setBudjetId(value as number)}
+              />
+              <SearchInputDebounced
+                value={searchValue}
+                onValueChange={setSearchValue}
+                placeholder={t('search')}
               />
             </DialogHeader>
 

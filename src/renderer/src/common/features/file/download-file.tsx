@@ -26,6 +26,7 @@ export const DownloadFile = ({
   params,
   fileName,
   buttonText,
+  IconStart,
   ...props
 }: DownloadFileProps) => {
   const alertToggle = useToggle()
@@ -90,6 +91,8 @@ export const DownloadFile = ({
       >
         {isDownloadingFile ? (
           <Loader2 className="btn-icon icon-sm icon-start animate-spin" />
+        ) : IconStart ? (
+          <IconStart className="btn-icon icon-sm icon-start" />
         ) : (
           <Download className="btn-icon icon-sm icon-start" />
         )}
