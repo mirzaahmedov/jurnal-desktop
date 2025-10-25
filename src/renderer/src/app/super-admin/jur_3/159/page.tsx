@@ -120,6 +120,7 @@ const AdminOrgan159Page = () => {
           />
 
           <DownloadFile
+            withFullScreenLoader
             url="/admin/jur3-159/prixod/rasxod"
             fileName={`${t('pages.organization')}_${t('prixod')}/${t('rasxod')}_${from}:${to}.xlsx`}
             params={{

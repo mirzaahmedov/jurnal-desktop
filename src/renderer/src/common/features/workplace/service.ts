@@ -23,6 +23,8 @@ export class WorkplaceService {
         PaginationParams & {
           vacantId: number
           search?: string
+          orderBy?: string
+          orderType?: 'asc' | 'desc'
         }
       ]
     >
@@ -77,6 +79,15 @@ export class WorkplaceService {
     const res = await zarplataApiNew.delete<WorkplaceFormValues>(
       `${WorkplaceService.endpoint}/${id}`
     )
+    return res.data
+  }
+
+  static async dismissEmployee(id: number) {
+    const res = await zarplataApiNew.put<void>(`${WorkplaceService.endpoint}/dismiss`, undefined, {
+      params: {
+        id
+      }
+    })
     return res.data
   }
 }

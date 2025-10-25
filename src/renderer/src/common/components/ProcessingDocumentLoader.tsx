@@ -1,18 +1,14 @@
+import type { DialogTriggerProps } from 'react-aria-components'
+
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { useTranslation } from 'react-i18next'
 
-import { DialogContent, DialogOverlay, DialogTrigger } from '@/common/components/jolly/dialog'
+import { DialogContent, DialogOverlay, DialogTrigger } from './jolly/dialog'
 
-const DemoPage = () => {
-  return <ProcessingDocumentLoader />
-}
-
-export default DemoPage
-
-const ProcessingDocumentLoader = () => {
+export const ProcessingDocumentLoader = (props: Omit<DialogTriggerProps, 'children'>) => {
   const { t } = useTranslation()
   return (
-    <DialogTrigger isOpen>
+    <DialogTrigger {...props}>
       <DialogOverlay className="backdrop-blur-sm bg-black/50">
         <DialogContent
           closeButton={false}
@@ -30,7 +26,7 @@ const ProcessingDocumentLoader = () => {
 
               <div className="w-full max-w-xs mx-auto">
                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full animate-loading-bar"></div>
+                  <div className="bg-gradient-to-r from-brand to-brand/50 h-2 rounded-full animate-loading-bar"></div>
                 </div>
               </div>
             </div>

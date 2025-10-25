@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { BudjetSelect } from '@/app/super-admin/budjet/budjet-select'
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, useTableSort } from '@/common/components'
 import { FormElement } from '@/common/components/form'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
@@ -69,6 +69,7 @@ export const PassportInfoAssignPositionDialog = ({
   })
 
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes(budjetId)
+  const { sorting, getColumnSorted, handleSort } = useTableSort()
 
   const { data: workplaces, isFetching: isFetchingWorkplaces } = useQuery({
     queryKey: [
@@ -77,7 +78,9 @@ export const PassportInfoAssignPositionDialog = ({
         vacantId: selectedVacant?.id ?? 0,
         page: pagination.page,
         limit: pagination.limit,
-        search: searchValue
+        search: searchValue,
+        orderBy: sorting?.order_by,
+        orderType: sorting?.order_type.toLowerCase() as 'asc' | 'desc' | undefined
       }
     ],
     queryFn: WorkplaceService.getWorkplaces,
@@ -145,6 +148,8 @@ export const PassportInfoAssignPositionDialog = ({
                     <GenericTable
                       data={workplaces?.data ?? []}
                       columnDefs={WorkplaceColumns}
+                      getColumnSorted={getColumnSorted}
+                      onSort={handleSort}
                       selectedIds={selectedWorkplace ? [selectedWorkplace.id] : []}
                       className="table-generic-xs"
                       getRowClassName={(row) =>

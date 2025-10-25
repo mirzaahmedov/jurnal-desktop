@@ -24,7 +24,7 @@ import { SearchInputDebounced } from '@/common/components/search-input-debounced
 import { IDCell } from '@/common/components/table/renderers/id'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Badge } from '@/common/components/ui/badge'
-import { DownloadFile } from '@/common/features/file'
+import { DownloadFile, ImportFile } from '@/common/features/file'
 import { AlimentDeductionService } from '@/common/features/payroll-deduction/aliment-deductions/service'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useVacantTreeNodes } from '@/common/features/vacant/hooks/use-vacant-tree-nodes'
@@ -120,7 +120,15 @@ export const NachislenieReports = () => {
               }}
             />
 
-            <div className="flex items-center flex-wrap justify-end gap-2.5">
+            <div className="w-full max-w-4xl flex items-center flex-wrap justify-end gap-2.5">
+              <ImportFile
+                isZarplata
+                method="PUT"
+                url="ImportExcel/update-plastik"
+                icon={<BiCreditCard className="btn-icon mr-2" />}
+                buttonText={t('import_excel_plastik')}
+                params={{}}
+              />
               <DownloadFile
                 isZarplata
                 url="Excel2/get-plastik"
@@ -133,7 +141,6 @@ export const NachislenieReports = () => {
               <Button
                 onPress={() => alimonyToggle.open()}
                 IconStart={WalletCards}
-                className="ml-auto"
               >
                 {t('aliment')}
               </Button>

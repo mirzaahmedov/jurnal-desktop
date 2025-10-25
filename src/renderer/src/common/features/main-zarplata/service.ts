@@ -70,11 +70,13 @@ export class MainZarplataService {
           ostanovit?: boolean
           year?: number
           month?: number
+          orderBy?: string
+          orderType?: 'asc' | 'desc'
         }
       ]
     >
   ) {
-    const { vacantId, ostanovit, year, month } = ctx.queryKey[1]
+    const { vacantId, ostanovit, year, month, orderBy, orderType } = ctx.queryKey[1]
     const res = await zarplataApiNew.get<MainZarplata[]>(
       `${MainZarplataService.endpoint}/get-by-vacantId`,
       {
@@ -82,7 +84,9 @@ export class MainZarplataService {
           vacantId,
           ostanovit,
           year,
-          month
+          month,
+          orderBy,
+          orderType
         }
       }
     )

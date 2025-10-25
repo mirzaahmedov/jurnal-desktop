@@ -7,7 +7,7 @@ import { Allotment } from 'allotment'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, useTableSort } from '@/common/components'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
 import {
@@ -41,13 +41,16 @@ const PassportDetailsPage = () => {
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { openMainZarplataView } = useZarplataStore()
+  const { getColumnSorted, handleSort, sorting } = useTableSort()
 
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
   const { data: mainZarplata, isFetching: isFetchingMainZarplata } = useQuery({
     queryKey: [
       MainZarplataService.QueryKeys.GetByVacantId,
       {
-        vacantId: selectedVacant?.id ?? 0
+        vacantId: selectedVacant?.id ?? 0,
+        orderBy: sorting?.order_by,
+        orderType: sorting?.order_type.toLowerCase() as 'asc' | 'desc' | undefined
       }
     ],
     queryFn: MainZarplataService.getByVacantId,
@@ -144,6 +147,8 @@ const PassportDetailsPage = () => {
               columnDefs={MainZarplataColumnDefs}
               onEdit={handleRowEdit}
               onDelete={handleRowDelete}
+              getColumnSorted={getColumnSorted}
+              onSort={handleSort}
               getRowClassName={(row) => {
                 if (row.ostanovitRaschet) {
                   return 'bg-red-50 hover:bg-red-50 even:bg-red-50 even:hover:bg-red-50 [&_*]:text-red-600 [&_*]:border-red-200'

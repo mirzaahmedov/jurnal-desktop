@@ -1,6 +1,7 @@
+import type { AxiosResponse } from 'axios'
 import type { Accept } from 'react-dropzone'
 
-import { useCallback, useState } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 
 import { type MutationOptions, useMutation } from '@tanstack/react-query'
 import { CircleX, UploadCloud } from 'lucide-react'
@@ -21,6 +22,7 @@ import { Card } from '@/common/components/ui/card'
 import { Progress } from '@/common/components/ui/progress'
 import { useToggle } from '@/common/hooks'
 import { api } from '@/common/lib/http'
+import { zarplataApiNew } from '@/common/lib/zarplata'
 
 const acceptFiles: Accept = {
   'application/vnd.ms-excel': [],
@@ -28,12 +30,25 @@ const acceptFiles: Accept = {
 }
 
 export interface ImportFileDialogProps {
+  isZarplata?: boolean
   url: string
+  method?: 'POST' | 'PUT'
   params?: Record<string, unknown>
+  icon?: ReactNode
+  buttonText?: string
   onSuccess?: (res: unknown) => void
   onError?: MutationOptions<unknown, Error, File>['onError']
 }
-export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialogProps) => {
+export const ImportFile = ({
+  isZarplata,
+  method = 'POST',
+  url,
+  params,
+  icon,
+  buttonText,
+  onSuccess,
+  onError
+}: ImportFileDialogProps) => {
   const dialogToggle = useToggle()
 
   const [file, setFile] = useState<File>()
@@ -45,16 +60,30 @@ export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialog
     mutationFn: async (file: File) => {
       const formData = new FormData()
       formData.set('file', file)
-      const res = await api.post(url, formData, {
-        params,
-        onUploadProgress: (e) => {
-          if (!e.total) {
-            setProgress(null)
-            return
+      let res: AxiosResponse<any, any>
+      if (isZarplata) {
+        res = await zarplataApiNew[method.toLowerCase()](url, formData, {
+          params,
+          onUploadProgress: (e) => {
+            if (!e.total) {
+              setProgress(null)
+              return
+            }
+            setProgress((e.loaded / e.total) * 100)
           }
-          setProgress((e.loaded / e.total) * 100)
-        }
-      })
+        })
+      } else {
+        res = await api.post(url, formData, {
+          params,
+          onUploadProgress: (e) => {
+            if (!e.total) {
+              setProgress(null)
+              return
+            }
+            setProgress((e.loaded / e.total) * 100)
+          }
+        })
+      }
       return res.data
     },
     onSuccess(res) {
@@ -88,7 +117,7 @@ export const ImportFile = ({ url, params, onSuccess, onError }: ImportFileDialog
       onOpenChange={handleOpenChange}
     >
       <Button>
-        <UploadCloud className="btn-icon mr-2" /> {t('import-excel')}
+        {icon ?? <UploadCloud className="btn-icon mr-2" />} {buttonText ?? t('import-excel')}
       </Button>
       <DialogOverlay>
         <DialogContent className="pt-10 w-full max-w-xl">

@@ -25,13 +25,15 @@ export const Signatures: FC<{
             <View>
               <Text>
                 {i18n.language === 'uz'
-                  ? p.doljnost_name
+                  ? transliterator.textToLatin(p.doljnost_name)
                   : transliterator.textToCyrillic(p.doljnost_name)}
               </Text>
             </View>
             <View>
               <Text style={{ fontWeight: 'bold', textAlign: 'right' }}>
-                {i18n.language === 'uz' ? p.fio_name : transliterator.textToCyrillic(p.fio_name)}
+                {i18n.language === 'uz'
+                  ? transliterator.textToLatin(p.fio_name)
+                  : transliterator.textToCyrillic(p.fio_name)}
               </Text>
             </View>
           </View>

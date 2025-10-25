@@ -6,12 +6,13 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { Edit, Plus, Trash2 } from 'lucide-react'
+import { Edit, Plus, Trash2, UserMinus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
-import { GenericTable, LoadingOverlay } from '@/common/components'
+import { GenericTable, LoadingOverlay, useTableSort } from '@/common/components'
 import { Button } from '@/common/components/jolly/button'
+import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
 import { DownloadFile } from '@/common/features/file'
@@ -70,6 +71,7 @@ const StaffingTable = () => {
   })
 
   const { filteredTreeNodes, search, setSearch, vacantsQuery } = useVacantTreeNodes()
+  const { sorting, getColumnSorted, handleSort } = useTableSort()
 
   const { mutate: createVacant, isPending: isCreatingVacant } = useMutation({
     mutationFn: VacantService.create,
@@ -121,7 +123,9 @@ const StaffingTable = () => {
         vacantId: selectedVacant?.id ?? 0,
         page: pagination.page,
         limit: pagination.limit,
-        search: searchFilter
+        search: searchFilter,
+        orderBy: sorting?.order_by,
+        orderType: sorting?.order_type.toLowerCase() as 'asc' | 'desc' | undefined
       }
     ],
     queryFn: WorkplaceService.getWorkplaces,
@@ -159,6 +163,20 @@ const StaffingTable = () => {
   })
   const { mutate: deleteWorkplace, isPending: isDeletingWorkplace } = useMutation({
     mutationFn: WorkplaceService.deleteWorkplace,
+    onSuccess: () => {
+      workplaceDialogToggle.setOpen(false)
+
+      toast.success(t('delete_success'))
+      queryClient.invalidateQueries({
+        queryKey: [WorkplaceService.QueryKeys.GetAll]
+      })
+    },
+    onError: () => {
+      toast.error(t('delete_failed'))
+    }
+  })
+  const dismissEmployee = useMutation({
+    mutationFn: WorkplaceService.dismissEmployee,
     onSuccess: () => {
       workplaceDialogToggle.setOpen(false)
 
@@ -367,9 +385,31 @@ const StaffingTable = () => {
               <GenericTable
                 data={workplaces?.data ?? []}
                 columnDefs={WorkplaceColumns}
+                onSort={handleSort}
+                getColumnSorted={getColumnSorted}
                 onEdit={handleEditWorkplace}
                 onDelete={handleDeleteWorkplace}
-                actions={(row) => <WorkplaceDuplicate values={row} />}
+                actionsWidth={200}
+                actions={(row) => (
+                  <div className="flex items-center">
+                    <TooltipTrigger delay={200}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => {
+                          dismissEmployee.mutate(row.id)
+                        }}
+                        isPending={
+                          dismissEmployee.variables === row.id && dismissEmployee.isPending
+                        }
+                      >
+                        <UserMinus className="btn-icon text-red-500 hover:text-red-600" />
+                      </Button>
+                      <Tooltip>{t('remove_from_position')}</Tooltip>
+                    </TooltipTrigger>
+                    <WorkplaceDuplicate values={row} />
+                  </div>
+                )}
                 className="table-generic-xs"
               />
             </div>

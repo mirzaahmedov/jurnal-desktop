@@ -31,13 +31,10 @@ export const Downloads = () => {
         </Button>
         <Tooltip>{t('app.downloads')}</Tooltip>
       </TooltipTrigger>
-      <Popover
-        placement="top end"
-        className=""
-      >
-        <PopoverDialog className="w-full max-w-2xl p-0 text-foreground">
+      <Popover placement="top end">
+        <PopoverDialog className="p-0 text-foreground overflow-hidden">
           {files.length ? (
-            <div className="p-2.5 flex items-center justify-end">
+            <div className="p-2.5 flex items-center justify-end border-b">
               <Button
                 variant="link"
                 className="text-xs font-bold text-slate-500"
@@ -47,9 +44,9 @@ export const Downloads = () => {
               </Button>
             </div>
           ) : null}
-          <div className="divide-y">
-            {files.length ? (
-              files.map((file) => (
+          {files.length ? (
+            <div className="p-0 m-0 divide-y">
+              {files.map((file) => (
                 <FileItem
                   key={file.path}
                   fileName={file.name}
@@ -60,15 +57,15 @@ export const Downloads = () => {
                   onOpen={window.downloader.openFile}
                   onOpenFileInFolder={window.downloader.openFileInFolder}
                 />
-              ))
-            ) : (
-              <div className="py-10 px-32">
-                <EmptyList>
-                  <Trans>no_downloaded_files</Trans>
-                </EmptyList>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="h-full flex items-center justify-center">
+              <EmptyList>
+                <Trans>no_downloaded_files</Trans>
+              </EmptyList>
+            </div>
+          )}
         </PopoverDialog>
       </Popover>
     </PopoverTrigger>

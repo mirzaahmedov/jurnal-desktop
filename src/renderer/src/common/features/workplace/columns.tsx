@@ -19,7 +19,8 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
   {
     key: 'id',
     renderCell: IDCell,
-    minWidth: 90
+    minWidth: 90,
+    sort: true
   },
   {
     minWidth: 80,
@@ -28,12 +29,14 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
   },
   {
     minWidth: 300,
+    sort: true,
     key: 'fio'
   },
   {
     minWidth: 200,
     key: 'spravochnikZarpaltaDoljnostName',
-    header: 'doljnost'
+    header: 'doljnost',
+    sort: true
   },
   {
     numeric: true,
@@ -51,7 +54,8 @@ export const WorkplaceColumns: ColumnDef<Workplace>[] = [
   {
     numeric: true,
     minWidth: 130,
-    key: 'oklad'
+    key: 'oklad',
+    sort: true
   },
   {
     minWidth: 50,

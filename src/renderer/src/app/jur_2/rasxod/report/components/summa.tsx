@@ -5,7 +5,7 @@ import { Flex, Label, TextBox } from '@/common/components/pdf'
 type SummaProps = {
   summa: string
 }
-const Summa = ({ summa }: SummaProps) => {
+export const Summa = ({ summa }: SummaProps) => {
   const { t } = useTranslation(['porucheniya'])
   return (
     <Flex>
@@ -19,5 +19,3 @@ const Summa = ({ summa }: SummaProps) => {
     </Flex>
   )
 }
-
-export { Summa }

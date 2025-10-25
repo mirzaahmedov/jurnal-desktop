@@ -8,16 +8,20 @@ export const MainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
   {
     key: 'kartochka',
     minWidth: 100,
+    sort: true,
     header: 'card_num'
   },
   {
     key: 'fio',
+    sort: true,
     minWidth: 300
   },
   {
-    key: 'doljnostName',
+    key: 'spravochnikDoljnostName',
     minWidth: 200,
-    header: 'doljnost'
+    sort: true,
+    header: 'doljnost',
+    renderCell: (row) => <span>{row.doljnostName}</span>
   },
   {
     key: 'spravochikZarplataZvanieName',
@@ -25,9 +29,10 @@ export const MainZarplataColumnDefs: ColumnDef<MainZarplata>[] = [
     header: 'military_rank'
   },
   {
-    key: 'doljnostOklad',
+    key: 'oklad',
     header: 'oklad',
     numeric: true,
+    sort: true,
     renderCell: (row) => <SummaCell summa={row.doljnostOklad} />
   },
   {

@@ -1,15 +1,18 @@
 import type { Podpis } from '@/common/models'
 
 import { View } from '@react-pdf/renderer'
+import Translator from 'lotin-kirill'
 import { useTranslation } from 'react-i18next'
 
 import { Flex, Label, TextBox } from '@/common/components/pdf'
+
+const translator = new Translator()
 
 type SignaturesProps = {
   podpis: Podpis[]
 }
 export const Signatures = ({ podpis }: SignaturesProps) => {
-  const { t } = useTranslation(['porucheniya'])
+  const { t, i18n } = useTranslation(['porucheniya'])
   return (
     <>
       <Flex alignItems="flex-start">
@@ -24,9 +27,15 @@ export const Signatures = ({ podpis }: SignaturesProps) => {
                   textAlign: 'right'
                 }}
               >
-                {p.doljnost_name}
+                {i18n.language === 'uz'
+                  ? translator.textToLatin(p.doljnost_name)
+                  : translator.textToCyrillic(p.doljnost_name)}
               </Label>
-              <TextBox style={{ flex: 1, minHeight: 35 }}>{p.fio_name}</TextBox>
+              <TextBox style={{ flex: 1, minHeight: 35 }}>
+                {i18n.language === 'uz'
+                  ? translator.textToLatin(p.fio_name)
+                  : translator.textToCyrillic(p.fio_name)}
+              </TextBox>
             </>
           ))}
       </Flex>

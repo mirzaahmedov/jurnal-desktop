@@ -4,6 +4,7 @@ import type { AxiosResponse } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { Download, Loader2 } from 'lucide-react'
 
+import { ProcessingDocumentLoader } from '@/common/components/ProcessingDocumentLoader'
 import { Button } from '@/common/components/jolly/button'
 // import { useSettingsStore } from '@/common/features/settings'
 import { useToggle } from '@/common/hooks'
@@ -14,6 +15,7 @@ import { useDownloadsManagerStore } from '../downloads-manager/store'
 import { SelectReportTitleAlert } from './select-report-title-alert'
 
 export type DownloadFileProps = ButtonProps & {
+  withFullScreenLoader?: boolean
   isZarplata?: boolean
   url: string
   params: Record<string, any>
@@ -21,6 +23,7 @@ export type DownloadFileProps = ButtonProps & {
   buttonText?: string
 }
 export const DownloadFile = ({
+  withFullScreenLoader = false,
   isZarplata = false,
   url,
   params,
@@ -102,6 +105,7 @@ export const DownloadFile = ({
         open={alertToggle.isOpen}
         onOpenChange={alertToggle.setOpen}
       />
+      {withFullScreenLoader ? <ProcessingDocumentLoader isOpen={isDownloadingFile} /> : null}
     </>
   )
 }

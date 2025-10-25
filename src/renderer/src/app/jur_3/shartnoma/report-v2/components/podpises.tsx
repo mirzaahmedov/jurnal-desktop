@@ -34,7 +34,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
                 <View style={{ flex: 1 }}>
                   <Text>
                     {i18n.language === 'uz'
-                      ? podpis.doljnost_name
+                      ? transliterator.textToLatin(podpis.doljnost_name)
                       : transliterator.textToCyrillic(podpis.doljnost_name)}
                   </Text>
                 </View>
@@ -42,7 +42,7 @@ export const Podpises = ({ year, podpises }: PodpisProps) => {
                 <View style={{ flex: 2 }}>
                   <Text style={{ fontWeight: 'bold', textAlign: 'right' }}>
                     {i18n.language === 'uz'
-                      ? podpis.fio_name
+                      ? transliterator.textToLatin(podpis.fio_name)
                       : transliterator.textToCyrillic(podpis.fio_name)}
                   </Text>
                 </View>
