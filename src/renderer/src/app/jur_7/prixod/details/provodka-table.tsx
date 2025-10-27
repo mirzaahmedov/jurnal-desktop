@@ -83,15 +83,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
   return (
     <div>
       <div className="overflow-x-auto scrollbar relative">
-        <div
-          onFocus={(e) => {
-            e.currentTarget.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest'
-            })
-          }}
-          className="w-[2500px]"
-        >
+        <div className="w-[2500px]">
           <AddExistingProductDialog
             responsible_id={form.watch('kimga_id')}
             to={form.watch('doc_date')}
@@ -768,7 +760,7 @@ export const ProvodkaTable = ({ form, tabIndex, ...props }: ProvodkaTableProps) 
       </div>
       <div className="mt-5 flex items-center justify-center">
         <Pagination
-          disablePageSize={false}
+          disablePageSize={true}
           page={page}
           limit={PAGE_SIZE}
           onChange={({ page }) => setPage(page ?? 1)}

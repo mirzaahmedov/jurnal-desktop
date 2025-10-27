@@ -1,5 +1,6 @@
 export interface OtdelniyRaschet {
   id: number
+  fio: string
   spravochnikBudjetNameId: number
   mainSchetId: number
   nachislenieYear: number

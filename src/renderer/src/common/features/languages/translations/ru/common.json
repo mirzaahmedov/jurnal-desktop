@@ -590,5 +590,6 @@
   "message": "Сообщение",
   "additional_file": "Дополнительный файл",
   "feedback_sent_successfully": "Обратная связь успешно отправлена",
-  "has_gotten_payroll": "Получил зарплату"
+  "has_gotten_payroll": "Получил зарплату",
+  "import_excel_plastik": "Импорт из Excel (Пластик)"
 }

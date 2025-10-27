@@ -589,5 +589,6 @@
   "message": "Xabar",
   "additional_file": "Qo'shimcha fayl",
   "feedback_sent_successfully": "Fikr-mulohaza muvaffaqiyatli yuborildi",
-  "has_gotten_payroll": "Ish haqi olgan"
+  "has_gotten_payroll": "Ish haqi olgan",
+  "import_excel_plastik": "Excel-dan import qilish (plastik)"
 }

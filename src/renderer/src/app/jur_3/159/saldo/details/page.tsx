@@ -286,8 +286,10 @@ const OrganSaldoDetailsPage = () => {
       const value = e.currentTarget.value
       if (value.length > 0) {
         const rows = form.getValues('organizations')
-        const index = rows.findIndex((row) =>
-          row.name?.toLowerCase()?.includes(value?.toLowerCase())
+        const index = rows.findIndex(
+          (row) =>
+            row.name?.toLowerCase()?.includes(value?.toLowerCase()) ||
+            row.inn?.toLowerCase()?.includes(value?.toLowerCase())
         )
         gridApi?.forEachNode((node) => {
           if (node.data.__originalIndex === index) {

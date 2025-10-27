@@ -3,7 +3,6 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useEffect, useState } from 'react'
 
-import { TreeViewIcon } from '@phosphor-icons/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
 import { Download, Plus, Search, Sigma, UserSquare } from 'lucide-react'
@@ -15,7 +14,6 @@ import { toast } from 'react-toastify'
 import { MainZarplataTable } from '@/app/jur_5/common/features/main-zarplata/main-zarplata-table'
 import { useMainZarplataList } from '@/app/jur_5/common/features/main-zarplata/use-fetchers'
 import { MainZarplataInfo } from '@/app/jur_5/passport-info/components'
-import { OtdelniyRaschetColumnDefs } from '@/app/jur_5/passport-info/otdelniy-raschet/columns'
 import { OtdelniyRaschetService } from '@/app/jur_5/passport-info/otdelniy-raschet/service'
 import {
   FooterCell,
@@ -40,6 +38,7 @@ import {
 } from '@/common/components/jolly/dialog'
 import { MonthSelect } from '@/common/components/month-select'
 import { PDFSaver } from '@/common/components/pdf-saver'
+import { SearchInputDebounced } from '@/common/components/search-input-debounced'
 import { SummaCell } from '@/common/components/table/renderers/summa'
 import { Form, FormField } from '@/common/components/ui/form'
 import { Input } from '@/common/components/ui/input'
@@ -89,6 +88,7 @@ export const NachislenieEditDialog = ({
   const { openMainZarplataView } = useZarplataStore()
 
   const [tabValue, setTabValue] = useState(TabOptions.View)
+  const [searchValue, setSearchValue] = useState('')
   const [comboValue, setComboValue] = useState(null)
   const [mainZarplataId, setMainZarplataId] = useState<number | null>(null)
   const [otdelniyRaschetData, setOtdelniyRaschetData] = useState<any>(null)
@@ -428,6 +428,13 @@ export const NachislenieEditDialog = ({
                     {t('add')}
                   </Button>
                 )}
+
+                {tabValue === TabOptions.OtdelniyRaschet && (
+                  <SearchInputDebounced
+                    value={searchValue}
+                    onValueChange={setSearchValue}
+                  />
+                )}
               </DialogHeader>
 
               {tabValue === TabOptions.View && (
@@ -662,7 +669,22 @@ export const NachislenieEditDialog = ({
                         className: 'font-black'
                       }
                     ]}
-                    data={otdelniyRaschetQuery?.data ?? []}
+                    data={
+                      otdelniyRaschetQuery?.data?.filter((item) => {
+                        console.log({ item })
+                        return (
+                          item.docNum
+                            ?.toString()
+                            .toLowerCase()
+                            ?.includes(searchValue?.toLowerCase()) ||
+                          item.docDate
+                            ?.toString()
+                            ?.toLowerCase()
+                            ?.includes(searchValue?.toLowerCase()) ||
+                          item.fio?.toString()?.toLowerCase()?.includes(searchValue?.toLowerCase())
+                        )
+                      }) ?? []
+                    }
                     className="table-generic-xs"
                   >
                     {({ row }) => (
