@@ -106,9 +106,9 @@ const SmetaGrafikPage = () => {
           onDelete={handleClickDelete}
           getRowDeletable={(row) => row.isdeleted}
           getRowEditable={(row) => row.isdeleted}
-          actions={(row) =>
-            !row.isdeleted ? (
-              <>
+          actions={(row) => (
+            <>
+              {!row.isdeleted ? (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -118,36 +118,37 @@ const SmetaGrafikPage = () => {
                 >
                   <Eye className="btn-icon" />
                 </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                    >
-                      <Ellipsis className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="left"
-                    onCloseAutoFocus={(e) => e.preventDefault()}
+              ) : null}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
                   >
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <DownloadFile
-                        url={`/smeta/grafik/${row.id}`}
-                        fileName={`График_${row.year}.xlsx`}
-                        buttonText={t('download')}
-                        params={{
-                          main_schet_id,
-                          year: row.year,
-                          excel: true
-                        }}
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : null
-          }
+                    <Ellipsis className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="left"
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <DownloadFile
+                      url={`/smeta/grafik/${row.id}`}
+                      fileName={`График_${row.year}.xlsx`}
+                      buttonText={t('download')}
+                      params={{
+                        main_schet_id,
+                        year: row.year,
+                        excel: true
+                      }}
+                    />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
         />
       </ListView.Content>
       <ListView.Footer className="flex items-center justify-between">

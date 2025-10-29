@@ -32,7 +32,7 @@ export const Downloads = () => {
         <Tooltip>{t('app.downloads')}</Tooltip>
       </TooltipTrigger>
       <Popover placement="top end">
-        <PopoverDialog className="p-0 text-foreground overflow-hidden">
+        <PopoverDialog className="p-0 text-foreground overflow-hidden max-w-md min-w-[400px] h-full min-h-[300px] flex flex-col">
           {files.length ? (
             <div className="p-2.5 flex items-center justify-end border-b">
               <Button
@@ -45,7 +45,7 @@ export const Downloads = () => {
             </div>
           ) : null}
           {files.length ? (
-            <div className="p-0 m-0 divide-y">
+            <div className="p-0 m-0 divide-y flex-1">
               {files.map((file) => (
                 <FileItem
                   key={file.path}
@@ -60,7 +60,7 @@ export const Downloads = () => {
               ))}
             </div>
           ) : (
-            <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center flex-1">
               <EmptyList>
                 <Trans>no_downloaded_files</Trans>
               </EmptyList>

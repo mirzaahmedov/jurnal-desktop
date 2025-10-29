@@ -390,7 +390,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
       </EditableTableCell>
       <EditableTableCell style={{ width: 300 }}>
         <TextEditor
-          value={row?.name ?? ''}
+          value={row?.organ_name ?? ''}
           readOnly
         />
       </EditableTableCell>
@@ -500,7 +500,7 @@ const Row = ({ index, row, rows, highlightedRow, onCellDoubleClick, ...props }: 
       </EditableTableCell>
       <EditableTableCell style={{ width: 300 }}>
         <TextEditor
-          value={row?.name_year ?? ''}
+          value={row?.organ_name_year ?? ''}
           readOnly
         />
       </EditableTableCell>

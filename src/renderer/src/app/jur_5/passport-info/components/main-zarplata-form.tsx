@@ -9,6 +9,7 @@ import Transliterator from 'lotin-kirill'
 import { Calculator } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { TbListCheck } from 'react-icons/tb'
 import { toast } from 'react-toastify'
 
 import { ZarplataSpravochnikType } from '@/app/super-admin/zarplata/spravochnik/config'
@@ -30,6 +31,7 @@ import { PersonService } from '@/common/features/integrations/person/service'
 import { DissmisEmployee } from '@/common/features/main-zarplata/dismiss-main-zarplata-dialog'
 import { MainZarplataService } from '@/common/features/main-zarplata/service'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { useToggle } from '@/common/hooks'
 import { formatDate, getDateDifference, parseDate, parseLocaleDate } from '@/common/lib/date'
 import { formatLocaleDate } from '@/common/lib/format'
 import { cn } from '@/common/lib/utils'
@@ -37,6 +39,7 @@ import { cn } from '@/common/lib/utils'
 import { getVacantRayon } from '../../common/utils/vacant'
 import { BankCardForm } from '../bank-card/bank-card-form'
 import { MainZarplataFormSchema, defaultValues } from '../config'
+import { Privileges } from './privileges'
 
 const transliterator = new Transliterator()
 
@@ -67,6 +70,7 @@ export const MainZarplataForm = ({
   const [profileImage, setProfileImage] = useState<string>()
 
   const queryClient = useQueryClient()
+  const privilegesToggle = useToggle()
   const form = useForm({
     resolver: zodResolver(MainZarplataFormSchema),
     defaultValues
@@ -232,12 +236,22 @@ export const MainZarplataForm = ({
     startOfYear
   )
 
+  console.log({ mainZarplataData, privilegesToggle })
+
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
         className="h-full px-0 flex flex-col"
       >
+        {mainZarplataData ? (
+          <Privileges
+            mainZarplataId={mainZarplataData?.id}
+            isOpen={privilegesToggle.isOpen}
+            onOpenChange={privilegesToggle.setOpen}
+          />
+        ) : null}
+
         <div className="grid grid-cols-12 gap-2.5 flex-1 overflow-auto justify-center items-start scrollbar px-2.5 pb-5">
           <div
             className={cn(
@@ -277,7 +291,7 @@ export const MainZarplataForm = ({
               <div className="flex flex-col gap-2 py-1">
                 {onCalculate ? (
                   <Button
-                    onClick={() => onCalculate?.(mainZarplataData?.id ?? 0)}
+                    onPress={() => onCalculate?.(mainZarplataData?.id ?? 0)}
                     isDisabled={!mainZarplataData || isCalculating || isUpdating || isCreating}
                     className="mb-2"
                   >
@@ -308,7 +322,7 @@ export const MainZarplataForm = ({
                 )}
               />
             </div>
-            <div className="col-span-full flex items-center flex-wrap gap-10">
+            <div className="col-span-full flex items-center flex-wrap gap-5">
               <FormField
                 control={form.control}
                 name="xarbiy"
@@ -379,6 +393,13 @@ export const MainZarplataForm = ({
                   </FormElement>
                 )}
               />
+
+              <Button
+                IconStart={TbListCheck}
+                onPress={() => privilegesToggle.open()}
+              >
+                {t('privileges')}
+              </Button>
             </div>
             <FormField
               control={form.control}

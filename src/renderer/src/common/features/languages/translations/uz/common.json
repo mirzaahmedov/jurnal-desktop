@@ -590,5 +590,7 @@
   "additional_file": "Qo'shimcha fayl",
   "feedback_sent_successfully": "Fikr-mulohaza muvaffaqiyatli yuborildi",
   "has_gotten_payroll": "Ish haqi olgan",
-  "import_excel_plastik": "Excel-dan import qilish (plastik)"
+  "import_excel_plastik": "Excel-dan import qilish (plastik)",
+  "privileges": "Imtiyozlar",
+  "privilege": "Imtiyoz"
 }

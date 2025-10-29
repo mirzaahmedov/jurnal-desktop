@@ -19,5 +19,5 @@ export type SigninResponse = {
 
 export const defaultValues: SigninFormValues = {
   login: import.meta.env.DEV ? 'Тошкент ВФВБ' : '',
-  password: import.meta.env.DEV ? '123' : ''
+  password: import.meta.env.DEV ? '202560262' : ''
 }
