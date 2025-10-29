@@ -11,6 +11,7 @@ export class AlimentDeductionService {
   static QueryKeys = {
     GetAll: 'AlimentDeduction/all',
     GetById: 'AlimentDeduction/:id',
+    GetDeductionId: 'AlimentDeduction/deductionId',
     GetAliments: 'AlimentDeduction/aliments'
   }
 
@@ -25,6 +26,21 @@ export class AlimentDeductionService {
         mainId
       }
     })
+    return res.data
+  }
+
+  static async getDeductionId(
+    ctx: QueryFunctionContext<[typeof AlimentDeductionService.QueryKeys.GetDeductionId, number]>
+  ) {
+    const deductionId = ctx.queryKey[1]
+    const res = await zarplataApiNew.get<AlimentDeduction[]>(
+      `${AlimentDeductionService.endpoint}/get-deductionId`,
+      {
+        params: {
+          deductionId
+        }
+      }
+    )
     return res.data
   }
 

@@ -29,7 +29,7 @@ import { Input } from './ui/input'
 
 export type JollyDatePickerProps = Omit<PatternFormatProps<InputProps>, 'format' | 'onChange'> & {
   value?: string
-  onChange?: (value: string) => void
+  onChange?: (value: string, source: 'event' | 'prop' | 'blur') => void
   className?: string
   containerProps?: HTMLAttributes<HTMLDivElement>
   placeholder?: string
@@ -74,25 +74,25 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
       setMonthValue(value ? parseDate(value) : new Date())
     }, [formatValue, value])
 
-    const handleChange: OnValueChange = (values) => {
+    const handleChange: OnValueChange = (values, source) => {
       const value = values.formattedValue
       setInternalValue(value)
 
       if (values.value.length !== 8) {
-        onChange?.('')
+        onChange?.('', source.source)
         return
       }
 
       const isValid = validate(localeDateToISO(value))
       if (isValid) {
         const rawValue = unformatValue(value)
-        onChange?.(rawValue)
+        onChange?.(rawValue, source.source)
         setMonthValue(parseDate(rawValue))
       } else {
         if (validate === validateDate) {
           toast.error(t('date_does_not_exist'))
         }
-        onChange?.('')
+        onChange?.('', source.source)
         setInternalValue('')
         setMonthValue(new Date())
       }
@@ -100,7 +100,7 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
 
     const handleBlur = () => {
       if (!internalValue) {
-        onChange?.('')
+        onChange?.('', 'blur')
         setMonthValue(new Date())
         return
       }
@@ -108,7 +108,7 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
         if (validate === validateDate) {
           toast.error(t('date_does_not_exist'))
         }
-        onChange?.('')
+        onChange?.('', 'blur')
         setInternalValue('')
       }
     }
@@ -234,12 +234,12 @@ export const JollyDatePicker = forwardRef<HTMLButtonElement, JollyDatePickerProp
                   return
                 }
                 if (!date || !validate(formatDate(date))) {
-                  onChange?.('')
+                  onChange?.('', 'event')
                   setMonthValue(new Date())
                   calendarToggle.close()
                   return
                 }
-                onChange?.(formatDate(date))
+                onChange?.(formatDate(date), 'event')
                 setMonthValue(date)
                 calendarToggle.close()
               }}

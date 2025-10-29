@@ -5,7 +5,11 @@ export const AlimentDeductionFormSchema = z.object({
   deductionId: z.number(),
   poluchatelFio: z.string(),
   cardNumber: z.string(),
-  organizationId: z.number()
+  organizationId: z.number(),
+  totalAmount: z.number(),
+  dateStart: z.string(),
+  dateFinish: z.string(),
+  monthlyAmount: z.number()
 })
 
 export type AlimentDeductionFormValues = z.infer<typeof AlimentDeductionFormSchema>
@@ -15,5 +19,9 @@ export const defaultValues: AlimentDeductionFormValues = {
   deductionId: 0,
   poluchatelFio: '',
   cardNumber: '',
-  organizationId: 0
+  organizationId: 0,
+  totalAmount: 0,
+  dateStart: '',
+  dateFinish: '',
+  monthlyAmount: 0
 }

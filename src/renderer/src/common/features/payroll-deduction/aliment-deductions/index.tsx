@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { SummaCell } from '@/common/components/table/renderers/summa'
 import { useToggle } from '@/common/hooks'
 
 import { useConfirm } from '../../confirm'
@@ -41,9 +42,9 @@ export const AlimentDeductionsDialog: FC<AlimentDeductionsDialogProps> = ({
   const queryClient = useQueryClient()
 
   const alimentDeductionsQuery = useQuery({
-    queryKey: [AlimentDeductionService.QueryKeys.GetAll, { mainId: mainZarplataId }],
-    queryFn: AlimentDeductionService.getAll,
-    enabled: !!mainZarplataId
+    queryKey: [AlimentDeductionService.QueryKeys.GetDeductionId, deductionId],
+    queryFn: AlimentDeductionService.getDeductionId,
+    enabled: !!deductionId
   })
 
   const alimentDeleteMutation = useMutation({
@@ -96,6 +97,24 @@ export const AlimentDeductionsDialog: FC<AlimentDeductionsDialogProps> = ({
                       {
                         key: 'cardNumber',
                         header: 'card_number'
+                      },
+                      {
+                        key: 'dateStart',
+                        header: t('date_start')
+                      },
+                      {
+                        key: 'dateFinish',
+                        header: t('date_finish')
+                      },
+                      {
+                        key: 'totalAmount',
+                        header: t('total_amount'),
+                        renderCell: (row) => <SummaCell summa={row.totalAmount ?? 0} />
+                      },
+                      {
+                        key: 'monthlyAmount',
+                        header: t('monthly_amount'),
+                        renderCell: (row) => <SummaCell summa={row.monthlyAmount ?? 0} />
                       }
                     ] satisfies ColumnDef<AlimentDeduction>[]
                   }

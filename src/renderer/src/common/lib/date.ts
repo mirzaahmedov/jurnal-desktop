@@ -222,3 +222,21 @@ export const getWorkdaysInMonth = (
     weekends: totalDays - workdays
   }
 }
+
+export const getMonthsInPeriod = (dateStart: string, dateEnd: string) => {
+  console.log({ dateStart, dateEnd })
+  const start = parseDate(dateStart)
+  const end = parseDate(dateEnd)
+
+  console.log(
+    Math.max(end.getFullYear() - start.getFullYear(), 0) * 12 +
+      Math.max(end.getMonth() - start.getMonth(), 0) +
+      1
+  )
+
+  return (
+    Math.max(end.getFullYear() - start.getFullYear(), 0) * 12 +
+    Math.max(end.getMonth() - start.getMonth(), 0) +
+    1
+  )
+}

@@ -1,16 +1,3 @@
-import type { AlimentDeduction } from '@/common/models/payroll-deduction'
-import type { DialogTriggerProps } from 'react-aria-components'
-
-import { useEffect } from 'react'
-
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-
-import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
-import { FormElement } from '@/common/components/form'
-import { Button } from '@/common/components/jolly/button'
 import {
   DialogContent,
   DialogFooter,
@@ -20,11 +7,25 @@ import {
   DialogTrigger
 } from '@/common/components/jolly/dialog'
 import { Form, FormField } from '@/common/components/ui/form'
-import { Input } from '@/common/components/ui/input'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
+import { formatDate, getMonthsInPeriod, parseLocaleDate } from '@/common/lib/date'
+import { useEffect, useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { defaultValues } from './config'
+import type { AlimentDeduction } from '@/common/models/payroll-deduction'
 import { AlimentDeductionService } from './service'
+import { Button } from '@/common/components/jolly/button'
+import type { DialogTriggerProps } from 'react-aria-components'
+import { FormElement } from '@/common/components/form'
+import { Input } from '@/common/components/ui/input'
+import { JollyDatePicker } from '@/common/components/jolly-date-picker'
+import { NumericInput } from '@/common/components'
+import { createOrganizationSpravochnik } from '@/app/region-spravochnik/organization'
+import { defaultValues } from './config'
+import { formatLocaleDate } from '@/common/lib/format'
+import { toast } from 'react-toastify'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export interface AlimentDeductionDialogProps extends Omit<DialogTriggerProps, 'children'> {
   mainZarplataId: number
@@ -38,6 +39,8 @@ export const AlimentDeductionDialog = ({
   ...props
 }: AlimentDeductionDialogProps) => {
   const { t } = useTranslation(['app'])
+
+  const [monthCount, setMonthCount] = useState(0)
 
   const queryClient = useQueryClient()
   const form = useForm({
@@ -81,6 +84,8 @@ export const AlimentDeductionDialog = ({
         id: alimentDeductionData.id,
         values: {
           ...values,
+          dateStart: formatLocaleDate(values.dateStart),
+          dateFinish: formatLocaleDate(values.dateFinish),
           deductionId
         }
       })
@@ -90,7 +95,11 @@ export const AlimentDeductionDialog = ({
         mainZarplataId,
         cardNumber: values.cardNumber,
         poluchatelFio: values.poluchatelFio,
-        organizationId: values.organizationId
+        organizationId: values.organizationId,
+        totalAmount: values.totalAmount,
+        dateStart: formatLocaleDate(values.dateStart),
+        dateFinish: formatLocaleDate(values.dateFinish),
+        monthlyAmount: values.monthlyAmount
       })
     }
   }
@@ -102,9 +111,27 @@ export const AlimentDeductionDialog = ({
         poluchatelFio: alimentDeductionData.poluchatelFio,
         organizationId: alimentDeductionData.organizationId,
         deductionId: alimentDeductionData.deductionId,
-        mainZarplataId: alimentDeductionData.mainZarplataId
+        mainZarplataId: alimentDeductionData.mainZarplataId,
+        totalAmount: alimentDeductionData.totalAmount,
+        dateStart: alimentDeductionData.dateStart
+          ? formatDate(parseLocaleDate(alimentDeductionData.dateStart))
+          : '',
+        dateFinish: alimentDeductionData.dateFinish
+          ? formatDate(parseLocaleDate(alimentDeductionData.dateFinish))
+          : '',
+        monthlyAmount: alimentDeductionData.monthlyAmount
       })
+      if (alimentDeductionData.dateStart && alimentDeductionData.dateFinish) {
+        const monthCount = getMonthsInPeriod(
+          alimentDeductionData.dateStart,
+          alimentDeductionData.dateFinish
+        )
+        setMonthCount(monthCount)
+      } else {
+        setMonthCount(0)
+      }
     } else {
+      setMonthCount(0)
       form.reset(defaultValues)
     }
   }, [alimentDeductionData])
@@ -144,6 +171,116 @@ export const AlimentDeductionDialog = ({
                       </FormElement>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="dateStart"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('date_start')}
+                        grid="2:4"
+                      >
+                        <JollyDatePicker
+                          {...field}
+                          onChange={(dateString) => {
+                            field.onChange(dateString)
+
+                            const dateFinish = form.getValues('dateFinish')
+                            if (!dateFinish || !dateString) {
+                              setMonthCount(0)
+                              return
+                            }
+
+                            const monthCount = getMonthsInPeriod(dateString, dateFinish)
+                            const totalAmount = form.getValues('totalAmount')
+
+                            setMonthCount(monthCount)
+                            form.setValue('monthlyAmount', totalAmount / monthCount)
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="dateFinish"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('date_finish')}
+                        grid="2:4"
+                      >
+                        <JollyDatePicker
+                          {...field}
+                          onChange={(dateString) => {
+                            field.onChange(dateString)
+
+                            const dateStart = form.getValues('dateStart')
+                            if (!dateStart || !dateString) {
+                              setMonthCount(0)
+                              return
+                            }
+
+                            const monthCount = getMonthsInPeriod(dateStart, dateString)
+                            const totalAmount = form.getValues('totalAmount')
+
+                            setMonthCount(monthCount)
+                            console.log('monthlyAmount', totalAmount / monthCount, totalAmount)
+                            form.setValue('monthlyAmount', totalAmount / monthCount)
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="monthlyAmount"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('monthly_amount')}
+                        grid="2:4"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values, event) => {
+                            const monthlyAmount = values.floatValue ?? 0
+                            field.onChange(monthlyAmount)
+
+                            if (event.source === 'event') {
+                              form.setValue('totalAmount', monthlyAmount * monthCount)
+                            }
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="totalAmount"
+                    render={({ field }) => (
+                      <FormElement
+                        label={t('total_amount')}
+                        grid="2:4"
+                      >
+                        <NumericInput
+                          {...field}
+                          onChange={undefined}
+                          onValueChange={(values, event) => {
+                            const totalAmount = values.floatValue ?? 0
+                            field.onChange(totalAmount)
+
+                            if (event.source === 'event') {
+                              form.setValue('monthlyAmount', totalAmount / monthCount)
+                            }
+                          }}
+                        />
+                      </FormElement>
+                    )}
+                  />
+
                   <FormElement
                     label={t('organization')}
                     grid="2:4"

@@ -592,5 +592,9 @@
   "has_gotten_payroll": "Ish haqi olgan",
   "import_excel_plastik": "Excel-dan import qilish (plastik)",
   "privileges": "Imtiyozlar",
-  "privilege": "Imtiyoz"
+  "privilege": "Imtiyoz",
+  "date_start": "Boshlanish sanasi",
+  "date_finish": "Tugash sanasi",
+  "total_amount": "Jami miqdor",
+  "monthly_amount": "Oylik miqdor"
 }

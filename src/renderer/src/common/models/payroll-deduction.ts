@@ -15,4 +15,8 @@ export interface AlimentDeduction {
   poluchatelFio: string
   cardNumber: string
   organizationId: number
+  totalAmount: number
+  dateStart: string
+  dateFinish: string
+  monthlyAmount: number
 }

@@ -593,5 +593,9 @@
   "has_gotten_payroll": "Иш ҳақи олган",
   "import_excel_plastik": "Excel-дан импорт қилиш (пластик)",
   "privileges": "Имтиёзлар",
-  "privilege": "Имтиёз"
+  "privilege": "Имтиёз",
+  "date_start": "Бошланиш санаси",
+  "date_finish": "Тугаш санаси",
+  "total_amount": "Жами сумма",
+  "monthly_amount": "Ойлик сумма"
 }

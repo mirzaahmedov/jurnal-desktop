@@ -593,5 +593,9 @@
   "has_gotten_payroll": "Получил зарплату",
   "import_excel_plastik": "Импорт из Excel (Пластик)",
   "privileges": "Привилегии",
-  "privilege": "Привилегия"
+  "privilege": "Привилегия",
+  "date_start": "Дата начала",
+  "date_finish": "Дата окончания",
+  "total_amount": "Общая сумма",
+  "monthly_amount": "Ежемесячная сумма"
 }
