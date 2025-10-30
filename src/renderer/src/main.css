@@ -200,3 +200,7 @@ b {
 .animate-loading-bar {
   animation: loading-bar 1.5s ease-in-out infinite;
 }
+
+.ag-header-cell.right-aligned .ag-header-cell-label {
+  justify-content: end;
+}

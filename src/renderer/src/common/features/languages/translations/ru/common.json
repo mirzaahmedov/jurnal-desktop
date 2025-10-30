@@ -141,6 +141,7 @@
   "code": "Код",
   "fio": "ФИО",
   "start": "Начало",
+  "start_short": "Нач.",
   "end": "Конец",
   "start-something": "Начало {{something}}",
   "rasxod-something": "Расход {{something}}",

@@ -1,5 +1,6 @@
 import type { MaterialSaldoProduct } from '@/common/models'
 import type { DialogProps } from '@radix-ui/react-dialog'
+import type { TFunction } from 'i18next'
 
 import { useEffect, useMemo, useState } from 'react'
 
@@ -31,14 +32,15 @@ import { CommonMaterialSaldoProductColumns } from '../columns'
 import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoProductService } from '../service'
 
-const columns = [
-  {
-    key: 'id',
-    renderCell: IDCell,
-    width: 160
-  },
-  ...CommonMaterialSaldoProductColumns
-] satisfies typeof CommonMaterialSaldoProductColumns
+const columns = (t: TFunction) =>
+  [
+    {
+      key: 'id',
+      renderCell: IDCell,
+      width: 160
+    },
+    ...CommonMaterialSaldoProductColumns(t)
+  ] satisfies ReturnType<typeof CommonMaterialSaldoProductColumns>
 
 enum TabOption {
   ALL = 'ALL',
@@ -133,7 +135,7 @@ export const SaldoProductSpravochnikDialog = ({
               {isFetching ? <LoadingOverlay /> : null}
               <div className="flex-1 overflow-auto scrollbar">
                 <GenericTable
-                  columnDefs={CommonMaterialSaldoProductColumns}
+                  columnDefs={CommonMaterialSaldoProductColumns(t)}
                   data={selectedRows ?? []}
                   getRowId={(row) => row.product_id}
                   onDelete={(organization) => {
@@ -157,7 +159,7 @@ export const SaldoProductSpravochnikDialog = ({
                 selectedIds={selectedIds}
                 disabledIds={disabledIds}
                 data={products?.data ?? []}
-                columnDefs={columns}
+                columnDefs={columns(t)}
                 getRowId={(row) => row.product_id}
                 className="w-full"
                 onClickRow={(organization) => {

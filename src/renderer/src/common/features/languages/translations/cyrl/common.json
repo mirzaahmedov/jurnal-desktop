@@ -141,6 +141,7 @@
   "code": "Код",
   "fio": "ФИО",
   "start": "Бошланғич",
+  "start_short": "Бош.",
   "end": "Якуний",
   "start-something": "Бошланғич {{something}}",
   "rasxod-something": "Чиқим {{something}}",

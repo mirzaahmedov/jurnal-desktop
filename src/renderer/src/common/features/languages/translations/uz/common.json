@@ -141,6 +141,7 @@
   "code": "Kod",
   "fio": "FIO",
   "start": "Boshlang'ich",
+  "start_short": "Bosh.",
   "end": "Yakuniy",
   "start-something": "Boshlang'ich {{something}}",
   "rasxod-something": "Chiqim {{something}}",

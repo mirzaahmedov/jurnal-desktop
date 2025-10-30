@@ -1,4 +1,5 @@
 import type { MaterialSaldoProduct } from '@/common/models'
+import type { TFunction } from 'i18next'
 import type { DialogTriggerProps } from 'react-aria-components'
 
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
@@ -40,14 +41,15 @@ import { MaterialSaldoQueryKeys } from '../config'
 import { MaterialSaldoProductService, MaterialSaldoService } from '../service'
 import { useMaterialSaldo } from '../use-saldo'
 
-const columns = [
-  {
-    key: 'id',
-    header: ' ',
-    renderCell: SelectCell
-  },
-  ...CommonMaterialSaldoProductColumns
-] satisfies typeof CommonMaterialSaldoProductColumns
+const columns = (t: TFunction) =>
+  [
+    {
+      key: 'id',
+      header: ' ',
+      renderCell: SelectCell
+    },
+    ...CommonMaterialSaldoProductColumns(t)
+  ] satisfies ReturnType<typeof CommonMaterialSaldoProductColumns>
 
 enum GroupTransferTabs {
   All = 'ALL',
@@ -301,7 +303,7 @@ export const GroupTransfer: FC<GroupTransferProps> = (props) => {
               )}
               {tabValue === GroupTransferTabs.All ? (
                 <GenericTable
-                  columnDefs={columns}
+                  columnDefs={columns(t)}
                   data={productsData}
                   getRowId={(row) => row.product_id}
                   getRowKey={(row) => row.id}
@@ -310,7 +312,7 @@ export const GroupTransfer: FC<GroupTransferProps> = (props) => {
                 />
               ) : (
                 <GenericTable
-                  columnDefs={columns}
+                  columnDefs={columns(t)}
                   data={selectedProducts}
                   getRowId={(row) => row.product_id}
                   getRowKey={(row) => row.id}

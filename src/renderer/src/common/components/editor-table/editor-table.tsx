@@ -1,6 +1,6 @@
-import type { ColDef } from 'ag-grid-community'
+import type { ColDef, GridApi } from 'ag-grid-community'
 
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'
 import { AgGridReact, type AgGridReactProps } from 'ag-grid-react'
@@ -13,6 +13,7 @@ import {
 
 import { numberCell } from './cells/number'
 import { numberEditor } from './editors/number'
+import { smetaEditor } from './editors/smeta'
 import { textEditor } from './editors/text'
 
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -32,6 +33,8 @@ export const EditorTable = <T extends FieldValues = any, F extends ArrayPath<T> 
   onValueEdited,
   ...props
 }: Omit<EditorTableProps<T, F>, 'rowData'>) => {
+  const [gridApi, setGridApi] = useState<GridApi>()
+
   const rowFields = useFieldArray({
     control: form.control,
     name: arrayField
@@ -63,26 +66,45 @@ export const EditorTable = <T extends FieldValues = any, F extends ArrayPath<T> 
     [columnDefs]
   )
 
+  const context = useMemo(
+    () => ({
+      form,
+      arrayField,
+      onValueEdited
+    }),
+    [form, arrayField, onValueEdited]
+  )
+
+  useEffect(() => {
+    gridApi?.refreshCells({ force: true })
+  }, [context, gridApi])
+
   return (
     <AgGridReact
       {...props}
+      onGridReady={(event) => {
+        setGridApi(event.api)
+        props.onGridReady?.(event)
+      }}
       rowSelection="single"
       enableCellTextSelection={true}
-      components={{
-        textEditor: textEditor,
-        numberEditor: numberEditor,
-        numberCell: numberCell
-      }}
+      components={components}
       columnDefs={columns}
-      defaultColDef={{
-        sortable: false
-      }}
+      defaultColDef={defaultColumnDefs}
       rowData={rowData}
-      context={{
-        form,
-        arrayField,
-        onValueEdited
-      }}
+      context={context}
     />
   )
+}
+
+export const components = {
+  textEditor: textEditor,
+  numberEditor: numberEditor,
+  smetaEditor: smetaEditor,
+  numberCell: numberCell
+}
+
+export const defaultColumnDefs: ColDef = {
+  sortable: false,
+  suppressKeyboardEvent: () => true
 }

@@ -121,7 +121,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content isLoading={isFetching}>
         <GenericTable
-          columnDefs={CommonMaterialSaldoProductColumns}
+          columnDefs={CommonMaterialSaldoProductColumns(t)}
           data={saldos?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}

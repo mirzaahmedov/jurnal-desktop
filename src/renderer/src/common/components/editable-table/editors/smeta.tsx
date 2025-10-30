@@ -70,7 +70,10 @@ export const createSmetaEditor = <T extends { smeta_id?: number }, F extends Arr
             />
           </div>
         </Pressable>
-        <Tooltip className="bg-white text-foreground shadow-xl p-5 min-w-96 max-w-2xl">
+        <Tooltip
+          placement="right"
+          className="bg-white text-foreground shadow-xl p-5 min-w-96 max-w-2xl"
+        >
           <p className="text-sm">{smetaSpravochnik.selected?.smeta_name}</p>
         </Tooltip>
       </TooltipTrigger>

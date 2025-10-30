@@ -3,6 +3,7 @@ import type { CellEventHandler, EditableTableMethods } from '@/common/components
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { convertColumnState } from 'ag-grid-community'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -11,6 +12,7 @@ import { toast } from 'react-toastify'
 import { Button } from '@/common/components/jolly/button'
 import { MonthPicker } from '@/common/components/month-picker'
 import { SearchInput } from '@/common/components/search-input'
+import { Badge } from '@/common/components/ui/badge'
 import { useRequisitesStore } from '@/common/features/requisites'
 import { useRequisitesRedirect } from '@/common/features/requisites/use-main-schet-redirect'
 import {
@@ -30,7 +32,7 @@ import { MainbookService } from '../service'
 import { type MainbookFormValues, defaultValues } from './config'
 import { MainbookDocumentsTracker } from './documents-tracker'
 import { MainbookTable } from './mainbook-table'
-import { MainbookProvodkaColumns } from './provodki'
+import { MainbookProvodkaColumns, type ProvodkaRow } from './provodki'
 import {
   getMainbookColumns,
   transformGetByIdData,
@@ -49,6 +51,7 @@ const MainbookDetailsPage = () => {
   const setLayout = useLayout()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
+  const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
   const [isEditable, setEditable] = useState(false)
   const [activeCell, setActiveCell] = useState<{
     type_id: number
@@ -338,6 +341,36 @@ const MainbookDetailsPage = () => {
     }
   }, [error])
 
+  const isRowEmpty = useCallback(
+    ({ row }: { row: ProvodkaRow }) => {
+      if (!types?.data) {
+        return true
+      }
+      for (const type of types.data) {
+        const prixodKey = `${type.id}_prixod`
+        const rasxodKey = `${type.id}_rasxod`
+        if (row[prixodKey] || row[rasxodKey]) {
+          console.log(row, prixodKey, rasxodKey)
+          return false
+        }
+      }
+      return true
+    },
+    [types?.data]
+  )
+
+  const isRowVisible = useCallback(
+    ({ index }: { index: number }) => {
+      const rows = form.getValues('childs')
+      if (!isEmptyRowsHidden || index === rows.length - 1) {
+        return true
+      }
+
+      return !isRowEmpty({ row: rows[index] })
+    },
+    [form, isRowEmpty, isEmptyRowsHidden]
+  )
+
   return (
     <DetailsView className="h-full">
       <DetailsView.Content
@@ -391,6 +424,16 @@ const MainbookDetailsPage = () => {
                     {t('autofill')}
                   </Button>
                 ) : null}
+
+                <Button
+                  variant="ghost"
+                  onPress={() => setEmptyRowsHidden((prev) => !prev)}
+                >
+                  {isEmptyRowsHidden ? t('show_empty_rows') : t('hide_empty_rows')}{' '}
+                  <Badge className="ml-2.5 text-xs">
+                    {form.watch('childs').filter((row) => isRowEmpty({ row })).length}
+                  </Badge>
+                </Button>
               </div>
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
@@ -400,6 +443,7 @@ const MainbookDetailsPage = () => {
                 form={form}
                 name="childs"
                 onCellDoubleClick={!isEditable ? handleCellDoubleClick : undefined}
+                isRowVisible={isRowVisible}
               />
             </div>
           </div>

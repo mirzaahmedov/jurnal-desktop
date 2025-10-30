@@ -1,4 +1,5 @@
 import type { MaterialSaldoProduct } from '@/common/models'
+import type { TFunction } from 'i18next'
 
 import { useEffect, useState } from 'react'
 
@@ -10,7 +11,13 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { createGroupSpravochnik } from '@/app/super-admin/group/service'
-import { ChooseSpravochnik, FooterCell, FooterRow, GenericTable } from '@/common/components'
+import {
+  ChooseSpravochnik,
+  type ColumnDef,
+  FooterCell,
+  FooterRow,
+  GenericTable
+} from '@/common/components'
 import { JollyDatePicker } from '@/common/components/jolly-date-picker'
 import { Button } from '@/common/components/jolly/button'
 import { ButtonGroup } from '@/common/components/ui/button-group'
@@ -64,14 +71,18 @@ import {
   handleOstatokResponse
 } from './utils'
 
-const columns = [
-  {
-    key: 'iznos',
-    width: 160,
-    renderCell: (row) => <Checkbox checked={row.iznos} />
-  },
-  ...CommonMaterialSaldoProductColumns
-] satisfies typeof CommonMaterialSaldoProductColumns
+const columns: (t: TFunction) => ColumnDef<any>[] = (t) =>
+  [
+    {
+      key: 'iznos',
+      width: 160,
+      renderCell: (row) => <Checkbox checked={row.iznos} />
+    },
+    ...CommonMaterialSaldoProductColumns(t, {
+      includeIznosPrixod: true,
+      includeIznosRasxod: true
+    })
+  ] satisfies ReturnType<typeof CommonMaterialSaldoProductColumns>
 
 const MaterialWarehouseSaldoPage = () => {
   const { startDate, endDate, setSelectedMonth } = useSelectedMonthStore()
@@ -449,7 +460,7 @@ const MaterialWarehouseSaldoPage = () => {
       </div>
       <ListView.Content isLoading={isFetching || isDeletingMonth || isDeleting || isCheckingCreate}>
         <GenericTable
-          columnDefs={columns}
+          columnDefs={columns(t)}
           data={saldo?.data ?? []}
           getRowId={(row) => row.product_id}
           getRowKey={(row) => row.id}
