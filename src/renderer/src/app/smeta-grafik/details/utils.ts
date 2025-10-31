@@ -63,3 +63,7 @@ export const calculateColumnTotals = (
 
   return totals
 }
+
+export const calculateInputWidth = (text: string) => {
+  return text.length * 8.5 + 2 * 16
+}

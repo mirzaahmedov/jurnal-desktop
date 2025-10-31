@@ -1,8 +1,8 @@
 import type { NumericInputProps } from '@/common/components'
 import type { PodotchetSaldoProvodka } from '@/common/models'
-import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community'
+import type { ColDef, GridApi } from 'ag-grid-community'
 
-import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
@@ -52,11 +52,11 @@ const PodotchetSaldoDetailsPage = () => {
   const queryClient = useQueryClient()
   const dialogToggle = useToggle()
   const setLayout = useLayout()
+  const gridApi = useRef<GridApi>()
   const startDate = useSelectedMonthStore((store) => store.startDate)
 
   const { queuedMonths } = usePodotchetSaldo()
 
-  const [gridApi, setGridApi] = useState<GridApi>()
   const [isEditable, setEditable] = useState(false)
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
   const [totalRow, setTotalRow] = useState<PodotchetSaldoProvodka[]>([
@@ -286,9 +286,9 @@ const PodotchetSaldoDetailsPage = () => {
         const index = rows.findIndex((row) =>
           row.name?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        gridApi?.forEachNode((node) => {
+        gridApi.current?.forEachNode((node) => {
           if (node.data.__originalIndex === index) {
-            gridApi?.ensureIndexVisible(node.rowIndex!, 'middle')
+            gridApi.current?.ensureIndexVisible(node.rowIndex!, 'middle')
             node.setSelected(true, true)
           }
         })
@@ -423,9 +423,6 @@ const PodotchetSaldoDetailsPage = () => {
     },
     [form]
   )
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    setGridApi(params.api)
-  }, [])
 
   useEffect(() => {
     if (error) {
@@ -529,11 +526,11 @@ const PodotchetSaldoDetailsPage = () => {
             </div>
             <div className="overflow-auto scrollbar flex-1 relative">
               <EditorTable
+                api={gridApi}
                 form={form}
                 arrayField="podotchets"
                 columnDefs={columnDefs}
                 onValueEdited={onValueChange}
-                onGridReady={onGridReady}
                 pinnedBottomRowData={totalRow}
                 isExternalFilterPresent={() => isEmptyRowsHidden}
                 doesExternalFilterPass={(params) =>

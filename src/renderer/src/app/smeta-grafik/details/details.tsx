@@ -24,8 +24,14 @@ import { formatNumber } from '@/common/lib/format'
 import { api } from '@/common/lib/http'
 import { DetailsView } from '@/common/views'
 
-import { SmetaGrafikFormSchema, SmetaGrafikQueryKeys, defaultValues } from '../config'
+import {
+  SmetaGrafikFormSchema,
+  type SmetaGrafikProvodkaFormValues,
+  SmetaGrafikQueryKeys,
+  defaultValues
+} from '../config'
 import { SmetaGrafikService } from '../service'
+import { calculateColumnTotals, calculateInputWidth, calculateRowTotals } from './utils'
 
 export interface SmetaGrafikDetailsProps {
   id: string
@@ -33,9 +39,10 @@ export interface SmetaGrafikDetailsProps {
   year?: string
 }
 export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsProps) => {
+  const timeoutRef = useRef<NodeJS.Timeout>()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const tableMethods = useRef<EditableTableMethods>(null)
+  const gridApi = useRef<GridApi>()
 
   const form = useForm({
     resolver: zodResolver(SmetaGrafikFormSchema),
@@ -45,7 +52,6 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
   const { t } = useTranslation()
   const { main_schet_id, budjet_id } = useRequisitesStore()
 
-  const [gridApi, setGridApi] = useState<GridApi>()
   const [totalRow, setTotalRow] = useState<SmetaGrafikProvodka[]>([
     {
       smeta_id: 0,
@@ -131,25 +137,32 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
       if (!res.data) {
         return
       }
+
+      const oldSmetas = form.getValues('smetas')
+
       form.setValue(
         'smetas',
-        res.data.map((item) => ({
-          smeta_id: item.id,
-          smeta_number: item.smeta_number,
-          smeta_name: item.smeta_name,
-          oy_1: 0,
-          oy_2: 0,
-          oy_3: 0,
-          oy_4: 0,
-          oy_5: 0,
-          oy_6: 0,
-          oy_7: 0,
-          oy_8: 0,
-          oy_9: 0,
-          oy_10: 0,
-          oy_11: 0,
-          oy_12: 0
-        }))
+        res.data.map((item) => {
+          const oldSmeta = oldSmetas.find((smeta) => smeta.smeta_id === item.id)
+          return {
+            smeta_id: item.id,
+            smeta_number: item.smeta_number,
+            smeta_name: item.smeta_name,
+            oy_1: oldSmeta?.oy_1 ?? 0,
+            oy_2: oldSmeta?.oy_2 ?? 0,
+            oy_3: oldSmeta?.oy_3 ?? 0,
+            oy_4: oldSmeta?.oy_4 ?? 0,
+            oy_5: oldSmeta?.oy_5 ?? 0,
+            oy_6: oldSmeta?.oy_6 ?? 0,
+            oy_7: oldSmeta?.oy_7 ?? 0,
+            oy_8: oldSmeta?.oy_8 ?? 0,
+            oy_9: oldSmeta?.oy_9 ?? 0,
+            oy_10: oldSmeta?.oy_10 ?? 0,
+            oy_11: oldSmeta?.oy_11 ?? 0,
+            oy_12: oldSmeta?.oy_12 ?? 0,
+            itogo: oldSmeta?.itogo ?? 0
+          }
+        })
       )
     }
   })
@@ -186,8 +199,49 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
         year: smetaGrafik.data.year,
         smetas: smetaGrafik.data.smetas
       })
+      const smetas = smetaGrafik.data?.smetas ?? []
+
+      smetas.forEach((smeta) => {
+        const rowTotal = calculateRowTotals(smeta)
+        smeta.itogo = rowTotal
+      })
+
+      const columnTotal = calculateColumnTotals(smetas)
+
+      ;[
+        'oy_1',
+        'oy_2',
+        'oy_3',
+        'oy_4',
+        'oy_5',
+        'oy_6',
+        'oy_7',
+        'oy_8',
+        'oy_9',
+        'oy_10',
+        'oy_11',
+        'oy_12',
+        'itogo'
+      ].forEach((key) => {
+        const column = gridApi.current?.getColumn(key)
+        const formattedValue = formatNumber(columnTotal[key])
+        const newWidth = calculateInputWidth(formattedValue)
+        const currentWidth = column?.getActualWidth() ?? 0
+
+        if (newWidth > currentWidth) {
+          gridApi.current?.setColumnWidths([
+            {
+              key,
+              newWidth
+            }
+          ])
+        }
+      })
+
+      setTotalRow([columnTotal])
     } else {
       form.reset(defaultValues)
+      gridApi.current?.autoSizeAllColumns()
     }
   }, [form, smetaGrafik, id])
 
@@ -201,24 +255,6 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     }
   }, [id, selectedYear, getByOrderNumber])
 
-  // const smetas = useWatch({
-  //   control: form.control,
-  //   name: 'smetas'
-  // })
-
-  // useEffect(() => {
-  //   setTotal(calculateColumnTotals(smetas))
-  //   smetas.forEach((smeta, index) => {
-  //     const itogo = calculateRowTotals(smeta)
-  //     if (itogo !== form.getValues(`smetas.${index}.itogo`)) {
-  //       form.setValue(`smetas.${index}.itogo`, itogo)
-  //     }
-  //   })
-  // }, [form, smetas])
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    setGridApi(params.api)
-  }, [])
-
   const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.stopPropagation()
@@ -230,7 +266,12 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
         const index = rows.findIndex((row) =>
           row.smeta_number?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        tableMethods.current?.scrollToRow(index)
+        gridApi.current?.forEachNode((node) => {
+          if (node.data.__originalIndex === index) {
+            gridApi.current?.ensureIndexVisible(node.rowIndex!, 'middle')
+            node.setSelected(true, true)
+          }
+        })
       }
     }
   }
@@ -442,16 +483,7 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
           field: 'itogo',
           headerName: t('total'),
           pinned: 'right',
-          cellRendererSelector: (params) => {
-            if (params.node.rowPinned === 'bottom') {
-              return {
-                component: 'numberCell'
-              }
-            }
-            return {
-              component: 'numberEditor'
-            }
-          },
+          cellRenderer: 'numberCell',
           cellRendererParams: {
             className: 'font-semibold'
           },
@@ -464,21 +496,24 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
     (rowIndex: number, field: string) => {
       if (field.startsWith('oy')) {
         const row = form.getValues(`smetas.${rowIndex}`)
-        let rowTotal = 0
-        for (let i = 1; i <= 12; i++) {
-          rowTotal += row[`oy_${i}`]
-        }
+        const rowTotal = calculateRowTotals(row)
+
         form.setValue(`smetas.${rowIndex}.itogo`, rowTotal)
 
-        const value = row[field]
-        const formattedValue = formatNumber(value, 0, 2)
+        const rows = form.getValues('smetas')
+        const columnTotals = calculateColumnTotals(rows)
 
-        const column = gridApi?.getColumn(field)
-        const newWidth = formattedValue.length * 8.5 + 2 * 16
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
+
+        const column = gridApi.current?.getColumn(field)
+        const formattedValue = formatNumber(columnTotals[field])
+        const newWidth = calculateInputWidth(formattedValue)
         const currentWidth = column?.getActualWidth() ?? 0
 
         if (newWidth > currentWidth) {
-          gridApi?.setColumnWidths([
+          gridApi.current?.setColumnWidths([
             {
               key: field,
               newWidth
@@ -486,62 +521,13 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
           ])
         }
 
-        const formattedTotalValue = formatNumber(value, 0, 2)
-
-        const totalColumn = gridApi?.getColumn('itogo')
-        const newTotalWidth = formattedTotalValue.length * 8.5 + 2 * 16
-        const currentTotalWidth = totalColumn?.getActualWidth() ?? 0
-
-        if (newTotalWidth > currentTotalWidth) {
-          gridApi?.setColumnWidths([
-            {
-              key: 'itogo',
-              newWidth: newTotalWidth
-            }
-          ])
-        }
-
-        const rows = form.getValues('smetas')
-        const totals = {
-          smeta_id: 0,
-          smeta_number: t('total'),
-          smeta_name: 'total',
-          oy_1: 0,
-          oy_2: 0,
-          oy_3: 0,
-          oy_4: 0,
-          oy_5: 0,
-          oy_6: 0,
-          oy_7: 0,
-          oy_8: 0,
-          oy_9: 0,
-          oy_10: 0,
-          oy_11: 0,
-          oy_12: 0,
-          itogo: 0
-        } as SmetaGrafikProvodka
-        rows.forEach((row) => {
-          for (let i = 1; i <= 12; i++) {
-            totals[`oy_${i}`] += row[`oy_${i}`]
-          }
-          totals['itogo'] = (totals['itogo'] || 0) + (row['itogo'] || 0)
-        })
-
-        // const bottomRows = gridApi?.getPinnedBottomRow(0)
-        // gridApi?.refreshCells({
-        //   force: true
-        // })
-
-        // setTotalRow((prev) => {
-        //   prev[0] = totals
-        //   return prev
-        // })
+        timeoutRef.current = setTimeout(() => {
+          setTotalRow([columnTotals])
+        }, 100)
       }
     },
-    [gridApi, t]
+    [t]
   )
-
-  console.log({ total: totalRow })
 
   return (
     <DetailsView>
@@ -611,15 +597,35 @@ export const SmetaGrafikDetails = ({ id, year, isEditable }: SmetaGrafikDetailsP
 
             <div className="flex-1 w-full overflow-x-auto scrollbar mb-24">
               <EditorTable
+                withCreateButton
+                withDeleteButton
+                api={gridApi}
+                loading={isFetching || fetchSmetas.isPending}
                 form={form}
                 arrayField="smetas"
                 columnDefs={columnDefs}
-                onGridReady={onGridReady}
                 onValueEdited={onValueEdited}
                 pinnedBottomRowData={totalRow}
-                autoSizeStrategy={{
-                  type: 'fitGridWidth'
-                }}
+                initialRowValues={
+                  {
+                    smeta_id: 0,
+                    smeta_number: '',
+                    smeta_name: '',
+                    oy_1: 0,
+                    oy_2: 0,
+                    oy_3: 0,
+                    oy_4: 0,
+                    oy_5: 0,
+                    oy_6: 0,
+                    oy_7: 0,
+                    oy_8: 0,
+                    oy_9: 0,
+                    oy_10: 0,
+                    oy_11: 0,
+                    oy_12: 0,
+                    itogo: 0
+                  } as SmetaGrafikProvodkaFormValues
+                }
               />
             </div>
             {isEditable ? (

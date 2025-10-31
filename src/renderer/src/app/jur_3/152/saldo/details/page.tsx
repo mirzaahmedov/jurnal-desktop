@@ -1,8 +1,8 @@
 import type { OrganSaldoProvodka } from '@/common/models'
-import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community'
+import type { ColDef, GridApi } from 'ag-grid-community'
 import type { CustomCellRendererProps } from 'ag-grid-react'
 
-import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, RefreshCw } from 'lucide-react'
@@ -45,6 +45,7 @@ const OrganSaldoDetailsPage = () => {
   const { id } = useParams()
   useRequisitesRedirect(-1, id !== 'create')
 
+  const gridApi = useRef<GridApi>()
   const navigate = useNavigate()
   const location = useLocation()
   const dialogToggle = useToggle()
@@ -60,7 +61,6 @@ const OrganSaldoDetailsPage = () => {
   >([])
 
   const [isEditable, setEditable] = useState(false)
-  const [gridApi, setGridApi] = useState<GridApi>()
   const [isEmptyRowsHidden, setEmptyRowsHidden] = useState(false)
 
   const { t } = useTranslation(['app'])
@@ -291,9 +291,9 @@ const OrganSaldoDetailsPage = () => {
             row.name?.toLowerCase()?.includes(value?.toLowerCase()) ||
             row.inn?.toLowerCase()?.includes(value?.toLowerCase())
         )
-        gridApi?.forEachNode((node) => {
+        gridApi.current?.forEachNode((node) => {
           if (node.data.__originalIndex === index) {
-            gridApi?.ensureIndexVisible(node.rowIndex!, 'middle')
+            gridApi.current?.ensureIndexVisible(node.rowIndex!, 'middle')
             node.setSelected(true, true)
           }
         })
@@ -310,9 +310,6 @@ const OrganSaldoDetailsPage = () => {
     },
     [isEmptyRowsHidden, form]
   )
-  const onGridReady = useCallback((params: GridReadyEvent) => {
-    setGridApi(params.api)
-  }, [])
 
   const columnDefs = useMemo<ColDef<OrganSaldoProvodkaFormValues>[]>(
     () => [
@@ -540,10 +537,10 @@ const OrganSaldoDetailsPage = () => {
             </div>
             <div className="flex-1 overflow-auto scrollbar">
               <EditorTable
+                api={gridApi}
                 columnDefs={columnDefs}
                 form={form}
                 arrayField="organizations"
-                onGridReady={onGridReady}
                 onRowDoubleClicked={(params) => {
                   setSelectedRowIndex(params.data?.__originalIndex)
                   setSelectedOrganName(params.data?.name ?? '')

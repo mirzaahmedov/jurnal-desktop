@@ -62,18 +62,18 @@ export const MainbookDocumentsTracker = ({
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="w-full max-w-[1800px] h-full max-h-[900px] flex flex-col p-0 gap-0">
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col overflow-hidden">
             <DialogHeader className="p-5">
               <DialogTitle>
                 <Trans>documents</Trans>
               </DialogTitle>
             </DialogHeader>
-            <div className="flex-1 overflow-y-auto scrollbar">
+            <div className="relative flex-1 overflow-y-auto scrollbar">
               <GenericTable
-                data={documents?.data ?? []}
+                data={Array.from({ length: 20 }).flatMap(() => documents?.data ?? [])}
                 columnDefs={columns}
                 footer={
-                  <FooterRow>
+                  <FooterRow className="sticky bottom-0 bg-white shadow-sm-up">
                     <FooterCell
                       title={t('total')}
                       colSpan={6}
@@ -81,6 +81,10 @@ export const MainbookDocumentsTracker = ({
                     <FooterCell
                       content={formatNumber(documents?.meta?.summa ?? 0)}
                       colSpan={1}
+                    />
+                    <FooterCell
+                      content={null}
+                      colSpan={100}
                     />
                   </FooterRow>
                 }

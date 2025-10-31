@@ -26,7 +26,8 @@ import { ListView } from '@/common/views'
 
 import { TwoFColumns } from './columns'
 import { TwoFQueryKeys } from './config'
-import { TwoFFilters, useYearFilter } from './filters'
+import { TwoFFilters, useDialogState, useYearFilter } from './filters'
+import { TwoFSaldoDialog } from './saldo/page'
 import { TwoFService } from './service'
 
 const TwoFPage = () => {
@@ -38,6 +39,7 @@ const TwoFPage = () => {
 
   const [year] = useYearFilter()
 
+  const { isOpen, setOpen } = useDialogState()
   const { t } = useTranslation(['app'])
   const { confirm } = useConfirm()
   const { budjet_id, main_schet_id } = useRequisitesStore()
@@ -139,6 +141,11 @@ const TwoFPage = () => {
           {...pagination}
         />
       </ListView.Footer>
+
+      <TwoFSaldoDialog
+        isOpen={isOpen}
+        onOpenChange={setOpen}
+      />
     </ListView>
   )
 }

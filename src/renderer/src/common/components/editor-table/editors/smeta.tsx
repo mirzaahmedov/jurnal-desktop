@@ -75,7 +75,7 @@ export const smetaEditor = createEditor<{
             {props.value ? (
               <Tooltip
                 className="bg-white text-foreground shadow-xl p-5 min-w-96 max-w-2xl"
-                placement="right"
+                placement="left"
               >
                 <p className="text-sm">{smeta_name}</p>
               </Tooltip>

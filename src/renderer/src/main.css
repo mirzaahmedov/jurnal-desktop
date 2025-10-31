@@ -204,3 +204,7 @@ b {
 .ag-header-cell.right-aligned .ag-header-cell-label {
   justify-content: end;
 }
+
+.ag-root-wrapper .ag-header {
+  background-color: theme(colors.gray.100);
+}
