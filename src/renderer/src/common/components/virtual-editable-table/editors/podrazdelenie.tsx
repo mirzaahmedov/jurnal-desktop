@@ -3,8 +3,10 @@ import type { EditorComponent } from './interfaces'
 import { createPodrazdelenieSpravochnik } from '@/app/region-spravochnik/podrazdelenie'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createPodrazdelenieEditor = <T extends object>(): EditorComponent<T, any> => {
-  return ({ column, tabIndex, value, error, onChange }) => {
+export const createPodrazdelenieEditor = <
+  T extends { id_spravochnik_podrazdelenie?: number }
+>(): EditorComponent<T> => {
+  return ({ tabIndex, value, errors, onChange }) => {
     const podrazdelnieSpravochnik = useSpravochnik(
       createPodrazdelenieSpravochnik({
         value: value as number | undefined,
@@ -17,8 +19,8 @@ export const createPodrazdelenieEditor = <T extends object>(): EditorComponent<T
         editor
         readOnly
         tabIndex={tabIndex}
-        error={!!error}
-        name={String(column.key)}
+        error={!!errors?.id_spravochnik_podrazdelenie}
+        name="id_spravochnik_podrazdelenie"
         getInputValue={(selected) => selected?.name ?? ''}
       />
     )

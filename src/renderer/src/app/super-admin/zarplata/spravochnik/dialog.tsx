@@ -3,7 +3,6 @@ import type { DialogTriggerProps } from 'react-aria-components'
 
 import { useEffect } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
@@ -34,7 +33,7 @@ import { Input } from '@/common/components/ui/input'
 import { useSpravochnik } from '@/common/features/spravochnik'
 import { capitalize } from '@/common/lib/string'
 
-import { ZarplataSpravochnikFormSchema, ZarplataSpravochnikType, defaultValues } from './config'
+import { ZarplataSpravochnikType, defaultValues } from './config'
 import { useTypeFilter } from './filters'
 import { ZarplataSpravochnikService } from './service'
 import { SpravochnikTypeSelect } from './spravochnik-type-select'
@@ -57,8 +56,7 @@ export const ZarplataSpravochnikDialog = ({
     defaultValues: {
       ...defaultValues,
       typesTypeCode: typeCode ?? defaultValues.typesTypeCode
-    },
-    resolver: zodResolver(ZarplataSpravochnikFormSchema)
+    }
   })
 
   const { mutate: createSpravochnik, isPending: isCreating } = useMutation({

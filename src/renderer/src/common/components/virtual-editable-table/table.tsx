@@ -1,54 +1,125 @@
-import type { EditableTableMethods, VirtualEditableColumnDef } from './interfaces'
+import type { ArrayPath } from 'react-hook-form'
 
 import {
-  type HTMLAttributes,
-  type RefObject,
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState
 } from 'react'
 
-import { type ArrayPath, Controller, type UseFormReturn, useFieldArray } from 'react-hook-form'
-import { Trans } from 'react-i18next'
-import { FixedSizeList } from 'react-window'
+import {
+  type ColumnDef,
+  type Row,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { CircleMinus, CirclePlus, CopyPlus } from 'lucide-react'
+import { useFieldArray } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
-import { AutoSizer } from '@/common/components/auto-sizer'
+import { Button } from '@/common/components/ui/button'
+import { cn } from '@/common/lib/utils'
 
-import { TableCell, TableHead, TableRow } from './components'
-import { getLeafColumns, getMaxDepth, handleStickyColumns } from './utils'
+import { EmptyList } from '../empty-states'
 
-interface VirtualEditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
-  methods: RefObject<EditableTableMethods>
-  form: UseFormReturn<any>
-  name: F
-  columnDefs: VirtualEditableColumnDef<T, F>[]
+interface TableAction {
+  key: string
+  onPress: Function
+  render: (args: { rowIndex: number; row: any; rows: any[] }) => ReactNode
 }
 
-export const VirtualEditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>(
-  props: VirtualEditableTableProps<T, F>
+// New props interface for TanStack table
+interface TanStackEditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+  keyboardNavigation?: boolean
+  tableRef?: React.RefObject<HTMLDivElement>
+  tabIndex?: number
+  form: any
+  name: F | string
+  columnDefs: ColumnDef<any>[]
+  className?: string
+  errors?: any
+  placeholder?: string
+  onDelete?: (ctx: any) => void
+  onDuplicate?: (ctx: any) => void
+  onCreate?: (args: any) => void
+  params?: Record<string, unknown>
+  validate?: (ctx: any) => boolean
+  methods?: React.RefObject<any>
+  isRowVisible?: (args: any) => boolean
+}
+
+export const EditableTable = <T extends object, F extends ArrayPath<NoInfer<T>>>(
+  props: TanStackEditableTableProps<T, F>
 ) => {
-  const { form, name, columnDefs, methods } = props
+  const {
+    keyboardNavigation = false,
+    tableRef,
+    tabIndex,
+    name,
+    form,
+    columnDefs,
+    className,
+    errors,
+    placeholder,
+    onCreate,
+    onDelete,
+    onDuplicate,
+    validate,
+    isRowVisible = () => true,
+    params = {},
+    methods
+  } = props
 
-  const tableRef = useRef<HTMLDivElement>()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLTableSectionElement>(null)
+  const innerRef = useRef<HTMLTableElement>(null)
+  const ref = tableRef || innerRef
 
-  const maxDepth = getMaxDepth(columnDefs)
-  const leafColumns = getLeafColumns(columnDefs)
+  const [headerHeight, setHeaderHeight] = useState(0)
 
-  const gridTemplateColumns = leafColumns
-    .map((column) => (column.width ? `${column.width}px` : '1fr'))
-    .join(' ')
+  const { t } = useTranslation()
 
-  const { fields: rows } = useFieldArray({
+  const fieldArray = useFieldArray({
     control: form.control,
     name
   })
+  const fields = fieldArray.fields
 
+  const rowVirtualizer = useVirtualizer({
+    count: fields.length,
+    getScrollElement: () => containerRef.current,
+    overscan: 1,
+    estimateSize: () => 40
+  })
+
+  useEffect(() => {
+    const element = headerRef.current
+    if (!element) return
+
+    setHeaderHeight(element.offsetHeight)
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === element) {
+          setHeaderHeight(entry.contentRect.height)
+        }
+      }
+    })
+
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [])
   useImperativeHandle(
     methods,
     () => ({
       scrollToRow: (rowIndex: number) => {
-        const rowElement = tableRef.current?.querySelector(`[data-rowindex="${rowIndex}"]`)
+        const rowElement = ref.current?.querySelector(`[data-rowindex="${rowIndex}"]`)
 
         if (rowElement) {
           rowElement.scrollIntoView({
@@ -74,217 +145,291 @@ export const VirtualEditableTable = <T extends object, F extends ArrayPath<NoInf
 
           observer.observe(rowElement)
         }
+      },
+      updateColumnSize: (columnId: string, width: number) => {
+        setColumnSizing((prev) => ({
+          ...prev,
+          [columnId]: Math.max(width, 50) // Ensure minimum width
+        }))
+      },
+      resetColumnSizes: () => {
+        setColumnSizing({})
       }
     }),
     []
   )
 
+  const actions: TableAction[] = [
+    {
+      key: 'delete',
+      onPress: onDelete,
+      render: ({ rowIndex }) => (
+        <Button
+          tabIndex={tabIndex}
+          type="button"
+          variant="ghost"
+          className="hover:bg-slate-50 hover:text-red-500 text-red-400"
+          onClick={() => onDelete?.({ id: rowIndex, fieldArray })}
+        >
+          <CircleMinus className="btn-icon !mx-0" />
+        </Button>
+      )
+    },
+    {
+      key: 'duplicate',
+      onPress: onDuplicate,
+      render: ({ rowIndex }) => (
+        <Button
+          tabIndex={tabIndex}
+          type="button"
+          variant="ghost"
+          className="hover:bg-slate-50 text-brand"
+          onClick={() =>
+            onDuplicate?.({
+              index: rowIndex,
+              row: form.getValues(`${name}.${rowIndex}`),
+              fieldArray
+            })
+          }
+        >
+          <CopyPlus className="btn-icon !mx-0" />
+        </Button>
+      )
+    }
+  ].filter((action) => Boolean(action.onPress)) as TableAction[]
+
+  // Create columns for react-table
+  const columns = useMemo(() => {
+    const reactTableColumns: ColumnDef<any>[] = [
+      // Line number column
+      {
+        id: 'line_number',
+        header: () => '',
+        size: 50,
+        accessorFn: () => '',
+        cell: ({ row }) => <div className="px-3 font-medium text-slate-500">{row.index + 1}</div>
+      },
+      // User-provided columns (already in TanStack format)
+      ...columnDefs,
+      // Action columns
+      ...actions.map((action) => ({
+        id: action.key,
+        header: () => '',
+        size: 53,
+        accessorFn: () => '',
+        cell: ({ row }: { row: Row<any> }) =>
+          action.render({
+            rowIndex: row.index,
+            row: row.original,
+            rows: fields
+          })
+      }))
+    ]
+    return reactTableColumns
+  }, [columnDefs, actions, form, name, tabIndex, fields, errors, params, validate, t])
+
+  // Column sizing state
+  const [columnSizing, setColumnSizing] = useState<Record<string, number>>({})
+
+  const table = useReactTable({
+    data: fields,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: 'onChange',
+    state: {
+      columnSizing
+    },
+    onColumnSizingChange: setColumnSizing,
+    defaultColumn: {
+      size: 100,
+      minSize: 50,
+      maxSize: 500
+    }
+  })
+
+  // Calculate consistent column widths
+  const columnWidths = useMemo(() => {
+    const widths: Record<string, number> = {}
+    table.getAllColumns().forEach((column) => {
+      widths[column.id] = column.getSize()
+    })
+    return widths
+  }, [table, columns])
+
+  // Calculate total table width
+  const totalWidth = useMemo(() => {
+    return Object.values(columnWidths).reduce((sum, width) => sum + width, 0)
+  }, [columnWidths])
+
   return (
     <div
-      onScroll={(e) => {
-        handleStickyColumns(e.currentTarget)
+      ref={containerRef}
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
       }}
-      ref={(ref) => {
-        if (ref) {
-          tableRef.current = ref
-          handleStickyColumns(ref)
+      onFocus={(e) => {
+        e.target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        })
+      }}
+      onKeyUp={(e) => {
+        if (!keyboardNavigation) return
+        if (e.target instanceof HTMLInputElement && e.key.startsWith('Arrow')) {
+          e.preventDefault()
+          const rowElement = e.target.closest('div[data-rowindex]')
+          const cellElement = e.target.closest('div[data-cellindex]')
+
+          if (!rowElement || !cellElement) return
+
+          let rowIndex = Number(rowElement.getAttribute('data-rowindex') || 0)
+          let cellIndex = Number(cellElement.getAttribute('data-cellindex') || 0)
+
+          switch (e.key) {
+            case 'ArrowDown':
+              rowIndex += 1
+              break
+            case 'ArrowUp':
+              rowIndex -= 1
+              break
+            case 'ArrowLeft':
+              cellIndex -= 1
+              break
+            case 'ArrowRight':
+              cellIndex += 1
+              break
+          }
+
+          const nextRowElement = containerRef.current?.querySelector(
+            `div[data-rowindex="${rowIndex}"]`
+          )
+          const nextCellElement = nextRowElement?.querySelector(
+            `div[data-cellindex="${cellIndex}"]`
+          )
+
+          if (nextCellElement) {
+            nextCellElement.querySelector('input')?.focus()
+          }
         }
       }}
-      className="h-full w-full overflow-x-auto"
+      style={
+        {
+          '--editable-table-header-height': `${headerHeight}px`
+        } as CSSProperties
+      }
+      className="relative border border-blue-400 h-full overflow-y-auto"
     >
-      <div className="h-full min-w-min flex flex-col">
-        <div className="divide-y w-full min-w-min">
+      <div style={{ height: `${headerHeight + rowVirtualizer.getTotalSize()}px` }}>
+        {/* Table container */}
+        <div
+          ref={ref}
+          className={cn('border border-slate-200 w-full h-full', className)}
+        >
+          {/* Header */}
           <div
-            className="w-full min-w-min grid divide-x bg-white"
-            style={{
-              gridTemplateColumns,
-              gridAutoRows: '40px'
-            }}
+            ref={headerRef}
+            className="sticky top-0 z-[99] shadow-sm bg-white border-b"
           >
-            {columnDefs.map((column, index) => (
-              <HeaderCell
-                key={index}
-                columnDef={column}
-                depth={1}
-                maxDepth={maxDepth}
-                startCol={leafColumns
-                  .slice(0, index)
-                  .reduce((acc, c) => acc + getLeafColumns([c]).length, 1)}
-              />
+            {table.getHeaderGroups().map((headerGroup) => (
+              <div
+                key={headerGroup.id}
+                className="flex"
+                style={{ width: totalWidth, minWidth: totalWidth }}
+              >
+                {headerGroup.headers.map((header) => (
+                  <div
+                    key={header.id}
+                    className="px-3 py-2 border-r bg-gray-50 font-medium text-sm text-gray-700 flex items-center flex-shrink-0"
+                    style={{
+                      width: columnWidths[header.id],
+                      minWidth: columnWidths[header.id],
+                      maxWidth: columnWidths[header.id]
+                    }}
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </div>
+                ))}
+              </div>
             ))}
           </div>
-        </div>
 
-        <AutoSizer>
-          {({ ref, height, width }) => {
-            return (
-              <div
-                ref={ref}
-                className="flex-1 overflow-hidden"
-              >
-                <FixedSizeList
-                  itemCount={rows.length}
-                  itemSize={40}
-                  overscanCount={10}
-                  width={width ?? 0}
-                  height={height}
-                  style={{ overflowX: 'hidden', overflowY: 'auto' }}
-                  onScroll={() => {
-                    if (tableRef.current) {
-                      handleStickyColumns(tableRef.current)
-                    }
-                  }}
-                >
-                  {({ index, style }) => {
-                    return (
-                      <TableRow
-                        key={index}
+          {/* Body */}
+          <div className="relative">
+            {rowVirtualizer.getVirtualItems().length ? (
+              rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                const row = table.getRowModel().rows[virtualItem.index]
+                if (
+                  !row ||
+                  !isRowVisible({ row: row.original, index: virtualItem.index, rows: fields })
+                ) {
+                  return null
+                }
+
+                return (
+                  <div
+                    key={row.id}
+                    data-rowindex={virtualItem.index}
+                    className="flex absolute border-b hover:bg-gray-50"
+                    style={{
+                      width: totalWidth,
+                      minWidth: totalWidth,
+                      height: `${virtualItem.size}px`,
+                      transform: `translateY(${virtualItem.start}px)`
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell, cellIndex) => (
+                      <div
+                        key={cell.id}
+                        data-cellindex={cellIndex}
+                        className="px-3 py-2 border-r flex items-center flex-shrink-0"
                         style={{
-                          ...style,
-                          gridTemplateColumns,
-                          gridAutoRows: '40px'
+                          width: columnWidths[cell.column.id],
+                          minWidth: columnWidths[cell.column.id],
+                          maxWidth: columnWidths[cell.column.id]
                         }}
                       >
-                        <Cell
-                          columnDefs={columnDefs}
-                          index={index}
-                          name={name}
-                          row={rows[index]}
-                          rows={rows}
-                          form={form}
-                          tabIndex={1}
-                        />
-                      </TableRow>
-                    )
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </div>
+                    ))}
+                  </div>
+                )
+              })
+            ) : (
+              <div className="flex justify-center items-center py-10">
+                <EmptyList
+                  iconProps={{
+                    className: 'w-40'
                   }}
-                </FixedSizeList>
+                >
+                  {placeholder}
+                </EmptyList>
               </div>
-            )
-          }}
-        </AutoSizer>
+            )}
+          </div>
+
+          {/* Footer */}
+          {typeof onCreate === 'function' && (
+            <div className="sticky bottom-0 bg-white border-t">
+              {typeof onCreate === 'function' && (
+                <div className="flex">
+                  <div className="w-full p-2">
+                    <Button
+                      tabIndex={tabIndex}
+                      type="button"
+                      variant="ghost"
+                      className="w-full hover:bg-slate-50 text-brand hover:text-brand"
+                      onClick={() => onCreate({ fieldArray })}
+                    >
+                      <CirclePlus className="btn-icon icon-start" /> {t('add')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
-}
-
-interface HeaderCellProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
-  columnDef: VirtualEditableColumnDef<T, F>
-  depth: number
-  minSize?: number
-  maxDepth: number
-  startCol: number
-}
-const HeaderCell = <T extends object, F extends ArrayPath<NoInfer<T>>>({
-  columnDef,
-  depth,
-  maxDepth,
-  startCol
-}: HeaderCellProps<T, F>) => {
-  const leafCount = columnDef.columns ? getLeafColumns(columnDef.columns).length : 1
-  const colSpan = leafCount
-  const rowSpan = columnDef.columns ? 1 : maxDepth - depth + 1
-
-  const { header, key, headerClassName } = columnDef
-
-  return (
-    <>
-      <TableHead
-        style={{
-          gridColumn: `${startCol} / span ${colSpan}`,
-          gridRow: `${depth} / span ${rowSpan}`,
-          minWidth: columnDef.minWidth
-        }}
-        data-sticky={columnDef.sticky ? true : undefined}
-        data-left={columnDef.left !== undefined ? columnDef.left : undefined}
-        data-right={columnDef.right !== undefined ? columnDef.right : undefined}
-        className={headerClassName}
-      >
-        {!header ? (
-          <Trans>{String(key)}</Trans>
-        ) : typeof header === 'string' ? (
-          <Trans>{header}</Trans>
-        ) : null}
-      </TableHead>
-      {
-        columnDef.columns?.reduce(
-          (acc, child) => {
-            const childStart = startCol + acc.totalLeafCount
-            const childResult = (
-              <HeaderCell
-                key={`${child.header}-${childStart}`}
-                columnDef={child}
-                depth={depth + 1}
-                maxDepth={maxDepth}
-                startCol={childStart}
-              />
-            )
-            return {
-              totalLeafCount: acc.totalLeafCount + getLeafColumns([child]).length,
-              elements: [...acc.elements, childResult]
-            }
-          },
-          { totalLeafCount: 0, elements: [] as React.ReactNode[] }
-        ).elements
-      }
-    </>
-  )
-}
-
-interface CellProps<T extends object, F extends ArrayPath<NoInfer<T>>>
-  extends Pick<VirtualEditableTableProps<T, F>, 'name' | 'form' | 'columnDefs'>,
-    HTMLAttributes<HTMLTableRowElement> {
-  tabIndex?: number
-  index: number
-  row: any
-  rows: any
-}
-const Cell = <T extends object, R extends T[ArrayPath<NoInfer<T>>]>({
-  tabIndex,
-  index,
-  columnDefs,
-  row,
-  rows,
-  form
-}: CellProps<T, R>) => {
-  const [state, setState] = useState<Record<string, unknown>>({})
-
-  const leafColumns = useMemo(() => getLeafColumns(columnDefs), [columnDefs])
-
-  return leafColumns.map((column) => {
-    const { key, Editor, minWidth, sticky, left, right } = column
-
-    return (
-      <TableCell
-        key={String(key)}
-        className="bg-inherit"
-        style={{ minWidth }}
-        data-sticky={sticky ? true : undefined}
-        data-left={left !== undefined ? left : undefined}
-        data-right={right !== undefined ? right : undefined}
-      >
-        <Controller
-          control={form.control}
-          name={`users.${index}.${String(key)}`}
-          render={({ field }) => (
-            <Editor
-              tabIndex={tabIndex}
-              inputRef={field.ref}
-              index={index}
-              row={row}
-              column={column}
-              rows={rows}
-              form={form}
-              value={field.value}
-              onChange={field.onChange}
-              errors={{}}
-              params={{}}
-              state={state}
-              setState={setState}
-              data-editorId={`${index}-${String(key)}`}
-            />
-          )}
-        />
-      </TableCell>
-    )
-  })
 }

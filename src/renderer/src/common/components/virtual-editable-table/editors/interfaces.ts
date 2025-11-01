@@ -1,37 +1,35 @@
-import type { TableRowField, VirtualEditableColumnDef } from '../interfaces'
+import type { EditableColumnDef, TableRowField } from '../interface'
 import type { Dispatch, FC, InputHTMLAttributes, Ref, SetStateAction } from 'react'
-import type { ArrayPath, FieldError, FieldErrors, UseFormReturn } from 'react-hook-form'
+import type { ArrayPath, FieldErrors, UseFormReturn } from 'react-hook-form'
 
-export type ChangeContext<T extends object, K> = {
+export type ChangeContext<T extends object, K extends keyof T = keyof T> = {
   id: number
   key: K
-  values: T
+  payload: T
 }
 
-export type DeleteContext = {
-  id: number
-}
-
-export type EditorComponent<T extends object, F extends ArrayPath<NoInfer<T>>> = FC<{
-  readOnly?: boolean
+export type EditorComponent<T extends object, F extends ArrayPath<T>> = FC<{
   tabIndex?: number
   inputRef: Ref<HTMLInputElement>
-  index: number
+  id: number
+  fieldId: string
   row: TableRowField<T, F>
   rows: TableRowField<T, F>[]
   form: UseFormReturn<T>
-  column: VirtualEditableColumnDef<T>
+  col: EditableColumnDef<T>
   max?: number
-  error?: FieldError
   errors?: FieldErrors<T>
+  name: F
   value: unknown
   onChange?: (value: unknown) => void
   state: Record<string, unknown>
   setState: Dispatch<SetStateAction<Record<string, unknown>>>
   params: Record<string, unknown>
-  validate?: (ctx: ChangeContext<T, F>) => boolean
+  validate?: (ctx: ChangeContext<T>) => boolean
+  readOnly?: boolean
 }>
 
-export type EditorOptions<P = InputHTMLAttributes<HTMLInputElement>> = {
+export type EditorOptions<T extends object, P = InputHTMLAttributes<HTMLInputElement>> = {
+  key: keyof T
   inputProps?: P
 }

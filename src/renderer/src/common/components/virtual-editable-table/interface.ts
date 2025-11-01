@@ -43,6 +43,8 @@ export type HeaderColumnDef<T> = T & {
 
 export interface EditableTableMethods {
   scrollToRow: (rowIndex: number) => void
+  updateColumnSize: (columnId: string, width: number) => void
+  resetColumnSizes: () => void
 }
 
 export interface CreateHandlerArgs<T extends object, F extends ArrayPath<T>> {
@@ -59,16 +61,15 @@ export interface DuplicateHandlerArgs<T extends object, F extends ArrayPath<T>> 
 }
 
 export interface EditableTableProps<T extends object, F extends ArrayPath<NoInfer<T>>> {
+  keyboardNavigation?: boolean
   tableRef?: RefObject<HTMLTableElement>
   tabIndex?: number
-  form: UseFormReturn<T>
+  form: UseFormReturn<NoInfer<T>>
   name: F
-  height?: number
   columnDefs: EditableColumnDef<InferRow<T, F>>[]
   className?: string
   divProps?: HTMLAttributes<HTMLDivElement>
   errors?: FieldErrors<{ childs: InferRow<T, F>[] }>['childs']
-  disableHeader?: boolean
   getRowClassName?: (args: {
     index: number
     row: FieldArrayWithId<T, F, 'id'>

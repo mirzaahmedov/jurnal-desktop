@@ -3,8 +3,10 @@ import type { EditorComponent } from './interfaces'
 import { createSostavSpravochnik } from '@/app/region-spravochnik/sostav'
 import { SpravochnikInput, useSpravochnik } from '@/common/features/spravochnik'
 
-export const createSostavEditor = <T extends object>(): EditorComponent<T, any> => {
-  return ({ column, tabIndex, value, error, onChange }) => {
+export const createStaffEditor = <
+  T extends { id_spravochnik_sostav?: number }
+>(): EditorComponent<T> => {
+  return ({ tabIndex, value, errors, onChange }) => {
     const sostavSpravochnik = useSpravochnik(
       createSostavSpravochnik({
         value: value as number | undefined,
@@ -19,8 +21,8 @@ export const createSostavEditor = <T extends object>(): EditorComponent<T, any> 
         editor
         readOnly
         tabIndex={tabIndex}
-        error={!!error}
-        name={String(column.key)}
+        error={!!errors?.id_spravochnik_sostav}
+        name="id_spravochnik_sostav"
         getInputValue={(selected) => selected?.name ?? ''}
       />
     )
