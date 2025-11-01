@@ -1,42 +1,61 @@
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import { useTranslation } from 'react-i18next'
+import { DataGrid } from '@mui/x-data-grid'
+import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form'
 
-import { DialogContent, DialogOverlay, DialogTrigger } from '@/common/components/jolly/dialog'
+import { NumericInput } from '@/common/components'
 
 const DemoPage = () => {
-  return <ProcessingDocumentLoader />
+  const form = useForm<{
+    children: {
+      age: number
+      name: string
+      workplace: string
+    }[]
+  }>({
+    defaultValues: {
+      children: [
+        {
+          age: 1,
+          name: '',
+          workplace: ''
+        }
+      ]
+    }
+  })
+  const fields = useFieldArray({
+    control: form.control,
+    name: 'children'
+  })
+
+  return (
+    <FormProvider {...form}>
+      <DataGrid
+        rows={fields.fields}
+        columns={[
+          {
+            field: 'age',
+            renderCell: (params) => {
+              const form = useFormContext()
+              console.log({ params })
+              return (
+                <Controller
+                  control={form.control}
+                  name={`children.${params.id}.age`}
+                  render={({ field }) => (
+                    <NumericInput
+                      ref={field.ref}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  )}
+                />
+              )
+            }
+          }
+        ]}
+      />
+    </FormProvider>
+  )
 }
 
 export default DemoPage
-
-const ProcessingDocumentLoader = () => {
-  const { t } = useTranslation()
-  return (
-    <DialogTrigger isOpen>
-      <DialogOverlay className="backdrop-blur-sm bg-black/50">
-        <DialogContent
-          closeButton={false}
-          className="max-w-md mx-auto bg-white rounded-2xl shadow-2xl border-0 p-8"
-        >
-          <div className="flex flex-col items-center space-y-8">
-            <DotLottieReact
-              autoplay
-              loop
-              src="/lotties/finding-documents.json"
-            />
-
-            <div className="text-center space-y-6 w-full">
-              <p className="text-gray-600 leading-relaxed">{t('document_processing')}</p>
-
-              <div className="w-full max-w-xs mx-auto">
-                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full animate-loading-bar"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </DialogOverlay>
-    </DialogTrigger>
-  )
-}

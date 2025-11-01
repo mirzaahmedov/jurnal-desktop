@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const TwoFSaldoFormSchema = z.object({
   year: z.number(),
+  month: z.number(),
   smetas: z.array(
     z.object({
       smeta_id: z.number(),

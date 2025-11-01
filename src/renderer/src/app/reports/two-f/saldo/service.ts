@@ -42,7 +42,7 @@ export class TwoFSaldoService {
     return res.data
   }
 
-  static async create({ year, smetas }: TwoFSaldoFormValues) {
+  static async create({ year, month, smetas }: TwoFSaldoFormValues) {
     const res = await api.post<ApiResponse<unknown>>(
       TwoFSaldoService.endpoint,
       {
@@ -51,6 +51,7 @@ export class TwoFSaldoService {
       {
         params: {
           main_schet_id: getMainSchetId(),
+          month,
           year
         }
       }
@@ -58,7 +59,7 @@ export class TwoFSaldoService {
     return res.data
   }
 
-  static async update({ year, smetas }: TwoFSaldoFormValues) {
+  static async update({ year, month, smetas }: TwoFSaldoFormValues) {
     const res = await api.put(
       TwoFSaldoService.endpoint,
       {
@@ -67,6 +68,7 @@ export class TwoFSaldoService {
       {
         params: {
           main_schet_id: getMainSchetId(),
+          month,
           year
         }
       }

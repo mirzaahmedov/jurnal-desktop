@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Allotment } from 'allotment'
-import { Edit, Plus, Trash2, UserMinus } from 'lucide-react'
+import { Download, Edit, Plus, Trash2, UserMinus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -15,7 +15,6 @@ import { Button } from '@/common/components/jolly/button'
 import { Tooltip, TooltipTrigger } from '@/common/components/jolly/tooltip'
 import { Pagination } from '@/common/components/pagination'
 import { useConfirm } from '@/common/features/confirm'
-import { DownloadFile } from '@/common/features/file'
 import {
   SearchFilterDebounced,
   useSearchFilter
@@ -39,6 +38,7 @@ import { useLayout } from '@/common/layout'
 
 import { CalculateParamsService } from '../calculate-params/service'
 import { useCalculateParamsGuard } from '../common/hooks/use-calculate-params-guard'
+import { DownloadExcel } from './download-excel'
 import { WorkplaceDuplicate } from './workplace-duplicate'
 
 const StaffingTable = () => {
@@ -58,6 +58,7 @@ const StaffingTable = () => {
   const pagination = usePagination()
   const vacantDialogToggle = useToggle()
   const workplaceDialogToggle = useToggle()
+  const downloadExcelToggle = useToggle()
   const queryClient = useQueryClient()
   const setLayout = useLayout()
 
@@ -274,17 +275,13 @@ const StaffingTable = () => {
         <div className="flex items-center justify-between gap-4 min-w-0">
           <SearchFilterDebounced />
 
-          {selectedVacant ? (
-            <DownloadFile
-              isZarplata
-              url="Excel2/get-workplace"
-              params={{
-                vacantId: selectedVacant.id
-              }}
-              fileName={`ish_joylari__${selectedVacant?.name}.xlsx`}
-              buttonText={t('export-excel')}
-            />
-          ) : null}
+          <Button
+            variant="ghost"
+            IconStart={Download}
+            onPress={downloadExcelToggle.open}
+          >
+            {t('export-excel')}
+          </Button>
         </div>
       ),
       onCreate:
@@ -295,7 +292,14 @@ const StaffingTable = () => {
             }
           : undefined
     })
-  }, [setLayout, t, workplaceDialogToggle.open, selectedVacant, calculateParams])
+  }, [
+    t,
+    setLayout,
+    workplaceDialogToggle.open,
+    downloadExcelToggle.open,
+    selectedVacant,
+    calculateParams
+  ])
 
   return (
     <>
@@ -437,6 +441,11 @@ const StaffingTable = () => {
         selected={selectedWorkplace}
         minimumWage={calculateParams?.minZar ?? 0}
         onSubmit={handleSubmitWorkplace}
+      />
+
+      <DownloadExcel
+        isOpen={downloadExcelToggle.isOpen}
+        onOpenChange={downloadExcelToggle.setOpen}
       />
     </>
   )

@@ -66,6 +66,8 @@ export const EditorTable = <T extends FieldValues = any, F extends ArrayPath<T> 
     }))
   }, [rowFields.fields])
 
+  console.log({ fields: rowFields.fields })
+
   const columns = useMemo<ColDef<any>[]>(() => {
     const updatedColumns = [
       {

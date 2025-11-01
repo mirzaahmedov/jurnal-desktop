@@ -1,7 +1,8 @@
 import type { TwoFSaldoFormValues } from './config'
 import type { ApiResponse, Smeta } from '@/common/models'
+import type { GridApi } from 'ag-grid-community'
 
-import { useEffect, useState } from 'react'
+import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 
 import { useMutation } from '@tanstack/react-query'
 import { CircleCheck, RefreshCcw, Trash2 } from 'lucide-react'
@@ -20,6 +21,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/common/components/jolly/dialog'
+import { MonthSelect } from '@/common/components/month-select'
+import { SearchInput } from '@/common/components/search-input'
 import { YearSelect } from '@/common/components/year-select'
 import { useConfirm } from '@/common/features/confirm'
 import { useRequisitesStore } from '@/common/features/requisites'
@@ -31,6 +34,8 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
   const { t } = useTranslation()
   const { confirm } = useConfirm()
   const { main_schet_id } = useRequisitesStore()
+
+  const gridApi = useRef<GridApi>()
 
   const [isEditing, setIsEditing] = useState(false)
   const [totalValues, setTotalValues] = useState<TwoFSaldoFormValues['smetas']>([
@@ -46,6 +51,7 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
   const form = useForm<TwoFSaldoFormValues>({
     defaultValues: {
       year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
       smetas: []
     }
   })
@@ -205,12 +211,34 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
     })
   }
 
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const value = e.currentTarget.value
+      if (value.length > 0) {
+        const rows = form.getValues('smetas')
+        const index = rows.findIndex((row) =>
+          row.smeta_number?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+        gridApi.current?.forEachNode((node) => {
+          if (node.data.__originalIndex === index) {
+            gridApi.current?.ensureIndexVisible(node.rowIndex!, 'middle')
+            node.setSelected(true, true)
+          }
+        })
+      }
+    }
+  }
+
   return (
     <DialogTrigger {...props}>
       <DialogOverlay>
         <DialogContent className="h-full max-h-[800px] w-full max-w-7xl">
           <form
             className="flex flex-col gap-5"
+            noValidate
             onSubmit={handleSubmit}
           >
             <DialogHeader className="flex flex-row items-center justify-between">
@@ -243,11 +271,25 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
                     form.setValue('year', value ? Number(value) : new Date().getFullYear())
                   }}
                 />
+                <MonthSelect
+                  isReadOnly={isEditing}
+                  selectedKey={form.watch('month')}
+                  onSelectionChange={(value) => {
+                    form.setValue('month', value ? Number(value) : new Date().getFullYear())
+                  }}
+                  className="w-32"
+                />
+
+                <SearchInput
+                  onKeyDown={handleSearch}
+                  formNoValidate
+                />
               </div>
             </DialogHeader>
             <div className="flex-1">
               <EditorTable
                 form={form}
+                api={gridApi}
                 loading={
                   fetchSmetas.isPending || fetchSaldoData.isPending || checkSaldoMutation.isPending
                 }
@@ -259,8 +301,8 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
                   },
                   {
                     flex: 1,
-                    field: 'jur3a_akt_avans',
-                    headerName: t('real_expenses'),
+                    field: 'bank_prixod',
+                    headerName: t('funds_paid_by_ministry'),
                     cellRendererSelector: (params) => {
                       if (params.node.rowPinned === 'bottom') {
                         return { component: 'numberCell' }
@@ -287,8 +329,8 @@ export const TwoFSaldoDialog = (props: Omit<DialogTriggerProps, 'children'>) => 
                   },
                   {
                     flex: 1,
-                    field: 'bank_prixod',
-                    headerName: t('funds_paid_by_ministry'),
+                    field: 'jur3a_akt_avans',
+                    headerName: t('real_expenses'),
                     cellRendererSelector: (params) => {
                       if (params.node.rowPinned === 'bottom') {
                         return { component: 'numberCell' }
